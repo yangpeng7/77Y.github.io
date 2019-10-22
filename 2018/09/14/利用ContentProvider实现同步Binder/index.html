@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="在Android中跨进程通信的方式有好多种，比如 Intent Messenger AIDL（Android 接口定义语言） ContentProvider Socket  以AIDL为例，在使用AIDL实现安卓跨进程通信的时候，通常分为3步： 定义AIDL接口文件，在Service的onBind方法中返回binder给客户端  客户端与服务端绑定，在回调函数onServiceConnected中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用ContentProvider实现同步Binder">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2018&#x2F;09&#x2F;14&#x2F;%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="在Android中跨进程通信的方式有好多种，比如 Intent Messenger AIDL（Android 接口定义语言） ContentProvider Socket  以AIDL为例，在使用AIDL实现安卓跨进程通信的时候，通常分为3步： 定义AIDL接口文件，在Service的onBind方法中返回binder给客户端  客户端与服务端绑定，在回调函数onServiceConnected中">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;09&#x2F;14&#x2F;5b9b755c33aab.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;09&#x2F;14&#x2F;5b9b7575dbab0.png">
+<meta property="og:updated_time" content="2019-10-22T13:11:20.064Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;09&#x2F;14&#x2F;5b9b755c33aab.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>利用ContentProvider实现同步Binder</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/10/22/hello-world/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&text=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&title=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&is_video=false&description=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=利用ContentProvider实现同步Binder&body=Check out this article: http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&title=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&title=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&title=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&title=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&name=利用ContentProvider实现同步Binder&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#在Android中跨进程通信的方式有好多种，比如"><span class="toc-number">1.</span> <span class="toc-text">在Android中跨进程通信的方式有好多种，比如</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#以AIDL为例，在使用AIDL实现安卓跨进程通信的时候，通常分为3步："><span class="toc-number">2.</span> <span class="toc-text">以AIDL为例，在使用AIDL实现安卓跨进程通信的时候，通常分为3步：</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-定义AIDL"><span class="toc-number"></span> <span class="toc-text">1. 定义AIDL</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-在Service中实现接口并作为binder返回"><span class="toc-number"></span> <span class="toc-text">2. 在Service中实现接口并作为binder返回</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-在BossActivity中-bindService"><span class="toc-number"></span> <span class="toc-text">3. 在BossActivity中 bindService</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-定义AIDL和实现类"><span class="toc-number"></span> <span class="toc-text">1. 定义AIDL和实现类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-定义BinderProvider主要代码如下"><span class="toc-number"></span> <span class="toc-text">2. 定义BinderProvider主要代码如下:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-查询ContentProvider获得cursor调用服务端逻辑。"><span class="toc-number"></span> <span class="toc-text">3. 查询ContentProvider获得cursor调用服务端逻辑。</span></a>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        利用ContentProvider实现同步Binder
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-09-14T02:50:00.000Z" itemprop="datePublished">2018-09-14</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h5 id="在Android中跨进程通信的方式有好多种，比如"><a href="#在Android中跨进程通信的方式有好多种，比如" class="headerlink" title="在Android中跨进程通信的方式有好多种，比如"></a>在Android中跨进程通信的方式有好多种，比如</h5><ul>
+<li>Intent</li>
+<li>Messenger</li>
+<li>AIDL（Android 接口定义语言）</li>
+<li>ContentProvider</li>
+<li>Socket</li>
+</ul>
+<h5 id="以AIDL为例，在使用AIDL实现安卓跨进程通信的时候，通常分为3步："><a href="#以AIDL为例，在使用AIDL实现安卓跨进程通信的时候，通常分为3步：" class="headerlink" title="以AIDL为例，在使用AIDL实现安卓跨进程通信的时候，通常分为3步："></a>以AIDL为例，在使用AIDL实现安卓跨进程通信的时候，通常分为3步：</h5><ol>
+<li><p>定义AIDL接口文件，在<code>Service</code>的<code>onBind</code>方法中返回<code>binder</code>给客户端</p>
+</li>
+<li><p>客户端与服务端绑定，在回调函数<code>onServiceConnected</code>中获取<code>binder</code></p>
+</li>
+<li><p>通过<code>Stub</code>的<code>asInterface</code>方法转换为我们定义的接口，然后调用服务端逻辑。</p>
+</li>
+</ol>
+<p>这是一种典型的CS（客户端-服务端）架构。下面我们就用AIDL来实现跨进程通信，首先我们来定义一个问题：</p>
+<blockquote>
+<p>假如小王是一家连锁超市的老板，他最关心的是自己的超市目前的规模以及自己超市的营业额的情况。他是需要服务的一端，所以把小王定义为客户端。针对老板的需求，我们需要提供两个服务，一是查询连锁超市的数量而是查询超市的营业额。</p>
+</blockquote>
+<p>既然需求有了，现在我们就来实现它：</p>
+<p>客户端就定义一个<code>BossActivity</code>用于显示连锁超市目前的规模以及营业额。<br>服务端为了解耦就定义两个<code>Service</code>，<code>OrderService</code>（查询营业额）和<code>StoreService</code>（查询超市规模）</p>
+<p>接下来按照上面的三步走，我们依次来实现一下</p>
+<h4 id="1-定义AIDL"><a href="#1-定义AIDL" class="headerlink" title="1. 定义AIDL"></a>1. 定义AIDL</h4><ul>
+<li>定义<code>IOrderService.aidl</code> 包括查询营业额的服务</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package qiwoo.android.sync.binder;</span><br><span class="line"></span><br><span class="line">interface IOrderService &#123;</span><br><span class="line"></span><br><span class="line">	// 获取营业额</span><br><span class="line">    int getOrderAmount();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>定义<code>IStoreService.aidl</code> 包括查询超市规模的的服务，其实就是store的数量</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package qiwoo.android.sync.binder;</span><br><span class="line"></span><br><span class="line">import qiwoo.android.sync.binder.Store;</span><br><span class="line"></span><br><span class="line">interface IStoreService &#123;</span><br><span class="line"></span><br><span class="line">	// 获取超市的列表</span><br><span class="line">    List&lt;Store&gt; getStores();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-在Service中实现接口并作为binder返回"><a href="#2-在Service中实现接口并作为binder返回" class="headerlink" title="2. 在Service中实现接口并作为binder返回"></a>2. 在Service中实现接口并作为binder返回</h4><ul>
+<li><code>OrderService</code> 具体实现如下</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public class OrderService extends Service &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        super.onCreate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    IOrderService.Stub mOrderService = new IOrderService.Stub() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public int getOrderAmount() throws RemoteException &#123;</span><br><span class="line">	        // 方便演示这里就不涉及过多逻辑，简单返回数据</span><br><span class="line">            return 100;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    @Nullable</span><br><span class="line">    @Override</span><br><span class="line">    public IBinder onBind(Intent intent) &#123;</span><br><span class="line">    	//返回 OrderService binder</span><br><span class="line">        return mOrderService;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li><code>StoreService</code> 具体实现如下</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public class StoreService extends Service &#123;</span><br><span class="line"></span><br><span class="line">    private List&lt;Store&gt; stores;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        super.onCreate();</span><br><span class="line"></span><br><span class="line">		// 方便演示这里就不涉及过多逻辑，简单创建数据</span><br><span class="line">        Store store1 = new Store(1, &quot;qiwoo&quot;, &quot;123&quot;, &quot;beijing&quot;);</span><br><span class="line">        Store store2 = new Store(2, &quot;mobile&quot;, &quot;123&quot;, &quot;beijing&quot;);</span><br><span class="line"></span><br><span class="line">        stores = new ArrayList&lt;&gt;();</span><br><span class="line">        stores.add(store1);</span><br><span class="line">        stores.add(store2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    IStoreService.Stub mStoreService = new IStoreService.Stub() &#123;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public List&lt;Store&gt; getStores() throws RemoteException &#123;</span><br><span class="line">            return stores;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    @Nullable</span><br><span class="line">    @Override</span><br><span class="line">    public IBinder onBind(Intent intent) &#123;</span><br><span class="line">        // 返回 StoreService binder</span><br><span class="line">        return mStoreService;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-在BossActivity中-bindService"><a href="#3-在BossActivity中-bindService" class="headerlink" title="3. 在BossActivity中 bindService"></a>3. 在<code>BossActivity</code>中 <code>bindService</code></h4><ul>
+<li>绑定服务</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Intent orderIntent = new Intent();</span><br><span class="line">orderIntent.setClass(this, OrderService.class);</span><br><span class="line">bindService(orderIntent, mOrderServiceConnection, Context.BIND_AUTO_CREATE);</span><br><span class="line"></span><br><span class="line">Intent storeIntent = new Intent();</span><br><span class="line">storeIntent.setClass(this, StoreService.class);</span><br><span class="line">bindService(storeIntent, mStoreServiceConnection, Context.BIND_AUTO_CREATE);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>传入的ServiceConnection</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">private ServiceConnection mOrderServiceConnection = new ServiceConnection() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void onServiceConnected(ComponentName name, IBinder service) &#123;</span><br><span class="line">    	// 在这里，绑定成功之后，我们就拿到了binder</span><br><span class="line">        mOrderService = IOrderService.Stub.asInterface(service);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onServiceDisconnected(ComponentName name) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调用远程服务</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">	// 在 onServiceConnected 中拿到的binder</span><br><span class="line">    int amount = mOrderService.getOrderAmount();</span><br><span class="line">    Toast.makeText(BossActivity.this, &quot;恭喜老板营业额是：&quot; + amount + &quot; 亿&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">&#125; catch (RemoteException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到目前为止，一切都很顺利。我们通过AIDL实现了跨进程通信，来测试一下结果和我们预期的也一样。</p>
+<figure class="half">
+    <img src="https://i.loli.net/2018/09/14/5b9b755c33aab.png" width="200">
+    <img src="https://i.loli.net/2018/09/14/5b9b7575dbab0.png" width="200">
+</figure>
+
+<!--![1.png](https://i.loli.net/2018/09/14/5b9b755c33aab.png)
+
+![2.png](https://i.loli.net/2018/09/14/5b9b7575dbab0.png)
+-->
+<p>非常棒，老板很有钱，晚上又可以给我们加鸡腿了。但是有没有发现一个问题：在<code>BossActivity</code>中想要调用另一个进程的服务，必须要等 <code>bindService</code>中传入的<code>ServiceConnection</code>拿到<code>onServiceConnected</code>的回调才能使用，也就是我们异步的获取了<code>binder</code>。有的时候我们并不想这样做，有没有一个办法可以直接通过一个<code>get</code>方法就拿到<code>binder</code>呢？</p>
+<p>答案当然是肯定的啦，现在我们再回到文章开头看看实现跨进程通信中常见的几种方式，有一个<code>ContentProvider</code>接下来它就是我们的主角了，对<code>ContentProvider</code>不熟的同学可以去查一下它的用法。我们就通过它来实现在客户端同步获取<code>binder</code>，怎么去做呢，同样三步走。</p>
+<ul>
+<li><p>定义AIDL接口文件和实现类</p>
+</li>
+<li><p>定义一个<code>ContentProvider</code>根据查询参数的不同返回具体的服务<code>binder</code></p>
+</li>
+<li><p>查询<code>ContentProvider</code>获得<code>Cursor</code>然后通过<code>Stub</code>的<code>asInterface</code>方法转换为我们定义的接口，然后调用服务端逻辑。</p>
+</li>
+</ul>
+<h4 id="1-定义AIDL和实现类"><a href="#1-定义AIDL和实现类" class="headerlink" title="1. 定义AIDL和实现类"></a>1. 定义AIDL和实现类</h4><p>AIDL和上面完全一样，不再重复</p>
+<ul>
+<li><code>OrderServiceImpl</code>实现</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class OrderServiceImpl extends IOrderService.Stub &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int getOrderAmount() throws RemoteException &#123;</span><br><span class="line">        return 100;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>StoreServiceImpl</code>实现</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public class StoreServiceImpl extends IStoreService.Stub &#123;</span><br><span class="line"></span><br><span class="line">    private List&lt;Store&gt; stores;</span><br><span class="line"></span><br><span class="line">    public StoreServiceImpl() &#123;</span><br><span class="line"></span><br><span class="line">        Store store1 = new Store(1, &quot;qiwoo&quot;, &quot;123&quot;, &quot;beijing&quot;);</span><br><span class="line">        Store store2 = new Store(2, &quot;mobile&quot;, &quot;123&quot;, &quot;beijing&quot;);</span><br><span class="line"></span><br><span class="line">        stores = new ArrayList&lt;&gt;();</span><br><span class="line">        stores.add(store1);</span><br><span class="line">        stores.add(store2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;Store&gt; getStores() throws RemoteException &#123;</span><br><span class="line">        return stores;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-定义BinderProvider主要代码如下"><a href="#2-定义BinderProvider主要代码如下" class="headerlink" title="2. 定义BinderProvider主要代码如下:"></a>2. 定义<code>BinderProvider</code>主要代码如下:</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) &#123;</span><br><span class="line"></span><br><span class="line">    IBinder binder;</span><br><span class="line"></span><br><span class="line">    if (selectionArgs[0].equals(SERVICE_ORDER)) &#123;</span><br><span class="line">        binder = new OrderServiceImpl();</span><br><span class="line"></span><br><span class="line">        Log.d(TAG, &quot;Query OrderServiceImpl&quot;);</span><br><span class="line"></span><br><span class="line">    &#125; else if (selectionArgs[0].equals(SERVICE_STORE)) &#123;</span><br><span class="line">        binder = new StoreServiceImpl();</span><br><span class="line"></span><br><span class="line">        Log.d(TAG, &quot;Query StoreServiceImpl&quot;);</span><br><span class="line"></span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    BinderCursor cursor = new BinderCursor(new String[]&#123;&quot;service&quot;&#125;, binder);</span><br><span class="line"></span><br><span class="line">    return cursor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>ContentProvider</code>的<code>query</code>方法返回的是一个<code>Cursor</code>，现在的场景不像查询数据库一样可以通过<code>SQLiteDatabase</code>的<code>query</code>方法直接返回一个<code>Cursor</code>，而<code>Cursor</code>又是一个接口，没有办法直接实例化。所以我们需要找一个可以实例化一个<code>Cursor</code>，这里用到了<code>MatrixCursor</code>。有了<code>Cursor</code>之后就可以把根据查询参数的不同我们返回了不同的<code>binder</code>放到<code>Cursor</code>中返回。下面我们来看一下<code>BinderCursor</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">public class BinderCursor extends MatrixCursor &#123;</span><br><span class="line"></span><br><span class="line">    static final String KEY_BINDER = &quot;binder&quot;;</span><br><span class="line"></span><br><span class="line">    Bundle mBinderExtra = new Bundle();</span><br><span class="line"></span><br><span class="line">    public static class BinderParcelable implements Parcelable &#123;</span><br><span class="line"></span><br><span class="line">        public IBinder mBinder;</span><br><span class="line"></span><br><span class="line">        public static final Creator&lt;BinderParcelable&gt; CREATOR = new Creator&lt;BinderParcelable&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public BinderParcelable createFromParcel(Parcel source) &#123;</span><br><span class="line">                return new BinderParcelable(source);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public BinderParcelable[] newArray(int size) &#123;</span><br><span class="line">                return new BinderParcelable[size];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        BinderParcelable(IBinder binder) &#123;</span><br><span class="line">            mBinder = binder;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        BinderParcelable(Parcel source) &#123;</span><br><span class="line">            mBinder = source.readStrongBinder();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public int describeContents() &#123;</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void writeToParcel(Parcel dest, int flags) &#123;</span><br><span class="line">            dest.writeStrongBinder(mBinder);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public BinderCursor(String[] columnNames, IBinder binder) &#123;</span><br><span class="line">        super(columnNames);</span><br><span class="line"></span><br><span class="line">        if (binder != null) &#123;</span><br><span class="line">            Parcelable value = new BinderParcelable(binder);</span><br><span class="line">            mBinderExtra.putParcelable(KEY_BINDER, value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Bundle getExtras() &#123;</span><br><span class="line">        return mBinderExtra;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到它继承自<code>MatrixCursor</code>，然后通过<code>Bundle</code>包装了<code>binder</code>，这样就可以 <code>new</code> 一个 <code>MatrixCursor</code>的对象返回了。</p>
+<h4 id="3-查询ContentProvider获得cursor调用服务端逻辑。"><a href="#3-查询ContentProvider获得cursor调用服务端逻辑。" class="headerlink" title="3. 查询ContentProvider获得cursor调用服务端逻辑。"></a>3. 查询<code>ContentProvider</code>获得<code>cursor</code>调用服务端逻辑。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">final ContentResolver resolver = MainActivity.this.getContentResolver();</span><br><span class="line"></span><br><span class="line">final Cursor cu = resolver.query(CONTENT_URI, null, null, new String[]&#123;SERVICE_ORDER&#125;, null);</span><br><span class="line">if (cu == null) &#123;</span><br><span class="line">    return;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">IBinder binder = getBinder(cu);</span><br><span class="line">try &#123;</span><br><span class="line">    IOrderService orderService = IOrderService.Stub.asInterface(binder);</span><br><span class="line">    int amount = orderService.getOrderAmount();</span><br><span class="line"></span><br><span class="line">    Toast.makeText(MainActivity.this, &quot;恭喜老板营业额是：&quot; + amount + &quot; 亿&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">    </span><br><span class="line">&#125; catch (RemoteException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">cu.close();</span><br></pre></td></tr></table></figure>
+<p>这里，我们为了获得营业额和超市规模的数据传入的查询参数是<code>SERVICE_ORDER</code>和<code>SERVICE_STORE</code>，假如有很多个服务就可以把这部分代码再进行封装，写一个管理类，根据不同的参数返回不同的service。</p>
+<p>这样我们获取<code>binder</code>就是同步的了，不需要再等待回调，<code>query</code>出来直接使用。打印的结果和上面是一样的，不再展示。</p>
+<p><a href="https://github.com/77Y/SyncBinder" target="_blank" rel="noopener">本文demo地址: github.com/77Y/SyncBinder</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#在Android中跨进程通信的方式有好多种，比如"><span class="toc-number">1.</span> <span class="toc-text">在Android中跨进程通信的方式有好多种，比如</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#以AIDL为例，在使用AIDL实现安卓跨进程通信的时候，通常分为3步："><span class="toc-number">2.</span> <span class="toc-text">以AIDL为例，在使用AIDL实现安卓跨进程通信的时候，通常分为3步：</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-定义AIDL"><span class="toc-number"></span> <span class="toc-text">1. 定义AIDL</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-在Service中实现接口并作为binder返回"><span class="toc-number"></span> <span class="toc-text">2. 在Service中实现接口并作为binder返回</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-在BossActivity中-bindService"><span class="toc-number"></span> <span class="toc-text">3. 在BossActivity中 bindService</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-定义AIDL和实现类"><span class="toc-number"></span> <span class="toc-text">1. 定义AIDL和实现类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-定义BinderProvider主要代码如下"><span class="toc-number"></span> <span class="toc-text">2. 定义BinderProvider主要代码如下:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-查询ContentProvider获得cursor调用服务端逻辑。"><span class="toc-number"></span> <span class="toc-text">3. 查询ContentProvider获得cursor调用服务端逻辑。</span></a>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&text=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&title=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&is_video=false&description=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=利用ContentProvider实现同步Binder&body=Check out this article: http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&title=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&title=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&title=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&title=利用ContentProvider实现同步Binder" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/&name=利用ContentProvider实现同步Binder&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
