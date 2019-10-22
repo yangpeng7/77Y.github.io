@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="简介2018年12月4日，Flutter 1.0 正式发布。Flutter 是 Google 用以帮助开发者在 iOS 和 Android 两个平台开发高质量原生 UI 的移动 SDK。Flutter 兼容现有的代码，免费且开源，在全球开发者中广泛被使用。Flutter 用 Dart 作为开发语言，对于有 Java 等高级语言开发经验的开发者来说 Dart 很容易上手。 环境搭建flutter官网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter之初体验">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;01&#x2F;13&#x2F;Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="简介2018年12月4日，Flutter 1.0 正式发布。Flutter 是 Google 用以帮助开发者在 iOS 和 Android 两个平台开发高质量原生 UI 的移动 SDK。Flutter 兼容现有的代码，免费且开源，在全球开发者中广泛被使用。Flutter 用 Dart 作为开发语言，对于有 Java 等高级语言开发经验的开发者来说 Dart 很容易上手。 环境搭建flutter官网">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;p0.qhimg.com&#x2F;t013864067c44d021b3.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;p0.qhimg.com&#x2F;t012a31b17e6eeb4506.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;p0.qhimg.com&#x2F;t01790612a877e0492a.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;p0.qhimg.com&#x2F;t01d5940af277cd0ef5.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;p0.qhimg.com&#x2F;t01c039c3ef05aa3124.png">
+<meta property="og:updated_time" content="2019-10-22T13:36:31.743Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;p0.qhimg.com&#x2F;t013864067c44d021b3.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Flutter之初体验</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&text=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&title=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&is_video=false&description=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Flutter之初体验&body=Check out this article: http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&title=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&title=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&title=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&title=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&name=Flutter之初体验&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-number">2.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初体验"><span class="toc-number">3.</span> <span class="toc-text">初体验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#新建项目"><span class="toc-number">3.1.</span> <span class="toc-text">新建项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#项目结构"><span class="toc-number">3.2.</span> <span class="toc-text">项目结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行结果"><span class="toc-number">3.3.</span> <span class="toc-text">运行结果</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Flutter之初体验
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-01-13T07:18:00.000Z" itemprop="datePublished">2019-01-13</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>2018年12月4日，Flutter 1.0 正式发布。Flutter 是 Google 用以帮助开发者在 iOS 和 Android 两个平台开发高质量原生 UI 的移动 SDK。Flutter 兼容现有的代码，免费且开源，在全球开发者中广泛被使用。Flutter 用 Dart 作为开发语言，对于有 Java 等高级语言开发经验的开发者来说 Dart 很容易上手。</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p><a href="https://flutter.io/docs/get-started/install" target="_blank" rel="noopener">flutter官网</a> 给出的环境搭建步骤非常详细，Windows、macOS、Linux 都有完善的安装文档。包括 Android Studio 安装 Flutter 插件等，针对不同的操作系统安装即可。我选择的是 macOS 平台的环境。</p>
+<p>安装完成后执行 <code>flutter doctor</code> 如果出现下图所需SDK和开发工具都配置完成就会出现”对勾”。如果有未配置好的项， <code>flutter doctor</code> 会提示出哪里有问题以及应该执行什么命令，按照提示一步步配置好就可以进入 Flutter 世界啦。</p>
+<p><img src="http://p0.qhimg.com/t013864067c44d021b3.png" alt="http://p0.qhimg.com/t013864067c44d021b3.png"></p>
+<h2 id="初体验"><a href="#初体验" class="headerlink" title="初体验"></a>初体验</h2><p>针对不同平台的开发者，Flutter 提供了不同的入门指引。</p>
+<p><img src="http://p0.qhimg.com/t012a31b17e6eeb4506.png" alt="http://p0.qhimg.com/t012a31b17e6eeb4506.png"></p>
+<h3 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h3><p>在 Android Studio 里安装好 Flutter 插件之后，点新建项目就会出现 Flutter 项目如下：</p>
+<p><img src="http://p0.qhimg.com/t01790612a877e0492a.png" alt="http://p0.qhimg.com/t01790612a877e0492a.png"></p>
+<h3 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h3><p><img src="http://p0.qhimg.com/t01d5940af277cd0ef5.png" alt="http://p0.qhimg.com/t01d5940af277cd0ef5.png"></p>
+<p>可以看到项目创建好之后，Android Studio 帮我们生成了许多目录。</p>
+<p>/android：标准的android工程结构</p>
+<p>/ios：iOS工程结构</p>
+<p>/build：最终编译出来的apk在<code>build/app/outputs/apk</code>目录下，apk还是挺大的，新创建的工程编译之后在25M左右</p>
+<p>/lib：dart源代码</p>
+<p>pubspec.yaml：这是一个比较重要的文件，依赖的包会在这里配置</p>
+<p>接下来我们看一下整个工程结构的源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import &apos;package:flutter/material.dart&apos;;</span><br><span class="line"></span><br><span class="line">void main() =&gt; runApp(MyApp());</span><br><span class="line"></span><br><span class="line">class MyApp extends StatelessWidget &#123;</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    return MaterialApp(</span><br><span class="line">      title: &apos;欢迎来到Flutter世界&apos;,</span><br><span class="line">      home: Scaffold(</span><br><span class="line">        appBar: AppBar(</span><br><span class="line">          title: Text(&apos;奇舞移动&apos;),</span><br><span class="line">        ),</span><br><span class="line">        body: Center(</span><br><span class="line">          child: Text(&quot;show me the code&quot;, style: TextStyle(fontSize: 20)),</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码很简单，页面显示的就是 <code>MyApp</code> 这个 Widget。关于 Widget 会在接下来的文章中介绍。第一次编译的时候会比较慢，运行起来之后，我们尝试做一些修改然后点击 Hot Reload 就可以很快显示在页面上，类似于 Instant Run。</p>
+<h3 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h3><p>以下是在 Pixel 和 iPhone XR 模拟器的运行结果</p>
+<p><img src="http://p0.qhimg.com/t01c039c3ef05aa3124.png" alt="http://p0.qhimg.com/t01c039c3ef05aa3124.png"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-number">2.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初体验"><span class="toc-number">3.</span> <span class="toc-text">初体验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#新建项目"><span class="toc-number">3.1.</span> <span class="toc-text">新建项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#项目结构"><span class="toc-number">3.2.</span> <span class="toc-text">项目结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行结果"><span class="toc-number">3.3.</span> <span class="toc-text">运行结果</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&text=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&title=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&is_video=false&description=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Flutter之初体验&body=Check out this article: http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&title=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&title=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&title=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&title=Flutter之初体验" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/&name=Flutter之初体验&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="什么是ConstraintLayoutConstraintLayout 是 Google I&#x2F;O 2016 上发布全新的布局方式。虽然已经发布了这么长时间，但是基于已有的布局方式基本满足需求，工作中SDK开发UI涉及比较少， ConstraintLayout 一直没有深度使用过。前几天的一次内部分享提到了ConstraintLayout，于是决定体验一把ConstraintLayout布局方式给我">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ConstraintLayout初探">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2018&#x2F;09&#x2F;21&#x2F;ConstraintLayout%E5%88%9D%E6%8E%A2&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="什么是ConstraintLayoutConstraintLayout 是 Google I&#x2F;O 2016 上发布全新的布局方式。虽然已经发布了这么长时间，但是基于已有的布局方式基本满足需求，工作中SDK开发UI涉及比较少， ConstraintLayout 一直没有深度使用过。前几天的一次内部分享提到了ConstraintLayout，于是决定体验一把ConstraintLayout布局方式给我">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;09&#x2F;21&#x2F;5ba4941441c38.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;09&#x2F;21&#x2F;5ba4975f714d1.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;09&#x2F;21&#x2F;5ba4a00ac02ef.png">
+<meta property="og:updated_time" content="2019-10-22T13:35:46.818Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;09&#x2F;21&#x2F;5ba4941441c38.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>ConstraintLayout初探</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/09/28/%E5%85%B3%E4%BA%8EHandlerThread%E4%BD%A0%E5%BA%94%E8%AF%A5%E7%9F%A5%E9%81%93%E7%9A%84%E4%B8%80%E5%88%87/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/09/14/%E5%88%A9%E7%94%A8ContentProvider%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5Binder/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&text=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&title=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&is_video=false&description=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ConstraintLayout初探&body=Check out this article: http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&title=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&title=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&title=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&title=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&name=ConstraintLayout初探&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是ConstraintLayout"><span class="toc-number">1.</span> <span class="toc-text">什么是ConstraintLayout</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优势"><span class="toc-number">2.</span> <span class="toc-text">优势</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1、效率高"><span class="toc-number">2.1.</span> <span class="toc-text">1、效率高</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2、可视化编辑"><span class="toc-number">2.2.</span> <span class="toc-text">2、可视化编辑</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用"><span class="toc-number">3.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一些有趣的点"><span class="toc-number">4.</span> <span class="toc-text">一些有趣的点</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1、layout-constraintLeft-toLeftOf-和-layout-constraintStart-toStartOf有什么区别"><span class="toc-number">4.1.</span> <span class="toc-text">1、layout_constraintLeft_toLeftOf 和 layout_constraintStart_toStartOf有什么区别</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2、-约束中不能有循环依赖关系"><span class="toc-number">4.2.</span> <span class="toc-text">2、 约束中不能有循环依赖关系</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3、-layout-goneMarginLeft"><span class="toc-number">4.3.</span> <span class="toc-text">3、 layout_goneMarginLeft</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4、-不可能完成的任务"><span class="toc-number">4.4.</span> <span class="toc-text">4、 不可能完成的任务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5、Chain"><span class="toc-number">4.5.</span> <span class="toc-text">5、Chain</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#One-More-Thing"><span class="toc-number">5.</span> <span class="toc-text">One More Thing</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        ConstraintLayout初探
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-09-21T03:55:00.000Z" itemprop="datePublished">2018-09-21</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h4 id="什么是ConstraintLayout"><a href="#什么是ConstraintLayout" class="headerlink" title="什么是ConstraintLayout"></a>什么是ConstraintLayout</h4><p>ConstraintLayout 是 <a href="https://www.youtube.com/watch?v=sO9aX87hq9c" target="_blank" rel="noopener">Google I/O 2016</a> 上发布全新的布局方式。虽然已经发布了这么长时间，但是基于已有的布局方式基本满足需求，工作中SDK开发UI涉及比较少， <code>ConstraintLayout</code> 一直没有深度使用过。前几天的一次内部分享提到了<code>ConstraintLayout</code>，于是决定体验一把<code>ConstraintLayout</code>布局方式给我们开发过程带来的新的变化。<code>ConstraintLayout</code> 是以支持库的形式提供的，使用之前必须添加依赖。</p>
+<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><h5 id="1、效率高"><a href="#1、效率高" class="headerlink" title="1、效率高"></a>1、效率高</h5><p>关于性能高的原因，Google开发者公众号中<a href="https://mp.weixin.qq.com/s/gGR2itbY7hh9fo61SxaMQQ" target="_blank" rel="noopener">这篇文章</a>讲的很清楚，感兴趣的同学可以仔细阅读下。最主要的原因是，使用约束极大简化了xml中元素的嵌套层级，从而提升了<code>View</code>绘制过程中的效率。<br>​    </p>
+<h5 id="2、可视化编辑"><a href="#2、可视化编辑" class="headerlink" title="2、可视化编辑"></a>2、可视化编辑</h5><p>基于约束可以更方便的使用可视化布局，拖拖拽拽就可以马上生成想要的页面，但是对于大部分开发者来说，还是习惯使用在xml里手动布局。</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><figure >
+    <img src="https://i.loli.net/2018/09/21/5ba4941441c38.png" width="200">
+</figure>
+
+<p>这是 Play商店 中的一个页面，我们来用 <code>ConstraintLayout</code>实现一个item</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">&lt;android.support.constraint.ConstraintLayout</span><br><span class="line">    android:id=&quot;@+id/first&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;100dp&quot;</span><br><span class="line">    app:layout_constraintLeft_toLeftOf=&quot;parent&quot;</span><br><span class="line">    app:layout_constraintRight_toRightOf=&quot;parent&quot;</span><br><span class="line">    app:layout_constraintTop_toTopOf=&quot;parent&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/sort&quot;</span><br><span class="line">        android:layout_width=&quot;20dp&quot;</span><br><span class="line">        android:layout_height=&quot;match_parent&quot;</span><br><span class="line">        android:gravity=&quot;center&quot;</span><br><span class="line">        android:text=&quot;1&quot;</span><br><span class="line">        app:layout_constraintLeft_toLeftOf=&quot;parent&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;ImageView</span><br><span class="line">        android:id=&quot;@+id/icon&quot;</span><br><span class="line">        android:layout_width=&quot;60dp&quot;</span><br><span class="line">        android:layout_height=&quot;60dp&quot;</span><br><span class="line">        android:background=&quot;@mipmap/ic_launcher&quot;</span><br><span class="line">        app:layout_constraintBottom_toBottomOf=&quot;parent&quot;</span><br><span class="line">        app:layout_constraintLeft_toRightOf=&quot;@+id/sort&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/title&quot;</span><br><span class="line">        android:layout_width=&quot;0dp&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_marginLeft=&quot;10dp&quot;</span><br><span class="line">        android:layout_marginTop=&quot;10dp&quot;</span><br><span class="line">        android:gravity=&quot;left&quot;</span><br><span class="line">        android:text=&quot;YouTube&quot;</span><br><span class="line">        app:layout_constraintLeft_toRightOf=&quot;@+id/icon&quot;</span><br><span class="line">        app:layout_constraintRight_toRightOf=&quot;parent&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/company&quot;</span><br><span class="line">        android:layout_width=&quot;0dp&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_marginLeft=&quot;10dp&quot;</span><br><span class="line">        android:layout_marginTop=&quot;5dp&quot;</span><br><span class="line">        android:text=&quot;Google LLC&quot;</span><br><span class="line">        app:layout_constraintLeft_toRightOf=&quot;@+id/icon&quot;</span><br><span class="line">        app:layout_constraintRight_toRightOf=&quot;parent&quot;</span><br><span class="line">        app:layout_constraintTop_toBottomOf=&quot;@+id/title&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_marginLeft=&quot;10dp&quot;</span><br><span class="line">        android:layout_marginTop=&quot;15dp&quot;</span><br><span class="line">        android:text=&quot;25 MB • 4.3★&quot;</span><br><span class="line">        app:layout_constraintLeft_toRightOf=&quot;@+id/icon&quot;</span><br><span class="line">        app:layout_constraintTop_toBottomOf=&quot;@+id/company&quot; /&gt;</span><br><span class="line">&lt;/android.support.constraint.ConstraintLayout&gt;</span><br></pre></td></tr></table></figure>
+
+<figure >
+    <img src="https://i.loli.net/2018/09/21/5ba4975f714d1.png" width="200">
+</figure>
+
+<p>一层布局就搞定，很简洁，这也是性能优势的主要原因。</p>
+<ul>
+<li><code>layout_constraintLeft_toLeftOf</code></li>
+<li><code>layout_constraintLeft_toRightOf</code></li>
+<li><code>layout_constraintRight_toLeftOf</code></li>
+<li><code>layout_constraintRight_toRightOf</code></li>
+<li><code>layout_constraintTop_toTopOf</code></li>
+<li><code>layout_constraintTop_toBottomOf</code></li>
+<li><code>layout_constraintBottom_toTopOf</code></li>
+<li><code>layout_constraintBottom_toBottomOf</code></li>
+<li><code>layout_constraintBaseline_toBaselineOf</code></li>
+<li><code>layout_constraintStart_toEndOf</code></li>
+<li><code>layout_constraintStart_toStartOf</code></li>
+<li><code>layout_constraintEnd_toStartOf</code></li>
+<li><code>layout_constraintEnd_toEndOf</code></li>
+</ul>
+<p>可以看到有很多的约束条件可以用，其实这些约束顾名思义，基本上一看就知道是什么意思。比如下面两个<code>TextView</code> B 设置了 <code>layout_constraintLeft_toRightOf</code> （B的左是A的右）即B在A的右侧。这些属性非常简单，想了解更多，请访问<a href="https://developer.android.com/reference/android/support/constraint/ConstraintLayout" target="_blank" rel="noopener">这里</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;TextView</span><br><span class="line">    android:id=&quot;@+id/A&quot;</span><br><span class="line">    .../&gt;</span><br><span class="line"></span><br><span class="line">&lt;ImageView</span><br><span class="line">    android:id=&quot;@+id/B&quot;</span><br><span class="line">    ...</span><br><span class="line">    app:layout_constraintLeft_toRightOf=&quot;@+id/A&quot;/&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="一些有趣的点"><a href="#一些有趣的点" class="headerlink" title="一些有趣的点"></a>一些有趣的点</h4><p><code>ConstraintLayout</code>中设置依赖的条件很多，不再一一介绍，下面谈一下在学习的过程中遇到的产生疑惑的地方或官方提到的注意的点。</p>
+<h5 id="1、layout-constraintLeft-toLeftOf-和-layout-constraintStart-toStartOf有什么区别"><a href="#1、layout-constraintLeft-toLeftOf-和-layout-constraintStart-toStartOf有什么区别" class="headerlink" title="1、layout_constraintLeft_toLeftOf 和 layout_constraintStart_toStartOf有什么区别"></a>1、<code>layout_constraintLeft_toLeftOf</code> 和 <code>layout_constraintStart_toStartOf</code>有什么区别</h5><p>在水平方向上我们通常认为<code>layout_constraintLeft_toLeftOf</code> 和 <code>layout_constraintStart_toStartOf</code> 是一样的，但是为什么会有这两个属性呢？一般情况下这两个属性是一样的。但是有些国家的布局或者说阅读习惯是从右向左的，再用<code>layout_constraintLeft_toLeftOf</code>就不合适了，这时候<code>layout_constraintStart_toStartOf</code>就派上用场了。下面一张图可能看着更直观，图片来源于<a href="https://stackoverflow.com/questions/14904273/what-is-the-difference-between-android-margin-start-end-and-right-left" target="_blank" rel="noopener">StackOverFlow</a></p>
+<figure >
+    <img src="https://i.loli.net/2018/09/21/5ba4a00ac02ef.png" width="600">
+</figure>
+
+
+
+
+
+
+<h5 id="2、-约束中不能有循环依赖关系"><a href="#2、-约束中不能有循环依赖关系" class="headerlink" title="2、 约束中不能有循环依赖关系"></a>2、 约束中不能有循环依赖关系</h5><p>也就是假如有三个TextView A、B、C，不能出现某个属性A依赖B，B依赖C，C又依赖A</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;android.support.constraint.ConstraintLayout</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;wrap_content&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/cycle1&quot;</span><br><span class="line">        android:layout_width=&quot;60dp&quot;</span><br><span class="line">        android:layout_height=&quot;30dp&quot;</span><br><span class="line">        android:text=&quot;cycle1&quot;</span><br><span class="line">        app:layout_constraintLeft_toRightOf=&quot;@+id/cycle3&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/cycle2&quot;</span><br><span class="line">        android:layout_width=&quot;60dp&quot;</span><br><span class="line">        android:layout_height=&quot;30dp&quot;</span><br><span class="line">        android:text=&quot;cycle2&quot;</span><br><span class="line">        app:layout_constraintLeft_toRightOf=&quot;@+id/cycle1&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/cycle3&quot;</span><br><span class="line">        android:layout_width=&quot;60dp&quot;</span><br><span class="line">        android:layout_height=&quot;30dp&quot;</span><br><span class="line">        android:text=&quot;cycle3&quot;</span><br><span class="line">        app:layout_constraintLeft_toRightOf=&quot;@+id/cycle2&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;</span><br><span class="line">&lt;/android.support.constraint.ConstraintLayout&gt;</span><br></pre></td></tr></table></figure>
+<p>像以上三个 <code>TextView</code> 的 <code>layout_constraintLeft_toRightOf</code> 就是循环依赖的情况，这样显示就会错乱。</p>
+<h5 id="3、-layout-goneMarginLeft"><a href="#3、-layout-goneMarginLeft" class="headerlink" title="3、 layout_goneMarginLeft"></a>3、 <code>layout_goneMarginLeft</code></h5><p>这个属性是什么意思呢？我们非常熟悉的是 <code>layout_marginLeft</code> 我们来看下面的例子，当v1<br><code>visibility</code>是 <code>visible</code> 的时候左边距就是10dp，当 <code>visibility</code>是 <code>gone</code> 的时候<br>左边距就是50dp</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;android.support.constraint.ConstraintLayout</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;wrap_content&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/v1&quot;</span><br><span class="line">        android:layout_width=&quot;80dp&quot;</span><br><span class="line">        android:layout_height=&quot;30dp&quot;</span><br><span class="line">        android:background=&quot;@color/green&quot;</span><br><span class="line">        android:gravity=&quot;center&quot;</span><br><span class="line">        android:text=&quot;visible&quot;</span><br><span class="line">        android:textColor=&quot;@color/white&quot;</span><br><span class="line">        android:visibility=&quot;gone&quot;</span><br><span class="line">        app:layout_constraintLeft_toLeftOf=&quot;parent&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/v2&quot;</span><br><span class="line">        android:layout_width=&quot;80dp&quot;</span><br><span class="line">        android:layout_height=&quot;30dp&quot;</span><br><span class="line">        android:layout_marginLeft=&quot;10dp&quot;</span><br><span class="line">        android:background=&quot;@color/green&quot;</span><br><span class="line">        android:gravity=&quot;center&quot;</span><br><span class="line">        android:text=&quot;gone margin&quot;</span><br><span class="line">        android:textColor=&quot;@color/white&quot;</span><br><span class="line">        app:layout_constraintLeft_toRightOf=&quot;@+id/v1&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;parent&quot;</span><br><span class="line">        app:layout_goneMarginLeft=&quot;50dp&quot; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android.support.constraint.ConstraintLayout&gt;</span><br></pre></td></tr></table></figure>
+
+<h5 id="4、-不可能完成的任务"><a href="#4、-不可能完成的任务" class="headerlink" title="4、 不可能完成的任务"></a>4、 不可能完成的任务</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;android.support.constraint.ConstraintLayout</span><br><span class="line">    android:id=&quot;@+id/impossible&quot;</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;wrap_content&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:layout_width=&quot;wrap_content&quot;</span><br><span class="line">        android:layout_height=&quot;wrap_content&quot;</span><br><span class="line">        android:background=&quot;@color/green&quot;</span><br><span class="line">        android:gravity=&quot;center&quot;</span><br><span class="line">        android:text=&quot;impossible&quot;</span><br><span class="line">        android:textColor=&quot;@color/white&quot;</span><br><span class="line">        app:layout_constraintLeft_toLeftOf=&quot;parent&quot;</span><br><span class="line">        app:layout_constraintRight_toRightOf=&quot;parent&quot; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android.support.constraint.ConstraintLayout&gt;</span><br></pre></td></tr></table></figure>
+
+<p>按照上边的布局 <code>TextView</code> 的宽是<code>wrap_content</code> 同时<code>layout_constraintLeft_toLeftOf</code>和<code>layout_constraintRight_toRightOf</code>的值都是<code>parent</code>，这样设置的结果好像是不可能完成的任务，那么这样设置会如何显示呢？答案就是<code>TextView</code> 会水平居中。</p>
+<h5 id="5、Chain"><a href="#5、Chain" class="headerlink" title="5、Chain"></a>5、Chain</h5><p>把多个View设置到一个链上，这时对一个View的操作会对这个链上的View产生影响，如何把多个View加到一个Chain上呢，举个栗子。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;android.support.constraint.ConstraintLayout</span><br><span class="line">    android:layout_width=&quot;match_parent&quot;</span><br><span class="line">    android:layout_height=&quot;wrap_content&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/chain_1&quot;</span><br><span class="line">        android:layout_width=&quot;60dp&quot;</span><br><span class="line">        android:layout_height=&quot;30dp&quot;</span><br><span class="line">        android:layout_marginLeft=&quot;100dp&quot;</span><br><span class="line">        android:background=&quot;@color/green&quot;</span><br><span class="line">        android:gravity=&quot;center&quot;</span><br><span class="line">        android:text=&quot;chain 1&quot;</span><br><span class="line">        android:textColor=&quot;@color/white&quot;</span><br><span class="line">        app:layout_constraintLeft_toLeftOf=&quot;parent&quot;</span><br><span class="line">        app:layout_constraintRight_toLeftOf=&quot;@+id/chain_2&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;TextView</span><br><span class="line">        android:id=&quot;@+id/chain_2&quot;</span><br><span class="line">        android:layout_width=&quot;60dp&quot;</span><br><span class="line">        android:layout_height=&quot;30dp&quot;</span><br><span class="line">        android:background=&quot;@color/green&quot;</span><br><span class="line">        android:gravity=&quot;center&quot;</span><br><span class="line">        android:text=&quot;chain 2&quot;</span><br><span class="line">        android:textColor=&quot;@color/white&quot;</span><br><span class="line">        app:layout_constraintLeft_toRightOf=&quot;@+id/chain_1&quot;</span><br><span class="line">        app:layout_constraintTop_toTopOf=&quot;parent&quot; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android.support.constraint.ConstraintLayout&gt;</span><br></pre></td></tr></table></figure>
+<p>第一个<code>TextView</code>的<code>app:layout_constraintRight_toLeftOf=&quot;@+id/chain_2&quot;</code>和第二个<code>TextView</code>的<code>app:layout_constraintLeft_toRightOf=&quot;@+id/chain_1&quot;</code>，这两个属性互相关联，这样这两个<code>TextView</code>就属于一个链，注意这可不是循环依赖。这样给第一个<code>TextView</code>设置<code>android:layout_marginLeft=&quot;100dp&quot;</code>，这个链上的整体都会产生marginLeft。</p>
+<h4 id="One-More-Thing"><a href="#One-More-Thing" class="headerlink" title="One More Thing"></a>One More Thing</h4><p>通过上面的几个例子，可以看到<code>ConstraintLayout</code>很强大，但是它能干的事情仅限于此吗？不！<br>它还提供<code>ConstraintSet</code>这个类，可以很方便的重新设置约束规则。<code>ConstraintSet</code>是布局中约束的集合。</p>
+<p>它有几个方法非常有用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clone //复制当前的布局 </span><br><span class="line">applyTo //应用新的布局</span><br></pre></td></tr></table></figure>
+<p>我们可以利用<code>ConstraintSet</code>动态的改变布局，甚至是利用约束的变化形成动画，举个简单的例子。布局文件比较简单，具体效果下面可以看到，然后用代码来动态设置约束。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">public class AnimationActivity extends AppCompatActivity &#123;</span><br><span class="line"></span><br><span class="line">    private ConstraintLayout constraintLayout;</span><br><span class="line">    //两个ConstraintSet对象，用于保存原始的和新的约束</span><br><span class="line">    private ConstraintSet newConstraintSet = new ConstraintSet();</span><br><span class="line">    private ConstraintSet originConstraintSet = new ConstraintSet();</span><br><span class="line"></span><br><span class="line">    Handler handler = new Handler(new Handler.Callback() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public boolean handleMessage(Message msg) &#123;</span><br><span class="line">        	</span><br><span class="line">				//通过动态设置约束形成动画效果</span><br><span class="line">            if (tag) &#123;</span><br><span class="line">                TransitionManager.beginDelayedTransition(constraintLayout);</span><br><span class="line">                newConstraintSet.setMargin(R.id.animation_left_eye, ConstraintSet.START, 20);</span><br><span class="line">                newConstraintSet.setMargin(R.id.animation_right_eye, ConstraintSet.END, 20);</span><br><span class="line">                newConstraintSet.applyTo(constraintLayout);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                TransitionManager.beginDelayedTransition(constraintLayout);</span><br><span class="line">                originConstraintSet.applyTo(constraintLayout);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            tag = !tag;</span><br><span class="line"></span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    private boolean tag = true;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(@Nullable Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_animation);</span><br><span class="line"></span><br><span class="line">        constraintLayout = findViewById(R.id.main);</span><br><span class="line">        </span><br><span class="line">        //先把原始的约束条件复制给两个Set</span><br><span class="line">        originConstraintSet.clone(constraintLayout);</span><br><span class="line">        newConstraintSet.clone(constraintLayout);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Timer timer = new Timer();</span><br><span class="line"></span><br><span class="line">        timer.schedule(new TimerTask() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line"></span><br><span class="line">                handler.sendEmptyMessage(0);</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, 0, 1000);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>效果就是下面的样子啦。</p>
+<blockquote>
+<p>注意：如果要用<code>ConstraintSet</code>必须给xml文件中的所有View都设置id，否则会有如下异常 java.lang.RuntimeException: All children of ConstraintLayout must have ids to use ConstraintSet</p>
+</blockquote>
+<iframe height=480 width=320 src="https://i.loli.net/2018/09/21/5ba48de43310e.gif">
+[代码地址](https://github.com/77Y/ConstraintLayout.git)
+
+<p><code>ConstraintLayout</code>支持库还在不断更新中，如果你有关于<code>ConstraintLayout</code>更好玩的点子，欢迎评论。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是ConstraintLayout"><span class="toc-number">1.</span> <span class="toc-text">什么是ConstraintLayout</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优势"><span class="toc-number">2.</span> <span class="toc-text">优势</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1、效率高"><span class="toc-number">2.1.</span> <span class="toc-text">1、效率高</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2、可视化编辑"><span class="toc-number">2.2.</span> <span class="toc-text">2、可视化编辑</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用"><span class="toc-number">3.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一些有趣的点"><span class="toc-number">4.</span> <span class="toc-text">一些有趣的点</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1、layout-constraintLeft-toLeftOf-和-layout-constraintStart-toStartOf有什么区别"><span class="toc-number">4.1.</span> <span class="toc-text">1、layout_constraintLeft_toLeftOf 和 layout_constraintStart_toStartOf有什么区别</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2、-约束中不能有循环依赖关系"><span class="toc-number">4.2.</span> <span class="toc-text">2、 约束中不能有循环依赖关系</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3、-layout-goneMarginLeft"><span class="toc-number">4.3.</span> <span class="toc-text">3、 layout_goneMarginLeft</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4、-不可能完成的任务"><span class="toc-number">4.4.</span> <span class="toc-text">4、 不可能完成的任务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5、Chain"><span class="toc-number">4.5.</span> <span class="toc-text">5、Chain</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#One-More-Thing"><span class="toc-number">5.</span> <span class="toc-text">One More Thing</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&text=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&title=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&is_video=false&description=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ConstraintLayout初探&body=Check out this article: http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&title=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&title=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&title=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&title=ConstraintLayout初探" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/09/21/ConstraintLayout%E5%88%9D%E6%8E%A2/&name=ConstraintLayout初探&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前言为什么要写装饰模式？这几天在工作中又遇到了RePlugin。在RePlugin中有插件和宿主的概念，插件和宿主分别有自己的Context。通过以下两个方法可以分别获得宿主和插件的Context。  RePlugin是一套完整的、稳定的、适合全面使用的，占坑类插件化方案，由360手机卫士的RePlugin Team研发，也是业内首个提出”全面插件化”（全面特性、全面兼容、全面使用）的方案。  1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式之装饰模式">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2018&#x2F;10&#x2F;12&#x2F;%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="前言为什么要写装饰模式？这几天在工作中又遇到了RePlugin。在RePlugin中有插件和宿主的概念，插件和宿主分别有自己的Context。通过以下两个方法可以分别获得宿主和插件的Context。  RePlugin是一套完整的、稳定的、适合全面使用的，占坑类插件化方案，由360手机卫士的RePlugin Team研发，也是业内首个提出”全面插件化”（全面特性、全面兼容、全面使用）的方案。  1">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;10&#x2F;12&#x2F;5bc077c8ec562.png">
+<meta property="og:updated_time" content="2019-10-22T13:32:13.711Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;10&#x2F;12&#x2F;5bc077c8ec562.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>设计模式之装饰模式</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/10/19/%E8%81%8A%E8%81%8AContext/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/10/08/%E5%8D%81%E4%B8%80%E5%A4%A7%E8%A5%BF%E5%8C%97%E4%BD%93%E9%AA%8C/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&text=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&title=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&is_video=false&description=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=设计模式之装饰模式&body=Check out this article: http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&title=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&title=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&title=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&title=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&name=设计模式之装饰模式&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是装饰模式"><span class="toc-number">2.</span> <span class="toc-text">什么是装饰模式</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#装饰模式的结构图"><span class="toc-number">2.0.1.</span> <span class="toc-text">装饰模式的结构图</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#装饰模式实现"><span class="toc-number">3.</span> <span class="toc-text">装饰模式实现</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-定义抽象组件-Component"><span class="toc-number">3.1.</span> <span class="toc-text">1. 定义抽象组件 Component</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-定义具体组件（被装饰者）-ConcreteComponent"><span class="toc-number">3.2.</span> <span class="toc-text">2. 定义具体组件（被装饰者） ConcreteComponent</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-定义抽象装饰类-Decorator"><span class="toc-number">3.3.</span> <span class="toc-text">3. 定义抽象装饰类 Decorator</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-定义具体装饰类，这里定义两个ConcreteDecoratorA和ConcreteDecoratorB"><span class="toc-number">3.4.</span> <span class="toc-text">4. 定义具体装饰类，这里定义两个ConcreteDecoratorA和ConcreteDecoratorB</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        设计模式之装饰模式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-10-12T11:15:00.000Z" itemprop="datePublished">2018-10-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>为什么要写装饰模式？这几天在工作中又遇到了<a href="https://github.com/Qihoo360/RePlugin" target="_blank" rel="noopener">RePlugin</a>。在RePlugin中有插件和宿主的概念，插件和宿主分别有自己的Context。通过以下两个方法可以分别获得宿主和插件的Context。</p>
+<blockquote>
+<p>RePlugin是一套完整的、稳定的、适合全面使用的，占坑类插件化方案，由360手机卫士的RePlugin Team研发，也是业内首个提出”全面插件化”（全面特性、全面兼容、全面使用）的方案。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RePlugin.getHostContext();</span><br><span class="line">RePlugin.getPluginContext();</span><br></pre></td></tr></table></figure>
+<p>于是笔者读了以上两个方法的源码，进而读了一下<code>Context</code>类的部分源码和继承关系。看到有关<code>Context</code>类中使用了装饰模式。故而打算写一篇介绍装饰模式的文章，下一篇文章会再介绍<code>Context</code>的继承结构，以及在RePlugin中两个<code>Context</code>是如何得到的。</p>
+<h4 id="什么是装饰模式"><a href="#什么是装饰模式" class="headerlink" title="什么是装饰模式"></a>什么是装饰模式</h4><p>装饰模式(Decorator Pattern)又叫包装模式，它是结构型模式的一种。装饰模式可以动态的给对象添加一些额外的职责，它比继承更加灵活。如何理解这种灵活性？笔者认为通过继承的方式添加一些功能，必然要改动子类。但是使用装饰模式，可以通过新增一个装饰类而不必修改之前的代码。</p>
+<h6 id="装饰模式的结构图"><a href="#装饰模式的结构图" class="headerlink" title="装饰模式的结构图"></a>装饰模式的结构图</h6><p><img src="https://i.loli.net/2018/10/12/5bc077c8ec562.png" alt="1.png"></p>
+<p>装饰模式包含如下角色：</p>
+<ul>
+<li>Component: 抽象组件。定义一个抽象类或接口。</li>
+<li>ConcreteComponent: 具体组件。即被装饰者，给这个类的对象添加一些职责。</li>
+<li>Decorator: 抽象装饰类。</li>
+<li>ConcreteDecorator: 具体装饰类。给组件添加职责。</li>
+</ul>
+<h4 id="装饰模式实现"><a href="#装饰模式实现" class="headerlink" title="装饰模式实现"></a>装饰模式实现</h4><p>下面按照装饰模式的结构图来实现一下装饰模式</p>
+<h5 id="1-定义抽象组件-Component"><a href="#1-定义抽象组件-Component" class="headerlink" title="1. 定义抽象组件 Component"></a>1. 定义抽象组件 Component</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public abstract class Component &#123;</span><br><span class="line">    public abstract void operation();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="2-定义具体组件（被装饰者）-ConcreteComponent"><a href="#2-定义具体组件（被装饰者）-ConcreteComponent" class="headerlink" title="2. 定义具体组件（被装饰者） ConcreteComponent"></a>2. 定义具体组件（被装饰者） ConcreteComponent</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class ConcreteComponent extends Component &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void operation() &#123;</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;被装饰对象&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-定义抽象装饰类-Decorator"><a href="#3-定义抽象装饰类-Decorator" class="headerlink" title="3. 定义抽象装饰类 Decorator"></a>3. 定义抽象装饰类 Decorator</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public abstract class Decorator extends Component &#123;</span><br><span class="line"></span><br><span class="line">    protected Component component;</span><br><span class="line"></span><br><span class="line">    public Decorator(Component component) &#123;</span><br><span class="line">        this.component = component;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void operation() &#123;</span><br><span class="line">        if (component != null) &#123;</span><br><span class="line">            component.operation();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="4-定义具体装饰类，这里定义两个ConcreteDecoratorA和ConcreteDecoratorB"><a href="#4-定义具体装饰类，这里定义两个ConcreteDecoratorA和ConcreteDecoratorB" class="headerlink" title="4. 定义具体装饰类，这里定义两个ConcreteDecoratorA和ConcreteDecoratorB"></a>4. 定义具体装饰类，这里定义两个ConcreteDecoratorA和ConcreteDecoratorB</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class ConcreteDecoratorA extends Decorator &#123;</span><br><span class="line"></span><br><span class="line">    public ConcreteDecoratorA(Component component) &#123;</span><br><span class="line">        super(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void operation() &#123;</span><br><span class="line">        super.operation();</span><br><span class="line"></span><br><span class="line">        addDecoratorA(&quot;A&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void addDecoratorA(String decorator) &#123;</span><br><span class="line">        System.out.println(&quot;给对象装饰&quot; + decorator);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class ConcreteDecoratorB extends Decorator &#123;</span><br><span class="line"></span><br><span class="line">    public ConcreteDecoratorB(Component component) &#123;</span><br><span class="line">        super(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void operation() &#123;</span><br><span class="line">        super.operation();</span><br><span class="line"></span><br><span class="line">        addDecoratorB(&quot;B&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void addDecoratorB(String decorator) &#123;</span><br><span class="line">        System.out.println(&quot;给对象装饰&quot; + decorator);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样装饰模式的实现就完成了，接下来调用一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        ConcreteComponent component = new ConcreteComponent();</span><br><span class="line"></span><br><span class="line">        ConcreteDecoratorA decoratorA = new ConcreteDecoratorA(component);</span><br><span class="line"></span><br><span class="line">        ConcreteDecoratorB decoratorB = new ConcreteDecoratorB(component);</span><br><span class="line"></span><br><span class="line">        decoratorA.operation();</span><br><span class="line"></span><br><span class="line">        decoratorB.operation();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>打印输出结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">I/System.out: 被装饰对象</span><br><span class="line">I/System.out: 给对象装饰A</span><br><span class="line">I/System.out: 被装饰对象</span><br><span class="line">I/System.out: 给对象装饰B</span><br></pre></td></tr></table></figure>
+<p>可以看到<code>ConcreteComponent</code>此时已经具有了A和B的功能，同时<code>ConcreteComponent</code> 并不知道<code>ConcreteDecoratorA</code> 和 <code>ConcreteDecoratorB</code> 的存在。当我们要给<code>ConcreteComponent</code>增加其他功能，可以在不改变原有代码的前提下，动态的扩展<code>ConcreteComponent</code>的功能，只需要给<code>ConcreteComponent</code>增加新的装饰类即可。当然装饰模式也有一个小小的缺点，就是它会增加代码的复杂性。可根据实际情况选择是否使用装饰模式。</p>
+<p><a href="https://github.com/77Y/Decorator" target="_blank" rel="noopener">demo地址:https://github.com/77Y/Decorator</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是装饰模式"><span class="toc-number">2.</span> <span class="toc-text">什么是装饰模式</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#装饰模式的结构图"><span class="toc-number">2.0.1.</span> <span class="toc-text">装饰模式的结构图</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#装饰模式实现"><span class="toc-number">3.</span> <span class="toc-text">装饰模式实现</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-定义抽象组件-Component"><span class="toc-number">3.1.</span> <span class="toc-text">1. 定义抽象组件 Component</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-定义具体组件（被装饰者）-ConcreteComponent"><span class="toc-number">3.2.</span> <span class="toc-text">2. 定义具体组件（被装饰者） ConcreteComponent</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-定义抽象装饰类-Decorator"><span class="toc-number">3.3.</span> <span class="toc-text">3. 定义抽象装饰类 Decorator</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-定义具体装饰类，这里定义两个ConcreteDecoratorA和ConcreteDecoratorB"><span class="toc-number">3.4.</span> <span class="toc-text">4. 定义具体装饰类，这里定义两个ConcreteDecoratorA和ConcreteDecoratorB</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&text=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&title=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&is_video=false&description=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=设计模式之装饰模式&body=Check out this article: http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&title=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&title=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&title=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&title=设计模式之装饰模式" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/&name=设计模式之装饰模式&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

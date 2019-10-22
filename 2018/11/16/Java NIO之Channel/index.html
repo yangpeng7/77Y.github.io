@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="今天来谈一谈NIO中的Channel，上一篇文章介绍了Buffer，有了Buffer还需要有一个通道来处理Buffer。它就是今天我们要学习的Channel。按照字面理解，它就是一个通道，可以从通道中读数据，也可以把数据写入到通道中。 Channel可以分为几大类  FileChannel（文件操作） SocketChannel（客户端TCP操作） ServerSocketChannel（服务端T">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java NIO之Channel">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2018&#x2F;11&#x2F;16&#x2F;Java%20NIO%E4%B9%8BChannel&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="今天来谈一谈NIO中的Channel，上一篇文章介绍了Buffer，有了Buffer还需要有一个通道来处理Buffer。它就是今天我们要学习的Channel。按照字面理解，它就是一个通道，可以从通道中读数据，也可以把数据写入到通道中。 Channel可以分为几大类  FileChannel（文件操作） SocketChannel（客户端TCP操作） ServerSocketChannel（服务端T">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-22T13:41:19.288Z">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Java NIO之Channel</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/12/14/Java%20NIO%E4%B9%8BSelector/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/11/15/Mac%E4%B8%8BCharles%E6%8A%93%E5%8C%85%E9%85%8D%E7%BD%AE/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&text=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&title=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&is_video=false&description=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java NIO之Channel&body=Check out this article: http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&title=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&title=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&title=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&title=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&name=Java NIO之Channel&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#FileChannel"><span class="toc-number">1.</span> <span class="toc-text">FileChannel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#read"><span class="toc-number">2.</span> <span class="toc-text">read</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#write"><span class="toc-number">3.</span> <span class="toc-text">write</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#close"><span class="toc-number">4.</span> <span class="toc-text">close</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SocketChannel-amp-ServerSocketChannel"><span class="toc-number"></span> <span class="toc-text">SocketChannel&amp;ServerSocketChannel</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#建立连接"><span class="toc-number">1.</span> <span class="toc-text">建立连接</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端"><span class="toc-number">1.1.</span> <span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务端"><span class="toc-number">1.2.</span> <span class="toc-text">服务端</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发送接收数据"><span class="toc-number">2.</span> <span class="toc-text">发送接收数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端-1"><span class="toc-number">2.1.</span> <span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务端-1"><span class="toc-number">2.2.</span> <span class="toc-text">服务端</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DatagramChannel"><span class="toc-number"></span> <span class="toc-text">DatagramChannel</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bind端口"><span class="toc-number">1.</span> <span class="toc-text">Bind端口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端-2"><span class="toc-number">1.1.</span> <span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务端-2"><span class="toc-number">1.2.</span> <span class="toc-text">服务端</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发送接收数据-1"><span class="toc-number">2.</span> <span class="toc-text">发送接收数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端-3"><span class="toc-number">2.1.</span> <span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务端-3"><span class="toc-number">2.2.</span> <span class="toc-text">服务端</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Java NIO之Channel
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-11-16T11:55:00.000Z" itemprop="datePublished">2018-11-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>今天来谈一谈NIO中的Channel，上一篇文章介绍了Buffer，有了Buffer还需要有一个通道来处理Buffer。它就是今天我们要学习的Channel。按照字面理解，它就是一个通道，可以从通道中读数据，也可以把数据写入到通道中。</p>
+<p>Channel可以分为几大类</p>
+<ul>
+<li>FileChannel（文件操作）</li>
+<li>SocketChannel（客户端TCP操作）</li>
+<li>ServerSocketChannel（服务端TCP操作）</li>
+<li>DatagramChannel（UDP操作）</li>
+</ul>
+<h3 id="FileChannel"><a href="#FileChannel" class="headerlink" title="FileChannel"></a>FileChannel</h3><p>FileChannel比较简单，主要用于文件操作。在使用FileChannel之前，需要先打开它。FileChannel是不能设置非阻塞的，我们可以通过<code>RandomAccessFile</code>来获取一个FileChannel的对象<code>RandomAccessFile</code>的<code>getChannel()</code>方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public final FileChannel getChannel() &#123;</span><br><span class="line">    synchronized (this) &#123;</span><br><span class="line">        if (channel == null) &#123;</span><br><span class="line">            channel = FileChannelImpl.open(fd, path, true, rw, this);</span><br><span class="line">        &#125;</span><br><span class="line">        return channel;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有了FileChannel就可以对文件进行读写了，我们分别看一下读写的代码。</p>
+<h3 id="read"><a href="#read" class="headerlink" title="read"></a>read</h3><p>首先把文件中的数据从channel中读出来，然后写入到我们分配的buffer里，然后再把buffer中的数据打印出来，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ByteBuffer buffer = ByteBuffer.allocate(100);</span><br><span class="line">// fileChannel中读出来，写到buffer中</span><br><span class="line">int read = fileChannel.read(buffer);</span><br><span class="line">buffer.flip();</span><br><span class="line">while (buffer.hasRemaining()) &#123;</span><br><span class="line">	System.out.print((char) buffer.get());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="write"><a href="#write" class="headerlink" title="write"></a>write</h3><p>首先把要写入的内容放入buffer里，然后通过channel把buffer中的数据写入到文件中，当我们再查看文件的时候，就有写入之后的内容了，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">String str = &quot; is best&quot;;</span><br><span class="line">buffer.clear();</span><br><span class="line">buffer.put(str.getBytes());</span><br><span class="line">buffer.flip();</span><br><span class="line">// 从buffer中读出来，通过channel写入到文件中</span><br><span class="line">while (buffer.hasRemaining()) &#123;</span><br><span class="line">	fileChannel.write(buffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="close"><a href="#close" class="headerlink" title="close"></a>close</h3><p>使用完channel后关闭channel。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fileChannel.close();</span><br></pre></td></tr></table></figure>
+
+<h2 id="SocketChannel-amp-ServerSocketChannel"><a href="#SocketChannel-amp-ServerSocketChannel" class="headerlink" title="SocketChannel&amp;ServerSocketChannel"></a>SocketChannel&amp;ServerSocketChannel</h2><p>SocketChannel和ServerSocketChannel主要用于TCP连接。SocketChannel用于客户端，ServerSocketChannel用于服务端，客户端和服务端通信之前首先要建立连接。</p>
+<h3 id="建立连接"><a href="#建立连接" class="headerlink" title="建立连接"></a>建立连接</h3><h4 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h4><p>客户端建立连接的过程，首先打开SocketChannel，然后连接到服务端，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SocketChannel socketChannel = SocketChannel.open();</span><br><span class="line">socketChannel.connect(new InetSocketAddress(&quot;127.0.0.1&quot;, 8000));</span><br></pre></td></tr></table></figure>
+<h4 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h4><p>服务端首先打开ServerSocketChannel，然后绑定一个端口，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();</span><br><span class="line">serverSocketChannel.socket().bind(new InetSocketAddress(8000));</span><br></pre></td></tr></table></figure>
+
+<h3 id="发送接收数据"><a href="#发送接收数据" class="headerlink" title="发送接收数据"></a>发送接收数据</h3><h4 id="客户端-1"><a href="#客户端-1" class="headerlink" title="客户端"></a>客户端</h4><p>连接建立成功之后，客户端就可以给服务端发送数据了，和FileChannel一样，首先要把数据放到buffer中，然后再写到channel里。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//连接是否建立成功</span><br><span class="line">boolean isConnect = socketChannel.isConnected();</span><br><span class="line"></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocate(128);</span><br><span class="line">buffer.clear();</span><br><span class="line">buffer.put((&quot;qiwoo&quot;).getBytes());</span><br><span class="line"></span><br><span class="line">buffer.flip();</span><br><span class="line">while (buffer.hasRemaining()) &#123;</span><br><span class="line">	socketChannel.write(buffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="服务端-1"><a href="#服务端-1" class="headerlink" title="服务端"></a>服务端</h4><p>服务端ServerSocketChannel收到连接请求时，返回一个SocketChannel对象。然后就可以把数据从channel中读出来，然后写入到buffer里。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">SocketChannel socketChannel = serverSocketChannel.accept();</span><br><span class="line"></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocate(128);</span><br><span class="line">socketChannel.read(buffer);</span><br><span class="line"></span><br><span class="line">buffer.flip();</span><br><span class="line"></span><br><span class="line">while (buffer.hasRemaining()) &#123;</span><br><span class="line">	System.out.println((char) buffer.get());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="DatagramChannel"><a href="#DatagramChannel" class="headerlink" title="DatagramChannel"></a>DatagramChannel</h2><p>DatagramChannel，使用UDP协议来进行传输。由于不需要建立连接，其实没有客户端服务端的概念，为了便于理解，我们定义其中一端为客户端，一端为服务端。</p>
+<h3 id="Bind端口"><a href="#Bind端口" class="headerlink" title="Bind端口"></a>Bind端口</h3><h4 id="客户端-2"><a href="#客户端-2" class="headerlink" title="客户端"></a>客户端</h4><p>打开DatagramChannel，然后绑定一个端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DatagramChannel datagramChannel = DatagramChannel.open();</span><br><span class="line">datagramChannel.socket().bind(new InetSocketAddress(8888));</span><br></pre></td></tr></table></figure>
+<h4 id="服务端-2"><a href="#服务端-2" class="headerlink" title="服务端"></a>服务端</h4><p>打开DatagramChannel，然后绑定一个端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DatagramChannel datagramChannel = DatagramChannel.open();</span><br><span class="line">datagramChannel.socket().bind(new InetSocketAddress(8889));</span><br></pre></td></tr></table></figure>
+
+<h3 id="发送接收数据-1"><a href="#发送接收数据-1" class="headerlink" title="发送接收数据"></a>发送接收数据</h3><p>发送和接收数据也比较简单，代码如下：</p>
+<h4 id="客户端-3"><a href="#客户端-3" class="headerlink" title="客户端"></a>客户端</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ByteBuffer buffer = ByteBuffer.allocate(100);</span><br><span class="line"></span><br><span class="line">buffer.put(&quot;qiwoo&quot;.getBytes());</span><br><span class="line">buffer.flip();</span><br><span class="line"></span><br><span class="line">InetAddress address = InetAddress.getLocalHost();</span><br><span class="line">datagramChannel.send(buffer, new InetSocketAddress(address, 8889));</span><br></pre></td></tr></table></figure>
+
+<h4 id="服务端-3"><a href="#服务端-3" class="headerlink" title="服务端"></a>服务端</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ByteBuffer buffer = ByteBuffer.allocate(100);</span><br><span class="line">buffer.clear();</span><br><span class="line">datagramChannel.receive(buffer);</span><br><span class="line">buffer.flip();</span><br><span class="line">while (buffer.hasRemaining()) &#123;</span><br><span class="line">	System.out.print((char) buffer.get());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/77Y/NIOSample" target="_blank" rel="noopener">本文demo</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#FileChannel"><span class="toc-number">1.</span> <span class="toc-text">FileChannel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#read"><span class="toc-number">2.</span> <span class="toc-text">read</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#write"><span class="toc-number">3.</span> <span class="toc-text">write</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#close"><span class="toc-number">4.</span> <span class="toc-text">close</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SocketChannel-amp-ServerSocketChannel"><span class="toc-number"></span> <span class="toc-text">SocketChannel&amp;ServerSocketChannel</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#建立连接"><span class="toc-number">1.</span> <span class="toc-text">建立连接</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端"><span class="toc-number">1.1.</span> <span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务端"><span class="toc-number">1.2.</span> <span class="toc-text">服务端</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发送接收数据"><span class="toc-number">2.</span> <span class="toc-text">发送接收数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端-1"><span class="toc-number">2.1.</span> <span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务端-1"><span class="toc-number">2.2.</span> <span class="toc-text">服务端</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DatagramChannel"><span class="toc-number"></span> <span class="toc-text">DatagramChannel</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bind端口"><span class="toc-number">1.</span> <span class="toc-text">Bind端口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端-2"><span class="toc-number">1.1.</span> <span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务端-2"><span class="toc-number">1.2.</span> <span class="toc-text">服务端</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发送接收数据-1"><span class="toc-number">2.</span> <span class="toc-text">发送接收数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端-3"><span class="toc-number">2.1.</span> <span class="toc-text">客户端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务端-3"><span class="toc-number">2.2.</span> <span class="toc-text">服务端</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&text=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&title=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&is_video=false&description=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java NIO之Channel&body=Check out this article: http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&title=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&title=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&title=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&title=Java NIO之Channel" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/11/16/Java%20NIO%E4%B9%8BChannel/&name=Java NIO之Channel&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前面的文章分享了Buffer和Channel，以及关于Buffer和Channel的基本操作。这篇文章继续分享关于Channel的Buffer的操作Scatter和Gather，这篇内容比较简单。 什么是Scatter和GatherScatter和Gather的字面意思就可以分好的解释他们各自的用途。其中Scatter的意思是分散，Gather的意思是聚集，我们再来看一下他们是如何分散和聚集的，如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java NIO之Scatter-Gather">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;01&#x2F;03&#x2F;Java%20NIO%E4%B9%8BScatter-Gather&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="前面的文章分享了Buffer和Channel，以及关于Buffer和Channel的基本操作。这篇文章继续分享关于Channel的Buffer的操作Scatter和Gather，这篇内容比较简单。 什么是Scatter和GatherScatter和Gather的字面意思就可以分好的解释他们各自的用途。其中Scatter的意思是分散，Gather的意思是聚集，我们再来看一下他们是如何分散和聚集的，如">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;p0.qhimg.com&#x2F;t01895a48daee5ddf26.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;p0.qhimg.com&#x2F;t0153b1b83296c390d7.png">
+<meta property="og:updated_time" content="2019-10-22T13:42:58.222Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;p0.qhimg.com&#x2F;t01895a48daee5ddf26.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Java NIO之Scatter-Gather</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/01/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/12/29/%E6%8B%BE%E5%85%892018/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&text=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&title=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&is_video=false&description=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java NIO之Scatter-Gather&body=Check out this article: http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&title=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&title=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&title=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&title=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&name=Java NIO之Scatter-Gather&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是Scatter和Gather"><span class="toc-number">1.</span> <span class="toc-text">什么是Scatter和Gather</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用"><span class="toc-number">2.</span> <span class="toc-text">如何使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Gather"><span class="toc-number">2.1.</span> <span class="toc-text">Gather</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Scatter"><span class="toc-number">2.2.</span> <span class="toc-text">Scatter</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用场景"><span class="toc-number">3.</span> <span class="toc-text">使用场景</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Java NIO之Scatter-Gather
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-01-03T07:53:11.000Z" itemprop="datePublished">2019-01-03</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>前面的文章分享了Buffer和Channel，以及关于Buffer和Channel的基本操作。这篇文章继续分享关于Channel的Buffer的操作Scatter和Gather，这篇内容比较简单。</p>
+<h2 id="什么是Scatter和Gather"><a href="#什么是Scatter和Gather" class="headerlink" title="什么是Scatter和Gather"></a>什么是Scatter和Gather</h2><p>Scatter和Gather的字面意思就可以分好的解释他们各自的用途。其中Scatter的意思是分散，Gather的意思是聚集，我们再来看一下他们是如何分散和聚集的，如下图所示</p>
+<p><img src="http://p0.qhimg.com/t01895a48daee5ddf26.png" alt="http://p0.qhimg.com/t01895a48daee5ddf26.png"></p>
+<p>当一个Channel中的数据被多个Buffer来处理，就是分散也就是Scatter。</p>
+<p><img src="http://p0.qhimg.com/t0153b1b83296c390d7.png" alt="http://p0.qhimg.com/t0153b1b83296c390d7.png"></p>
+<p>当多个Buffer同时向一个Channel中写数据时，就是聚集也就是Gather。</p>
+<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><p>我们用FileChannel来解释如何使用Scatter和Gather。</p>
+<h3 id="Gather"><a href="#Gather" class="headerlink" title="Gather"></a>Gather</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">RandomAccessFile randomAccessFile = new RandomAccessFile(</span><br><span class="line">		&quot;/Users/yangpeng/Documents/360/code/QiwooSample/NIOSample/src/com/nio/sample/file.txt&quot;, &quot;rw&quot;);</span><br><span class="line">randomAccessFile.seek(0);</span><br><span class="line"></span><br><span class="line">FileChannel fileChannel = randomAccessFile.getChannel();</span><br><span class="line">System.out.println(&quot;FileChannel position &quot; + fileChannel.position());</span><br><span class="line"></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocate(100);</span><br><span class="line">String str = &quot;hello&quot;;</span><br><span class="line">buffer.clear();</span><br><span class="line">buffer.put(str.getBytes());</span><br><span class="line">buffer.flip();</span><br><span class="line"></span><br><span class="line">ByteBuffer buffer2 = ByteBuffer.allocate(100);</span><br><span class="line">String str2 = &quot; world&quot;;</span><br><span class="line">buffer2.clear();</span><br><span class="line">buffer2.put(str2.getBytes());</span><br><span class="line">buffer2.flip();</span><br><span class="line"></span><br><span class="line">ByteBuffer[] bufferArray = &#123; buffer, buffer2 &#125;;</span><br><span class="line">fileChannel.write(bufferArray);</span><br><span class="line"></span><br><span class="line">randomAccessFile.close();</span><br><span class="line">fileChannel.close();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过RandomAccessFile获得一个FileChannel</li>
+<li>分别初始化两个ByteBuffer，里面分别放入”hello”和”world”两个字符串。</li>
+<li>初始化一个ByteBuffer数组，内容为第二步的两个Buffer</li>
+<li>把ByteBuffer数组里的内容写入到FileChannel</li>
+<li>关闭RandomAccessFile和FileChannel</li>
+</ul>
+<p>执行完以上几步之后，我们打开文件查看就是文本里的内容就是”hello world”</p>
+<blockquote>
+<p>注意：写入的是缓冲区position和limit之间的数据。如果一个缓冲区容量为10字节，但是仅有5字节的数据，那么写入到通道中的数据就是5个字节。</p>
+</blockquote>
+<h3 id="Scatter"><a href="#Scatter" class="headerlink" title="Scatter"></a>Scatter</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">RandomAccessFile randomAccessFile = new RandomAccessFile(</span><br><span class="line">		&quot;/Users/yangpeng/Documents/360/code/QiwooSample/NIOSample/src/com/nio/sample/file.txt&quot;, &quot;rw&quot;);</span><br><span class="line">randomAccessFile.seek(0);</span><br><span class="line"></span><br><span class="line">FileChannel fileChannel = randomAccessFile.getChannel();</span><br><span class="line"></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocate(5);</span><br><span class="line"></span><br><span class="line">ByteBuffer buffer2 = ByteBuffer.allocate(100);</span><br><span class="line"></span><br><span class="line">ByteBuffer[] bufferArray = &#123;buffer, buffer2&#125;;</span><br><span class="line"></span><br><span class="line">fileChannel.read(bufferArray);</span><br><span class="line"></span><br><span class="line">buffer.flip();</span><br><span class="line">while (buffer.hasRemaining()) &#123;</span><br><span class="line">	System.out.print((char) buffer.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">System.out.println(&quot;&quot;);</span><br><span class="line"></span><br><span class="line">buffer2.flip();</span><br><span class="line">while (buffer2.hasRemaining()) &#123;</span><br><span class="line">	System.out.print((char) buffer2.get());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">randomAccessFile.close();</span><br><span class="line">fileChannel.close();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过RandomAccessFile获得一个FileChannel</li>
+<li>分别初始化两个ByteBuffer，准备把数据读到这两个buffer里</li>
+<li>初始化一个ByteBuffer数组，内容为第二步的两个Buffer</li>
+<li>从FileChannel中读出数据然后写入到ByteBuffer中</li>
+<li>关闭RandomAccessFile和FileChannel</li>
+</ul>
+<p>执行完以上几步之后，输出的内容就是”hello world”</p>
+<blockquote>
+<p>注意：read()方法根据缓冲区数组中的顺序将channel数据写入。一个缓冲区写满后，再往下一个缓冲区写。</p>
+</blockquote>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>适用于写入或者读出的数据是固定大小的几部分。</p>
+<p><a href="https://github.com/77Y/NIOSample" target="_blank" rel="noopener">本文demo</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是Scatter和Gather"><span class="toc-number">1.</span> <span class="toc-text">什么是Scatter和Gather</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用"><span class="toc-number">2.</span> <span class="toc-text">如何使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Gather"><span class="toc-number">2.1.</span> <span class="toc-text">Gather</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Scatter"><span class="toc-number">2.2.</span> <span class="toc-text">Scatter</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用场景"><span class="toc-number">3.</span> <span class="toc-text">使用场景</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&text=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&title=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&is_video=false&description=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java NIO之Scatter-Gather&body=Check out this article: http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&title=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&title=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&title=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&title=Java NIO之Scatter-Gather" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/01/03/Java%20NIO%E4%B9%8BScatter-Gather/&name=Java NIO之Scatter-Gather&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

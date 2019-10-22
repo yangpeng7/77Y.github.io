@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="在开发Android应用时，我们需要用到Google提供的SDK。当我们的开发的某一个模块足够通用也可以封装成SDK给其他业务方使用。什么是一个良好的SDK类产品？站在开发者和接入方的角度我认为应该满足以下几点： 对于开发者 良好的可维护性 设计合理、可扩展性强 代码逻辑清晰合理 监控及数据打点完备  对于接入方 集成简单，最好一行代码搞定 接入文档，接入实例详细 崩溃率低、内存占用小、SDK尽量">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android SDK类产品开发总结">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;01&#x2F;10&#x2F;Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="在开发Android应用时，我们需要用到Google提供的SDK。当我们的开发的某一个模块足够通用也可以封装成SDK给其他业务方使用。什么是一个良好的SDK类产品？站在开发者和接入方的角度我认为应该满足以下几点： 对于开发者 良好的可维护性 设计合理、可扩展性强 代码逻辑清晰合理 监控及数据打点完备  对于接入方 集成简单，最好一行代码搞定 接入文档，接入实例详细 崩溃率低、内存占用小、SDK尽量">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-22T13:44:34.578Z">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Android SDK类产品开发总结</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2019/01/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&text=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&title=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&is_video=false&description=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Android SDK类产品开发总结&body=Check out this article: http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&title=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&title=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&title=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&title=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&name=Android SDK类产品开发总结&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#对于开发者"><span class="toc-number">1.</span> <span class="toc-text">对于开发者</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对于接入方"><span class="toc-number">2.</span> <span class="toc-text">对于接入方</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注意点"><span class="toc-number">3.</span> <span class="toc-text">注意点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、熟悉你的代码"><span class="toc-number">3.1.</span> <span class="toc-text">1、熟悉你的代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、合理的接口设计"><span class="toc-number">3.2.</span> <span class="toc-text">2、合理的接口设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、内存分配与回收"><span class="toc-number">3.3.</span> <span class="toc-text">3、内存分配与回收</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、慎重选择第三方库"><span class="toc-number">3.4.</span> <span class="toc-text">4、慎重选择第三方库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5、ContentProvider-authorities-冲突导致应用无法安装"><span class="toc-number">3.5.</span> <span class="toc-text">5、ContentProvider authorities 冲突导致应用无法安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6、异常处理和日志"><span class="toc-number">3.6.</span> <span class="toc-text">6、异常处理和日志</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7、多进程操作SharedPreferences"><span class="toc-number">3.7.</span> <span class="toc-text">7、多进程操作SharedPreferences</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8、安全问题"><span class="toc-number">3.8.</span> <span class="toc-text">8、安全问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9、打包管理"><span class="toc-number">3.9.</span> <span class="toc-text">9、打包管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10、aar资源名称"><span class="toc-number">3.10.</span> <span class="toc-text">10、aar资源名称</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11、混淆"><span class="toc-number">3.11.</span> <span class="toc-text">11、混淆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12、内存泄漏"><span class="toc-number">3.12.</span> <span class="toc-text">12、内存泄漏</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13、打点统计"><span class="toc-number">3.13.</span> <span class="toc-text">13、打点统计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#14、特定机型适配"><span class="toc-number">3.14.</span> <span class="toc-text">14、特定机型适配</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Android SDK类产品开发总结
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-01-10T13:08:00.000Z" itemprop="datePublished">2019-01-10</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>在开发Android应用时，我们需要用到Google提供的SDK。当我们的开发的某一个模块足够通用也可以封装成SDK给其他业务方使用。什么是一个良好的SDK类产品？站在开发者和接入方的角度我认为应该满足以下几点：</p>
+<h3 id="对于开发者"><a href="#对于开发者" class="headerlink" title="对于开发者"></a>对于开发者</h3><ul>
+<li>良好的可维护性</li>
+<li>设计合理、可扩展性强</li>
+<li>代码逻辑清晰合理</li>
+<li>监控及数据打点完备</li>
+</ul>
+<h3 id="对于接入方"><a href="#对于接入方" class="headerlink" title="对于接入方"></a>对于接入方</h3><ul>
+<li>集成简单，最好一行代码搞定</li>
+<li>接入文档，接入实例详细</li>
+<li>崩溃率低、内存占用小、SDK尽量小</li>
+<li>出现问题及时响应解决</li>
+</ul>
+<p>以上总结起来就是对开发者友好、对接入方友好。当别人接手代码没有砸键盘的冲动甚至想和你干一杯82年的雪碧。当业务方接入你的SDK时感到神清气爽。下面总结一下本人在开发过程中总结的一些点，抛砖引玉，共同探讨。</p>
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><h4 id="1、熟悉你的代码"><a href="#1、熟悉你的代码" class="headerlink" title="1、熟悉你的代码"></a>1、熟悉你的代码</h4><p>这个放在第一条，是每个人要对自己的代码逻辑负责。</p>
+<h4 id="2、合理的接口设计"><a href="#2、合理的接口设计" class="headerlink" title="2、合理的接口设计"></a>2、合理的接口设计</h4><p>接口设计尽量简单，尤其是对业务方来说，没有那么多时间研究你的方法。接入越简单对业务方成本越低。</p>
+<h4 id="3、内存分配与回收"><a href="#3、内存分配与回收" class="headerlink" title="3、内存分配与回收"></a>3、内存分配与回收</h4><p>申请合适的内存，如果数组只放10个数据，就没必要申请20个空间大小。不用的资源及时回收。对于有多个进程的应用，要考虑是否有必要在每个进程都初始化SDK。</p>
+<h4 id="4、慎重选择第三方库"><a href="#4、慎重选择第三方库" class="headerlink" title="4、慎重选择第三方库"></a>4、慎重选择第三方库</h4><p>本身我们要做的就是一个SDK类的产品，尽量不使用第三方库。因为它会增大我们SDK包的大小。如果必须要使用，要选择稳定的第三方库，同时需要注意第三方库冲突的问题。你的接入方可能也依赖了这个第三方库，甚至和你的版本不一样。这时有两种选择，在你的SDK中以<code>provided</code>的方式依赖。二是修改第三方库的包名以解决冲突（这样会增大最终应用的大小）。关于修改包名可以使用jarjar.jar。可参考<a href="https://democome.com/article/jar-package-rename" target="_blank" rel="noopener">这篇文章</a></p>
+<h4 id="5、ContentProvider-authorities-冲突导致应用无法安装"><a href="#5、ContentProvider-authorities-冲突导致应用无法安装" class="headerlink" title="5、ContentProvider authorities 冲突导致应用无法安装"></a>5、ContentProvider authorities 冲突导致应用无法安装</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;provider</span><br><span class="line">    android:name=&quot;com.democome.SPContentProvider&quot;</span><br><span class="line">    android:authorities=&quot;com.democome.sdk.sp&quot;</span><br><span class="line">    android:exported=&quot;false&quot;</span><br><span class="line">    android:process=&quot;:push&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<p>像上面这样，如果多个应用接入了我们的SDK，那么第二个安装就会出问题“应用组件的命名与已安装应用有冲突”，导致第二个应用无法安装，正确的做法是<code>authorities</code>和包名相关，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;provider</span><br><span class="line">    android:name=&quot;com.democome.SPContentProvider&quot;</span><br><span class="line">    android:authorities=&quot;$&#123;applicationId&#125;.sdk.sp&quot;</span><br><span class="line">    android:exported=&quot;false&quot;</span><br><span class="line">    android:process=&quot;:push&quot; /&gt;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="6、异常处理和日志"><a href="#6、异常处理和日志" class="headerlink" title="6、异常处理和日志"></a>6、异常处理和日志</h4><p>什么样的异常自己处理，什么样的异常抛给业务方。我认为如果是业务方接入问题导致的异常，可以给业务方抛出异常。某些流程的关键环节打印出日志，当然这个日志是个可以开关的。</p>
+<h4 id="7、多进程操作SharedPreferences"><a href="#7、多进程操作SharedPreferences" class="headerlink" title="7、多进程操作SharedPreferences"></a>7、多进程操作SharedPreferences</h4><p>多进程操作SharedPreferences是有问题的，尽管SharedPreferences有一个<code>MODE_MULTI_PROCESS</code>模式，但这个模式也是不靠谱的，在一个进程中修改SharedPreferences中的值，另一个进程不会同步更新。解决办法是可以通过ContentProvider进行进程的同步操作。</p>
+<h4 id="8、安全问题"><a href="#8、安全问题" class="headerlink" title="8、安全问题"></a>8、安全问题</h4><p>本地拒绝服务漏洞，getIntent()的intent附带空数据、异常或畸形数据，会导致应用崩溃。解决办法需要加try catch。</p>
+<h4 id="9、打包管理"><a href="#9、打包管理" class="headerlink" title="9、打包管理"></a>9、打包管理</h4><p>规范的打包管理系统，版本的管理，发布的管理等。</p>
+<h4 id="10、aar资源名称"><a href="#10、aar资源名称" class="headerlink" title="10、aar资源名称"></a>10、aar资源名称</h4><p>aar中资源的名字加上一个前缀避免引用错误。</p>
+<h4 id="11、混淆"><a href="#11、混淆" class="headerlink" title="11、混淆"></a>11、混淆</h4><p>这个仁者见仁，有些大名鼎鼎的SDK都没有混淆。</p>
+<h4 id="12、内存泄漏"><a href="#12、内存泄漏" class="headerlink" title="12、内存泄漏"></a>12、内存泄漏</h4><p>用leakcanary检测，不要有内存泄漏。</p>
+<h4 id="13、打点统计"><a href="#13、打点统计" class="headerlink" title="13、打点统计"></a>13、打点统计</h4><p>SDK有良好的运行时监控机制，在某些关键地方以及崩溃打点上报，及时获取SDK运行状态，保证运行时稳定。但是打点也不能太频繁，避免对业务方业务造成影响。</p>
+<h4 id="14、特定机型适配"><a href="#14、特定机型适配" class="headerlink" title="14、特定机型适配"></a>14、特定机型适配</h4><p>这点没什么好说的，其实也是最坑的，各种乱七八糟的坑需要填。</p>
+<p>以上就是在SDK开发过程中的一些总结，以后有更新会继续补充，如果你在开发过程中有什么经验或教训欢迎留言交流！</p>
+<p><a href="https://democome.com" target="_blank" rel="noopener">博客地址:定期分享技术与人生</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#对于开发者"><span class="toc-number">1.</span> <span class="toc-text">对于开发者</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对于接入方"><span class="toc-number">2.</span> <span class="toc-text">对于接入方</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注意点"><span class="toc-number">3.</span> <span class="toc-text">注意点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、熟悉你的代码"><span class="toc-number">3.1.</span> <span class="toc-text">1、熟悉你的代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、合理的接口设计"><span class="toc-number">3.2.</span> <span class="toc-text">2、合理的接口设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、内存分配与回收"><span class="toc-number">3.3.</span> <span class="toc-text">3、内存分配与回收</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、慎重选择第三方库"><span class="toc-number">3.4.</span> <span class="toc-text">4、慎重选择第三方库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5、ContentProvider-authorities-冲突导致应用无法安装"><span class="toc-number">3.5.</span> <span class="toc-text">5、ContentProvider authorities 冲突导致应用无法安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6、异常处理和日志"><span class="toc-number">3.6.</span> <span class="toc-text">6、异常处理和日志</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7、多进程操作SharedPreferences"><span class="toc-number">3.7.</span> <span class="toc-text">7、多进程操作SharedPreferences</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8、安全问题"><span class="toc-number">3.8.</span> <span class="toc-text">8、安全问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9、打包管理"><span class="toc-number">3.9.</span> <span class="toc-text">9、打包管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10、aar资源名称"><span class="toc-number">3.10.</span> <span class="toc-text">10、aar资源名称</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11、混淆"><span class="toc-number">3.11.</span> <span class="toc-text">11、混淆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12、内存泄漏"><span class="toc-number">3.12.</span> <span class="toc-text">12、内存泄漏</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13、打点统计"><span class="toc-number">3.13.</span> <span class="toc-text">13、打点统计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#14、特定机型适配"><span class="toc-number">3.14.</span> <span class="toc-text">14、特定机型适配</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&text=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&title=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&is_video=false&description=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Android SDK类产品开发总结&body=Check out this article: http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&title=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&title=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&title=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&title=Android SDK类产品开发总结" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/01/10/Android%20SDK%E7%B1%BB%E4%BA%A7%E5%93%81%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93/&name=Android SDK类产品开发总结&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="在上篇文章《设计模式之装饰模式》中我们谈到了装饰模式，在 Android 中关于 Context 的设计就用到了装饰模式。这篇文章我们就来聊一聊 Context。 关于 Context，作为 Android 开发人员再熟悉不过了。启动 Actiivty、Service 需要 Context，获取资源需要 Context。离开 Context 整个系统都玩不转了，可见 Context 在 Andro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊Context">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2018&#x2F;10&#x2F;19&#x2F;%E8%81%8A%E8%81%8AContext&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="在上篇文章《设计模式之装饰模式》中我们谈到了装饰模式，在 Android 中关于 Context 的设计就用到了装饰模式。这篇文章我们就来聊一聊 Context。 关于 Context，作为 Android 开发人员再熟悉不过了。启动 Actiivty、Service 需要 Context，获取资源需要 Context。离开 Context 整个系统都玩不转了，可见 Context 在 Andro">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;10&#x2F;12&#x2F;5bc077c8ec562.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;p0.qhimg.com&#x2F;t01276147f31e393cc4.png">
+<meta property="og:updated_time" content="2019-10-22T13:29:29.561Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;10&#x2F;12&#x2F;5bc077c8ec562.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>聊聊Context</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/11/02/Java%20NIO%20%E4%B9%8B%20Buffer/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/10/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&text=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&title=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&is_video=false&description=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=聊聊Context&body=Check out this article: http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&title=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&title=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&title=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&title=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&name=聊聊Context&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        聊聊Context
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-10-19T13:55:00.000Z" itemprop="datePublished">2018-10-19</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>在上篇文章《设计模式之装饰模式》中我们谈到了装饰模式，在 Android 中关于 Context 的设计就用到了装饰模式。这篇文章我们就来聊一聊 Context。</p>
+<p>关于 Context，作为 Android 开发人员再熟悉不过了。启动 Actiivty、Service 需要 Context，获取资源需要 Context。离开 Context 整个系统都玩不转了，可见 Context 在 Android 中多么重要。</p>
+<p>先来回忆一下上篇文章中装饰模式的结构图</p>
+<p><img src="https://i.loli.net/2018/10/12/5bc077c8ec562.png" alt="1.png"></p>
+<p>再来对比一下 Context 的继承结构图<br><img src="http://p0.qhimg.com/t01276147f31e393cc4.png" alt="2.png"></p>
+<p>看着这两张图我们来找一下对应关系</p>
+<p>Componment -&gt; Context</p>
+<p>ConcreteComponment -&gt; ContextImpl</p>
+<p>Decorator -&gt; ContextWrapper</p>
+<p>ConcreteDecorator -&gt; ContextThemeWraper、Activity、Service、Application</p>
+<p>再来具体看一下代码</p>
+<p><code>Context.java</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public abstract void startActivity(@RequiresPermission Intent intent);</span><br><span class="line"></span><br><span class="line">public abstract ComponentName startService(Intent service);</span><br><span class="line"></span><br><span class="line">public abstract Resources getResources();</span><br></pre></td></tr></table></figure>
+
+<p>Context 是一个抽象类，定义了我们常用的大部分抽象方法。</p>
+<p><code>ContextImpl.java</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void startActivity(Intent intent) &#123;</span><br><span class="line">	warnIfCallingFromSystemProcess();</span><br><span class="line">	startActivity(intent, null);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void startActivity(Intent intent, Bundle options) &#123;</span><br><span class="line"></span><br><span class="line">    //省略代码</span><br><span class="line">    //启动activity的入口</span><br><span class="line">    mMainThread.getInstrumentation().execStartActivity(</span><br><span class="line">            getOuterContext(), mMainThread.getApplicationThread(), null,</span><br><span class="line">            (Activity) null, intent, -1, options);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public ComponentName startService(Intent service) &#123;</span><br><span class="line">    warnIfCallingFromSystemProcess();</span><br><span class="line">    return startServiceCommon(service, false, mUser);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ContextImpl 是 Context 的具体实现，也就是我们实际使用的对象。</p>
+<p><code>ContextWrapper.java</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public class ContextWrapper extends Context &#123;</span><br><span class="line">    Context mBase;</span><br><span class="line"></span><br><span class="line">    public ContextWrapper(Context base) &#123;</span><br><span class="line">        mBase = base;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    protected void attachBaseContext(Context base) &#123;</span><br><span class="line">        if (mBase != null) &#123;</span><br><span class="line">            throw new IllegalStateException(&quot;Base context already set&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        mBase = base;</span><br><span class="line">    &#125;</span><br><span class="line">    // 省略代码</span><br><span class="line">    @Override</span><br><span class="line">    public void startActivity(Intent intent) &#123;</span><br><span class="line">        mBase.startActivity(intent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ContextWrapper 这个类比较简单，里面有一个 Context（mBase）<br>的引用，也就是 ContextImpl 类的对象。还有一个 attachBaseContext 方法下面会提到。是给引用的 ContextImpl（mBase）赋值的地方。下面我们看下 ContextImpl 这个对象是什么时候创建和赋值给 mBase 的。</p>
+<p>要理解 ContextImpl 是如何创建的就不得不提到 Activity、Service、Application 的创建流程，由于涉及的代码比较多，我们只看关键部分。</p>
+<p>主要分析 ActivityThread 这个类，看一下 performLaunchActivity 方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) &#123;</span><br><span class="line">    ActivityInfo aInfo = r.activityInfo;</span><br><span class="line">    // 省略代码</span><br><span class="line">    //在这里创建了ContextImpl</span><br><span class="line">    ContextImpl appContext = createBaseContextForActivity(r);</span><br><span class="line">    Activity activity = null;</span><br><span class="line">    activity = mInstrumentation.newActivity(cl, component.getClassName(), r.intent);</span><br><span class="line"></span><br><span class="line">    if (activity != null) &#123;</span><br><span class="line">		 // 这个方法参数很多，现在我们只关心第一个appContext</span><br><span class="line">        activity.attach(appContext, this, getInstrumentation(), r.token,</span><br><span class="line">                r.ident, app, r.intent, r.activityInfo, title, r.parent,</span><br><span class="line">                r.embeddedID, r.lastNonConfigurationInstances, config,</span><br><span class="line">                r.referrer, r.voiceInteractor, window, r.configCallback);</span><br><span class="line"></span><br><span class="line">        if (customIntent != null) &#123;</span><br><span class="line">            activity.mIntent = customIntent;</span><br><span class="line">        &#125;</span><br><span class="line">        // 省略代码</span><br><span class="line">        r.activity = activity;</span><br><span class="line">    &#125;</span><br><span class="line">	// 省略代码</span><br><span class="line">    return activity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Activity 创建关键代码，注意 attach 这个方法</p>
+<p><code>Activity.java</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> final void attach(Context context, ActivityThread aThread,</span><br><span class="line">         Instrumentation instr, IBinder token, int ident,</span><br><span class="line">         Application application, Intent intent, ActivityInfo info,</span><br><span class="line">         CharSequence title, Activity parent, String id,</span><br><span class="line">         NonConfigurationInstances lastNonConfigurationInstances,</span><br><span class="line">         Configuration config, String referrer, IVoiceInteractor voiceInteractor,</span><br><span class="line">         Window window, ActivityConfigCallback activityConfigCallback) &#123;</span><br><span class="line">    </span><br><span class="line">     attachBaseContext(context);</span><br><span class="line"></span><br><span class="line">// 省略代码</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>看到这可以发现，在 attach 方法中，第一个参数 appContext 也就是 ContextImpl 类的对象，在 attach 方法中又调用了 ContextWrapper 的attachBaseContext(context)，最终把 appContext 赋值给 mBase。</p>
+<p>Service创建关键代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private void handleCreateService(CreateServiceData data) &#123;</span><br><span class="line">   </span><br><span class="line">    // 省略代码</span><br><span class="line">    Service service = null;</span><br><span class="line">    java.lang.ClassLoader cl = packageInfo.getClassLoader();</span><br><span class="line">    service = packageInfo.getAppFactory()</span><br><span class="line">            .instantiateService(cl, data.info.name, data.intent);</span><br><span class="line">   </span><br><span class="line">    // 省略代码</span><br><span class="line">    ContextImpl context = ContextImpl.createAppContext(this, packageInfo);</span><br><span class="line">    context.setOuterContext(service);</span><br><span class="line"></span><br><span class="line">    Application app = packageInfo.makeApplication(false, mInstrumentation);</span><br><span class="line">    service.attach(context, this, data.info.name, data.token, app,</span><br><span class="line">            ActivityManager.getService());</span><br><span class="line">    service.onCreate();</span><br><span class="line">    mServices.put(data.token, service);</span><br><span class="line">       </span><br><span class="line">    // 省略代码</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><code>Service.java</code>关键代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public final void attach(</span><br><span class="line">        Context context,</span><br><span class="line">        ActivityThread thread, String className, IBinder token,</span><br><span class="line">        Application application, Object activityManager) &#123;</span><br><span class="line">   </span><br><span class="line">    attachBaseContext(context);</span><br><span class="line">    </span><br><span class="line">    // 省略代码</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，同样是在 attach 方法中，通过调用 attachBaseContext(context) 把 ContextImpl 的对象赋值给了 mBase。其他的创建过程不再分析，有兴趣可以了解下 ActivityThread 源码。至此整个过程就串起来了，这就是装饰模式在 Context 中的实现。</p>
+<p>最后再来看一下 RePlugin 中 PluginContext 和 HostContext 是如何获取的，直接上代码。</p>
+<p><code>RePlugin.java</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 获取插件的Context</span><br><span class="line">public static Context getPluginContext() &#123;</span><br><span class="line">    return RePluginEnv.getPluginContext();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 获取宿主的Context</span><br><span class="line">public static Context getHostContext() &#123;</span><br><span class="line">        return RePluginEnv.getHostContext();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到两个方法都是调用了 RePluginEnv 中的方法，再去看下 RePluginEnv 的代码</p>
+<p><code>RePluginEnv.java</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 获取插件的Context</span><br><span class="line">public static Context getPluginContext() &#123;</span><br><span class="line">        return sPluginContext;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 获取宿主的Context</span><br><span class="line">public static Context getHostContext() &#123;</span><br><span class="line">        return sHostContext;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上两个 Context 都是在 init 方法中赋值的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">static void init(Context context, ClassLoader cl, IBinder manager) &#123;</span><br><span class="line">    sPluginContext = context;</span><br><span class="line"></span><br><span class="line">    // 确保获取的一定是主程序的Context</span><br><span class="line">    sHostContext = ((ContextWrapper) context).getBaseContext();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再往下看， init 方法是在  Entry 的 create 方法调用。</p>
+<p><code>Entry.java</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class Entry &#123;</span><br><span class="line"></span><br><span class="line">    public static final IBinder create(Context context, ClassLoader cl, IBinder manager) &#123;</span><br><span class="line">        // 初始化插件框架</span><br><span class="line">        RePluginFramework.init(cl);</span><br><span class="line">        // 初始化Env</span><br><span class="line">        RePluginEnv.init(context, cl, manager);</span><br><span class="line">        return new IPlugin.Stub() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public IBinder query(String name) throws RemoteException &#123;</span><br><span class="line">                return RePluginServiceManager.getInstance().getService(name);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Entry 的 create 又是在 <code>Loader.java</code> 中通过反射调用的，看下代码</p>
+<p><code>Loader.java</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPkgContext = new PluginContext(mContext, android.R.style.Theme, mClassLoader, mPkgResources, mPluginName, this);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IBinder b = (IBinder) mCreateMethod2.invoke(null, mPkgContext, getClass().getClassLoader(), manager);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到， create 方法的第一个参数就是 mPkgContext（PluginContext对象），它就是插件的 Context，有自己的 classloader 和 resource。同时 PluginContext 的构造方法接受一个 Context，也就是宿主的 Context，它也就是<code>mBase</code>。所以在上面的代码中就可以拿到宿主的 sHostContext 了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sHostContext = ((ContextWrapper) context).getBaseContext();</span><br></pre></td></tr></table></figure>
+
+<p>至此，RePlugin 插件中获取的宿主和插件 Context 分析完毕。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&text=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&title=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&is_video=false&description=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=聊聊Context&body=Check out this article: http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&title=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&title=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&title=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&title=聊聊Context" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/10/19/%E8%81%8A%E8%81%8AContext/&name=聊聊Context&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

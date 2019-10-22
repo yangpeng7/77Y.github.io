@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="什么是FlipperFlipper是facebook开源的一个面向移动端（Android&#x2F;iOS）开发者的桌面调试平台。 开源地址: https:&#x2F;&#x2F;github.com&#x2F;facebook&#x2F;flipper 官网地址: https:&#x2F;&#x2F;fbflipper.com&#x2F; 它分为两个部分  macOS的桌面应用程序（目前仅支持macOS） Android和iOS的原生SDK  桌面部分可以在github下载">
+<meta property="og:type" content="article">
+<meta property="og:title" content="嘿，兄弟！移动端调试工具Flipper了解一下">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;01&#x2F;20&#x2F;%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="什么是FlipperFlipper是facebook开源的一个面向移动端（Android&#x2F;iOS）开发者的桌面调试平台。 开源地址: https:&#x2F;&#x2F;github.com&#x2F;facebook&#x2F;flipper 官网地址: https:&#x2F;&#x2F;fbflipper.com&#x2F; 它分为两个部分  macOS的桌面应用程序（目前仅支持macOS） Android和iOS的原生SDK  桌面部分可以在github下载">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;01&#x2F;18&#x2F;5c417e0077935.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;01&#x2F;18&#x2F;5c4186ab13a16.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;01&#x2F;18&#x2F;5c4183eca3f2c.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;01&#x2F;18&#x2F;5c4184ce09351.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;01&#x2F;18&#x2F;5c41862a0ca4d.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;01&#x2F;18&#x2F;5c41871f94ed0.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;01&#x2F;25&#x2F;5c4ad500e8076.png">
+<meta property="og:updated_time" content="2019-10-22T13:28:05.800Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2019&#x2F;01&#x2F;18&#x2F;5c417e0077935.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>嘿，兄弟！移动端调试工具Flipper了解一下</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/01/13/Flutter%E4%B9%8B%E5%88%9D%E4%BD%93%E9%AA%8C/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&text=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&title=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&is_video=false&description=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=嘿，兄弟！移动端调试工具Flipper了解一下&body=Check out this article: http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&title=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&title=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&title=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&title=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&name=嘿，兄弟！移动端调试工具Flipper了解一下&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是Flipper"><span class="toc-number">1.</span> <span class="toc-text">什么是Flipper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#桌面部分"><span class="toc-number">2.</span> <span class="toc-text">桌面部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Android-SDK集成"><span class="toc-number">3.</span> <span class="toc-text">Android SDK集成</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#0、添加依赖"><span class="toc-number">3.1.</span> <span class="toc-text">0、添加依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1、添加权限"><span class="toc-number">3.2.</span> <span class="toc-text">1、添加权限</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、启用插件"><span class="toc-number">3.3.</span> <span class="toc-text">2、启用插件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用效果"><span class="toc-number">4.</span> <span class="toc-text">使用效果</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Logs"><span class="toc-number">4.1.</span> <span class="toc-text">Logs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Network"><span class="toc-number">4.2.</span> <span class="toc-text">Network</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Layout"><span class="toc-number">4.3.</span> <span class="toc-text">Layout</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Shared-Preferences"><span class="toc-number">4.4.</span> <span class="toc-text">Shared Preferences</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LeakCanary"><span class="toc-number">4.5.</span> <span class="toc-text">LeakCanary</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结论"><span class="toc-number">5.</span> <span class="toc-text">结论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#补充"><span class="toc-number">6.</span> <span class="toc-text">补充</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#iOS-Objective-c集成指南"><span class="toc-number">6.1.</span> <span class="toc-text">iOS Objective-c集成指南</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#初始化Podfile"><span class="toc-number">6.1.1.</span> <span class="toc-text">初始化Podfile</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iOS-Swift集成指南"><span class="toc-number">6.2.</span> <span class="toc-text">iOS Swift集成指南</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#初始化Podfile-1"><span class="toc-number">6.2.1.</span> <span class="toc-text">初始化Podfile</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        嘿，兄弟！移动端调试工具Flipper了解一下
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-01-20T04:50:00.000Z" itemprop="datePublished">2019-01-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h3 id="什么是Flipper"><a href="#什么是Flipper" class="headerlink" title="什么是Flipper"></a>什么是Flipper</h3><p>Flipper是facebook开源的一个面向移动端（Android/iOS）开发者的桌面调试平台。</p>
+<p>开源地址: <a href="https://github.com/facebook/flipper" target="_blank" rel="noopener">https://github.com/facebook/flipper</a></p>
+<p>官网地址: <a href="https://fbflipper.com/" target="_blank" rel="noopener">https://fbflipper.com/</a></p>
+<p>它分为两个部分</p>
+<ul>
+<li>macOS的桌面应用程序（目前仅支持macOS）</li>
+<li>Android和iOS的原生SDK</li>
+</ul>
+<h3 id="桌面部分"><a href="#桌面部分" class="headerlink" title="桌面部分"></a>桌面部分</h3><p>可以在<a href="https://github.com/facebook/flipper/releases" target="_blank" rel="noopener">github</a>下载最新版，当我们在Android或iOS应用中集成好SDK之后，打开桌面应用，可以看到如下窗口，目前它有几个内置的插件，分别是：</p>
+<ul>
+<li>Logs</li>
+<li>Layout Inspector</li>
+<li>Network</li>
+<li>Sandbox</li>
+<li>Shared Preferences</li>
+<li>LeakCanary</li>
+<li>Crash Reporter Plugin</li>
+</ul>
+<p><img src="https://i.loli.net/2019/01/18/5c417e0077935.png" alt="flipper-1.png"></p>
+<blockquote>
+<p>注意：除了内置的插件之外，也可以自己开发插件，实现定制的功能</p>
+</blockquote>
+<h3 id="Android-SDK集成"><a href="#Android-SDK集成" class="headerlink" title="Android SDK集成"></a>Android SDK集成</h3><h4 id="0、添加依赖"><a href="#0、添加依赖" class="headerlink" title="0、添加依赖"></a>0、添加依赖</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">debugImplementation &apos;com.facebook.flipper:flipper:0.14.1&apos;</span><br><span class="line">debugImplementation &apos;com.facebook.soloader:soloader:0.5.1&apos;</span><br><span class="line"></span><br><span class="line">debugImplementation &apos;com.squareup.leakcanary:leakcanary-android:1.6.1&apos;</span><br><span class="line">releaseImplementation &apos;com.squareup.leakcanary:leakcanary-android-no-op:1.6.1&apos;</span><br><span class="line"></span><br><span class="line">implementation &apos;com.squareup.okhttp3:okhttp:3.6.0&apos;</span><br></pre></td></tr></table></figure>
+<h4 id="1、添加权限"><a href="#1、添加权限" class="headerlink" title="1、添加权限"></a>1、添加权限</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="2、启用插件"><a href="#2、启用插件" class="headerlink" title="2、启用插件"></a>2、启用插件</h4><p>其中Log默认是打开的无需添加，其他需要通过代码来启用，关键代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">SoLoader.init(this, false);</span><br><span class="line"></span><br><span class="line">final FlipperClient client = AndroidFlipperClient.getInstance(this);</span><br><span class="line"></span><br><span class="line">//Network插件</span><br><span class="line">final NetworkFlipperPlugin networkPlugin = new NetworkFlipperPlugin();</span><br><span class="line">final FlipperOkhttpInterceptor interceptor = new FlipperOkhttpInterceptor(networkPlugin);</span><br><span class="line">client.addPlugin(networkPlugin);</span><br><span class="line"></span><br><span class="line">//Inspector插件</span><br><span class="line">client.addPlugin(new InspectorFlipperPlugin(this, DescriptorMapping.withDefaults()));</span><br><span class="line"></span><br><span class="line">//Sandbox插件</span><br><span class="line">client.addPlugin(new SandboxFlipperPlugin(new SandboxFlipperPluginStrategy() &#123;</span><br><span class="line">    @Nullable</span><br><span class="line">    @Override</span><br><span class="line">    public Map&lt;String, String&gt; getKnownSandboxes() &#123;</span><br><span class="line">        Map map = new HashMap();</span><br><span class="line">        return map;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void setSandbox(@Nullable String sandbox) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line">//SP插件</span><br><span class="line">client.addPlugin(new SharedPreferencesFlipperPlugin(this, &quot;flipper_shared_preference&quot;));</span><br><span class="line"></span><br><span class="line">//LeakCanary插件</span><br><span class="line">client.addPlugin(new LeakCanaryFlipperPlugin());</span><br><span class="line"></span><br><span class="line">//CrashReporter插件</span><br><span class="line">client.addPlugin(CrashReporterPlugin.getInstance());</span><br><span class="line"></span><br><span class="line">client.start();</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用效果"><a href="#使用效果" class="headerlink" title="使用效果"></a>使用效果</h3><h4 id="Logs"><a href="#Logs" class="headerlink" title="Logs"></a>Logs</h4><p>Logs和Android Studio的logcat类似，可以显示log的不同级别及过滤。</p>
+<p><img src="https://i.loli.net/2019/01/18/5c4186ab13a16.png" alt="flipper-2.png"></p>
+<h4 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h4><p>当发起一个网络请求（目前仅支持OkHttp库发起的请求），可以在Network标签下看到详细的网络请求情况。包括request和response。在使用中发现，response在中文解码支持不好，会有乱码。</p>
+<p><img src="https://i.loli.net/2019/01/18/5c4183eca3f2c.png" alt="flipper-network.png"></p>
+<h4 id="Layout"><a href="#Layout" class="headerlink" title="Layout"></a>Layout</h4><p>可以在Layout标签下看到Activity布局。有一个好处是，当修改View的样式或者文字等其他属性时，可以实时反馈到手机或模拟器上。</p>
+<p><img src="https://i.loli.net/2019/01/18/5c4184ce09351.png" alt="flipper-layout.png"></p>
+<h4 id="Shared-Preferences"><a href="#Shared-Preferences" class="headerlink" title="Shared Preferences"></a>Shared Preferences</h4><p>在Shared Preferences标签下，可以显示sp文件的<code>key</code>和<code>value</code>，并且在此修改的值也可以实时在手机或模拟器上修改。</p>
+<p><img src="https://i.loli.net/2019/01/18/5c41862a0ca4d.png" alt="flipper-4.png"></p>
+<h4 id="LeakCanary"><a href="#LeakCanary" class="headerlink" title="LeakCanary"></a>LeakCanary</h4><p>经测试，这部分功能不是很稳定，内存泄漏信息不能完整显示。</p>
+<p><img src="https://i.loli.net/2019/01/18/5c41871f94ed0.png" alt="flipper-leak.png"></p>
+<p>关于Sandbox和CrashReporter，目前文档上的使用不是特别明确，不在演示。</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>Flipper截止目前（2019-01-18）最新的版本是v0.14.1，开源的时间也没多久，有一些功能和文档还不是特别完善，比如有一些功能仅支持Android或者仅支持iOS，但是仓库的更新非常频繁，并且支持开发者自己开发插件。我们一起期待Flipper越来越好用。</p>
+<p>作者博客: <a href="https://democome.com" target="_blank" rel="noopener">https://democome.com</a></p>
+<p>演示demo: <a href="https://github.com/77Y/FlipperSample" target="_blank" rel="noopener">https://github.com/77Y/FlipperSample</a></p>
+<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><h4 id="iOS-Objective-c集成指南"><a href="#iOS-Objective-c集成指南" class="headerlink" title="iOS Objective-c集成指南"></a>iOS Objective-c集成指南</h4><h5 id="初始化Podfile"><a href="#初始化Podfile" class="headerlink" title="初始化Podfile"></a>初始化Podfile</h5><p>相比于Android，iOS集成相对简单一些。可以使用CocoaPods。新建项目，然后<code>pod init</code>初始化<code>Podfile</code>文件，并添加Flipper的依赖，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">project &apos;democome.xcodeproj&apos;</span><br><span class="line">source &apos;https://github.com/facebook/flipper.git&apos;</span><br><span class="line">source &apos;https://github.com/CocoaPods/Specs&apos;</span><br><span class="line">swift_version = &quot;4.1&quot;</span><br><span class="line">flipperkit_version = &apos;0.14.1&apos;</span><br><span class="line"></span><br><span class="line">target &apos;democome&apos; do</span><br><span class="line">  platform :ios, &apos;9.0&apos;</span><br><span class="line"></span><br><span class="line">  pod &apos;FlipperKit&apos;, &apos;~&gt;&apos; + flipperkit_version</span><br><span class="line">  pod &apos;FlipperKit/FlipperKitLayoutComponentKitSupport&apos;, &apos;~&gt;&apos; + flipperkit_version</span><br><span class="line">  pod &apos;FlipperKit/SKIOSNetworkPlugin&apos;, &apos;~&gt;&apos; + flipperkit_version</span><br><span class="line">  pod &apos;FlipperKit/FlipperKitUserDefaultsPlugin&apos;, &apos;~&gt;&apos; + flipperkit_version</span><br><span class="line">  # This post_install script adds swift version to yogakit&apos;s pod target.</span><br><span class="line">  # It also adds -DFB_SONARKIT_ENABLED=1 flag to OTHER_CFLAGS, necessary to build expose Flipper classes in the header files</span><br><span class="line">  post_install do |installer|</span><br><span class="line">        installer.pods_project.targets.each do |target|</span><br><span class="line">            if [&apos;YogaKit&apos;].include? target.name</span><br><span class="line">                target.build_configurations.each do |config|</span><br><span class="line">                    config.build_settings[&apos;SWIFT_VERSION&apos;] = swift_version</span><br><span class="line">                end</span><br><span class="line">            end</span><br><span class="line">        end</span><br><span class="line">        file_name = Dir.glob(&quot;*.xcodeproj&quot;)[0]</span><br><span class="line">        app_project = Xcodeproj::Project.open(file_name)</span><br><span class="line">        app_project.native_targets.each do |target|</span><br><span class="line">            target.build_configurations.each do |config|</span><br><span class="line">              if (config.build_settings[&apos;OTHER_CFLAGS&apos;])</span><br><span class="line">                if !(config.build_settings[&apos;OTHER_CFLAGS&apos;].include? &apos;-DFB_SONARKIT_ENABLED=1&apos;)</span><br><span class="line">                  puts &apos;Adding -DFB_SONARKIT_ENABLED=1 in OTHER_CFLAGS...&apos;</span><br><span class="line">                  config.build_settings[&apos;OTHER_CFLAGS&apos;] &lt;&lt; &apos;-DFB_SONARKIT_ENABLED=1&apos;</span><br><span class="line">                end</span><br><span class="line">              else</span><br><span class="line">                puts &apos;OTHER_CFLAGS does not exist, assigining it to `$(inherited), -DFB_SONARKIT_ENABLED=1` &apos;</span><br><span class="line">                config.build_settings[&apos;OTHER_CFLAGS&apos;] = &apos;$(inherited) -DFB_SONARKIT_ENABLED=1 &apos;</span><br><span class="line">              end</span><br><span class="line">              app_project.save</span><br><span class="line">            end</span><br><span class="line">        end</span><br><span class="line">   end</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+
+<p>AppDelegate添加如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FlipperClient *client = [FlipperClient sharedClient];</span><br><span class="line">SKDescriptorMapper *layoutDescriptorMapper = [[SKDescriptorMapper alloc] initWithDefaults];</span><br><span class="line">[FlipperKitLayoutComponentKitSupport setUpWithDescriptorMapper: layoutDescriptorMapper];</span><br><span class="line">[client addPlugin: [[FlipperKitLayoutPlugin alloc] initWithRootNode: application</span><br><span class="line">                                               withDescriptorMapper: layoutDescriptorMapper]];</span><br><span class="line"></span><br><span class="line">[client addPlugin:[[FKUserDefaultsPlugin alloc] initWithSuiteName:nil]];  [client start];</span><br><span class="line">[client addPlugin: [[FlipperKitNetworkPlugin alloc] initWithNetworkAdapter:[SKIOSNetworkAdapter new]]];</span><br><span class="line">[client start];</span><br></pre></td></tr></table></figure>
+
+<p>运行效果如下<br><img src="https://i.loli.net/2019/01/25/5c4ad500e8076.png" alt="flipper-oc.png"></p>
+<h4 id="iOS-Swift集成指南"><a href="#iOS-Swift集成指南" class="headerlink" title="iOS Swift集成指南"></a>iOS Swift集成指南</h4><h5 id="初始化Podfile-1"><a href="#初始化Podfile-1" class="headerlink" title="初始化Podfile"></a>初始化Podfile</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">project &apos;democome-swift.xcodeproj&apos;</span><br><span class="line">source &apos;https://github.com/facebook/flipper.git&apos;</span><br><span class="line">source &apos;https://github.com/CocoaPods/Specs&apos;</span><br><span class="line">swift_version = &quot;4.2.1&quot;</span><br><span class="line">flipperkit_version = &apos;0.14.1&apos;</span><br><span class="line"></span><br><span class="line">target &apos;democome-swift&apos; do</span><br><span class="line">  platform :ios, &apos;9.0&apos;</span><br><span class="line"></span><br><span class="line">  pod &apos;FlipperKit&apos;, &apos;~&gt;&apos; + flipperkit_version</span><br><span class="line">  # Layout and network plugins are not yet supported for swift projects</span><br><span class="line">  pod &apos;FlipperKit/FlipperKitLayoutComponentKitSupport&apos;, &apos;~&gt;&apos; + flipperkit_version</span><br><span class="line">  pod &apos;FlipperKit/SKIOSNetworkPlugin&apos;, &apos;~&gt;&apos; + flipperkit_version</span><br><span class="line">  pod &apos;FlipperKit/FlipperKitUserDefaultsPlugin&apos;, &apos;~&gt;&apos; + flipperkit_version</span><br><span class="line"></span><br><span class="line">  # If you use `use_frameworks!` in your Podfile, </span><br><span class="line">  # uncomment the below $static_framework array and also </span><br><span class="line">  # the pre_install section.  This will cause Flipper and </span><br><span class="line">  # it&apos;s dependencies to be static and all other pods to </span><br><span class="line">  # be dynamic.</span><br><span class="line"></span><br><span class="line">  # $static_framework = [&apos;FlipperKit&apos;, &apos;Flipper&apos;, &apos;Folly&apos;,</span><br><span class="line">  #   &apos;CocoaAsyncSocket&apos;, &apos;ComponentKit&apos;, &apos;DoubleConversion&apos;, </span><br><span class="line">  #   &apos;glog&apos;, &apos;PeerTalk&apos;, &apos;RSocket&apos;, &apos;Yoga&apos;, &apos;YogaKit&apos;, </span><br><span class="line">  #   &apos;CocoaLibEvent&apos;, &apos;OpenSSL-Static&apos;, &apos;boost-for-react-native&apos;]</span><br><span class="line">  </span><br><span class="line">  # pre_install do |installer|</span><br><span class="line">  #     installer.pod_targets.each do |pod|</span><br><span class="line">  #       if $static_framework.include?(pod.name)  </span><br><span class="line">  #         pod.host_requires_frameworks = false</span><br><span class="line">  #       end</span><br><span class="line">  #   end</span><br><span class="line">  # end</span><br><span class="line"></span><br><span class="line"># This post_install script adds -DFB_SONARKIT_ENABLED flag to OTHER_SWIFT_FLAGS, necessary to build swift target</span><br><span class="line">    post_install do |installer|</span><br><span class="line">      file_name = Dir.glob(&quot;*.xcodeproj&quot;)[0]</span><br><span class="line">      app_project = Xcodeproj::Project.open(file_name)</span><br><span class="line">      app_project.native_targets.each do |target|</span><br><span class="line">          target.build_configurations.each do |config|</span><br><span class="line">            if (config.build_settings[&apos;OTHER_SWIFT_FLAGS&apos;])</span><br><span class="line">              if !(config.build_settings[&apos;OTHER_SWIFT_FLAGS&apos;].include? &apos;-DFB_SONARKIT_ENABLED&apos;)</span><br><span class="line">                puts &apos;Adding -DFB_SONARKIT_ENABLED ...&apos;</span><br><span class="line">                swift_flags = config.build_settings[&apos;OTHER_SWIFT_FLAGS&apos;]</span><br><span class="line">                if swift_flags.split.last != &apos;-Xcc&apos;</span><br><span class="line">                  config.build_settings[&apos;OTHER_SWIFT_FLAGS&apos;] &lt;&lt; &apos; -Xcc&apos;</span><br><span class="line">                end</span><br><span class="line">                config.build_settings[&apos;OTHER_SWIFT_FLAGS&apos;] &lt;&lt; &apos; -DFB_SONARKIT_ENABLED&apos;</span><br><span class="line">              end</span><br><span class="line">            else</span><br><span class="line">              puts &apos;OTHER_SWIFT_FLAGS does not exist thus assigning it to `$(inherited) -Xcc -DFB_SONARKIT_ENABLED`&apos;</span><br><span class="line">              config.build_settings[&apos;OTHER_SWIFT_FLAGS&apos;] = &apos;$(inherited) -Xcc -DFB_SONARKIT_ENABLED&apos;</span><br><span class="line">            end</span><br><span class="line">            app_project.save</span><br><span class="line">          end</span><br><span class="line">        end</span><br><span class="line">    end</span><br><span class="line">  end</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意Swift版本，需要和你安装的版本保持一致，否则可能会报错，查看Swift版本命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xcrun swift -version</span><br></pre></td></tr></table></figure>
+
+<p>AppDelegate添加如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let client = FlipperClient.shared()</span><br><span class="line">let layoutDescriptorMapper = SKDescriptorMapper(defaults: ())</span><br><span class="line">FlipperKitLayoutComponentKitSupport.setUpWith(layoutDescriptorMapper)</span><br><span class="line">client?.add(FlipperKitLayoutPlugin(rootNode: application, with: layoutDescriptorMapper!))</span><br><span class="line">client?.start()</span><br></pre></td></tr></table></figure>
+
+<p>运行结果类似，不在贴出。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是Flipper"><span class="toc-number">1.</span> <span class="toc-text">什么是Flipper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#桌面部分"><span class="toc-number">2.</span> <span class="toc-text">桌面部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Android-SDK集成"><span class="toc-number">3.</span> <span class="toc-text">Android SDK集成</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#0、添加依赖"><span class="toc-number">3.1.</span> <span class="toc-text">0、添加依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1、添加权限"><span class="toc-number">3.2.</span> <span class="toc-text">1、添加权限</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、启用插件"><span class="toc-number">3.3.</span> <span class="toc-text">2、启用插件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用效果"><span class="toc-number">4.</span> <span class="toc-text">使用效果</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Logs"><span class="toc-number">4.1.</span> <span class="toc-text">Logs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Network"><span class="toc-number">4.2.</span> <span class="toc-text">Network</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Layout"><span class="toc-number">4.3.</span> <span class="toc-text">Layout</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Shared-Preferences"><span class="toc-number">4.4.</span> <span class="toc-text">Shared Preferences</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LeakCanary"><span class="toc-number">4.5.</span> <span class="toc-text">LeakCanary</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结论"><span class="toc-number">5.</span> <span class="toc-text">结论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#补充"><span class="toc-number">6.</span> <span class="toc-text">补充</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#iOS-Objective-c集成指南"><span class="toc-number">6.1.</span> <span class="toc-text">iOS Objective-c集成指南</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#初始化Podfile"><span class="toc-number">6.1.1.</span> <span class="toc-text">初始化Podfile</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iOS-Swift集成指南"><span class="toc-number">6.2.</span> <span class="toc-text">iOS Swift集成指南</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#初始化Podfile-1"><span class="toc-number">6.2.1.</span> <span class="toc-text">初始化Podfile</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&text=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&title=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&is_video=false&description=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=嘿，兄弟！移动端调试工具Flipper了解一下&body=Check out this article: http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&title=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&title=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&title=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&title=嘿，兄弟！移动端调试工具Flipper了解一下" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/01/20/%E5%98%BF%EF%BC%8C%E5%85%84%E5%BC%9F%EF%BC%81%E7%A7%BB%E5%8A%A8%E7%AB%AF%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7Flipper%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/&name=嘿，兄弟！移动端调试工具Flipper了解一下&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前面的篇文章介绍了NIO中的Buffer和Channel，有了之前的基础，这篇文章来介绍一下另一个比较重要的概念—-Selector。我们知道系统线程的切换是消耗系统资源的，如果我们每一个连接都用一个线程来管理，资源的开销会非常大，这个时候就可以用Selector。通过Selector可以实现一个线程管理多个Channel，如下图：  Selector使用打开使用之前获得一个Selector对象">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java NIO之Selector">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2018&#x2F;12&#x2F;14&#x2F;Java%20NIO%E4%B9%8BSelector&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="前面的篇文章介绍了NIO中的Buffer和Channel，有了之前的基础，这篇文章来介绍一下另一个比较重要的概念—-Selector。我们知道系统线程的切换是消耗系统资源的，如果我们每一个连接都用一个线程来管理，资源的开销会非常大，这个时候就可以用Selector。通过Selector可以实现一个线程管理多个Channel，如下图：  Selector使用打开使用之前获得一个Selector对象">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;p0.qhimg.com&#x2F;t01f013d87923f7849f.png">
+<meta property="og:updated_time" content="2019-10-22T13:43:45.145Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;p0.qhimg.com&#x2F;t01f013d87923f7849f.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Java NIO之Selector</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/12/15/%E4%BD%BF%E7%94%A8jarjar-jar%E4%BF%AE%E6%94%B9%E5%8C%85%E5%90%8D/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/11/16/Java%20NIO%E4%B9%8BChannel/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&text=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&title=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&is_video=false&description=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java NIO之Selector&body=Check out this article: http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&title=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&title=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&title=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&title=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&name=Java NIO之Selector&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Selector使用"><span class="toc-number">1.</span> <span class="toc-text">Selector使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#打开"><span class="toc-number">1.1.</span> <span class="toc-text">打开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注册"><span class="toc-number">1.2.</span> <span class="toc-text">注册</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SelectionKey"><span class="toc-number">1.2.1.</span> <span class="toc-text">SelectionKey</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ServerSocketChannel注册"><span class="toc-number">1.2.2.</span> <span class="toc-text">ServerSocketChannel注册</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SocketChannel注册"><span class="toc-number">1.2.3.</span> <span class="toc-text">SocketChannel注册</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Java NIO之Selector
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-12-14T02:08:00.000Z" itemprop="datePublished">2018-12-14</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>前面的篇文章介绍了NIO中的Buffer和Channel，有了之前的基础，这篇文章来介绍一下另一个比较重要的概念—-Selector。我们知道系统线程的切换是消耗系统资源的，如果我们每一个连接都用一个线程来管理，资源的开销会非常大，这个时候就可以用Selector。通过Selector可以实现一个线程管理多个Channel，如下图：</p>
+<p><img src="http://p0.qhimg.com/t01f013d87923f7849f.png" alt="Selector"></p>
+<h2 id="Selector使用"><a href="#Selector使用" class="headerlink" title="Selector使用"></a>Selector使用</h2><h3 id="打开"><a href="#打开" class="headerlink" title="打开"></a>打开</h3><p>使用之前获得一个Selector对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Selector selector = Selector.open();</span><br></pre></td></tr></table></figure>
+<h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><p>要把Channel注册到Selector上，Channel必需是非阻塞的。因此FileChannel是无法注册到Selector的。如果注册的时候不调用<code>configureBlocking</code>方法就会抛出<code>IllegalBlockingModeException</code>异常。</p>
+<h4 id="SelectionKey"><a href="#SelectionKey" class="headerlink" title="SelectionKey"></a>SelectionKey</h4><p>SelectionKey共有四种</p>
+<ul>
+<li>OP_ACCEPT</li>
+<li>OP_CONNECT</li>
+<li>OP_WRITE</li>
+<li>OP_READ</li>
+</ul>
+<h4 id="ServerSocketChannel注册"><a href="#ServerSocketChannel注册" class="headerlink" title="ServerSocketChannel注册"></a>ServerSocketChannel注册</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);</span><br></pre></td></tr></table></figure>
+<p>ServerSocketChannel的Operation Set只能是OP_ACCEPT，如果在注册的时候添加了OP_CONNECT、OP_WRITE或OP_READ会报异常。例如按照以下写法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT | SelectionKey.OP_CONNECT);</span><br></pre></td></tr></table></figure>
+<p>就会抛出下面的异常</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">"main"</span> java.lang.IllegalArgumentException</span><br><span class="line">	at java.nio.channels.spi.AbstractSelectableChannel.register(AbstractSelectableChannel.java:<span class="number">199</span>)</span><br><span class="line">	at java.nio.channels.SelectableChannel.register(SelectableChannel.java:<span class="number">280</span>)</span><br><span class="line">	at com.nio.sample.selector.SelectorServerSocketChannelSample.main(SelectorServerSocketChannelSample.java:<span class="number">27</span>)</span><br></pre></td></tr></table></figure>
+
+<p>ServerSocketChannel的<code>validOps</code>可以看到只有OP_ACCEPT是合法的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public final int validOps() &#123;</span><br><span class="line">    return SelectionKey.OP_ACCEPT;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="SocketChannel注册"><a href="#SocketChannel注册" class="headerlink" title="SocketChannel注册"></a>SocketChannel注册</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socketChannel.register(selector, SelectionKey.OP_CONNECT);</span><br></pre></td></tr></table></figure>
+
+<p>SocketChannel的Operation Set只能是OP_CONNECT、OP_WRITE和OP_READ，如果在注册的时候添加了OP_ACCEPT同样会报异常。</p>
+<p>SocketChannel的<code>validOps</code>可以看到只有OP_READ、OP_WRITE、OP_CONNECT是合法的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public final int validOps() &#123;</span><br><span class="line">    return (SelectionKey.OP_READ</span><br><span class="line">            | SelectionKey.OP_WRITE</span><br><span class="line">            | SelectionKey.OP_CONNECT);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注册成功之后，我们通过一个demo实现，客户端和服务端交互：</p>
+<p>服务端：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) throws Exception &#123;</span><br><span class="line"></span><br><span class="line">	ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();</span><br><span class="line"></span><br><span class="line">	serverSocketChannel.socket().bind(new InetSocketAddress(9000));</span><br><span class="line">	serverSocketChannel.configureBlocking(false);</span><br><span class="line"></span><br><span class="line">	Selector selector = Selector.open();</span><br><span class="line"></span><br><span class="line">	// configureBlocking 如果不设置非阻塞，register的时候会报异常</span><br><span class="line">	// java.nio.channels.IllegalBlockingModeException</span><br><span class="line">	serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);</span><br><span class="line"></span><br><span class="line">	while (true) &#123;</span><br><span class="line"></span><br><span class="line">		int selected = selector.select();</span><br><span class="line">		</span><br><span class="line">		if (selected &gt; 0) &#123;</span><br><span class="line"></span><br><span class="line">			Iterator&lt;SelectionKey&gt; iterator = selector.selectedKeys().iterator();</span><br><span class="line">			while (iterator.hasNext()) &#123;</span><br><span class="line"></span><br><span class="line">				SelectionKey selectionKey = iterator.next();</span><br><span class="line">				iterator.remove();</span><br><span class="line"></span><br><span class="line">				if (selectionKey.isAcceptable()) &#123;</span><br><span class="line">					System.err.println(&quot;Acceptable&quot;);</span><br><span class="line">					SocketChannel socketChannel = serverSocketChannel.accept();</span><br><span class="line">					socketChannel.configureBlocking(false);</span><br><span class="line">					socketChannel.register(selector, SelectionKey.OP_READ);</span><br><span class="line">				&#125; else if (selectionKey.isReadable()) &#123;</span><br><span class="line">					System.err.println(&quot;Readable&quot;);</span><br><span class="line">					SocketChannel socketChannel = (SocketChannel) selectionKey.channel();</span><br><span class="line">					ByteBuffer buffer = ByteBuffer.allocate(128);</span><br><span class="line">					socketChannel.read(buffer);</span><br><span class="line">					System.out.println(&quot;接收来自客户端的数据：&quot; + new String(buffer.array()));</span><br><span class="line">					selectionKey.interestOps(SelectionKey.OP_WRITE);</span><br><span class="line">				&#125; else if (selectionKey.isWritable()) &#123;</span><br><span class="line">					System.err.println(&quot;Writable&quot;);</span><br><span class="line">					SocketChannel channel = (SocketChannel) selectionKey.channel();</span><br><span class="line">					String content = &quot;向客户端发送数据 : &quot; + System.currentTimeMillis();</span><br><span class="line">					ByteBuffer buffer = ByteBuffer.wrap(content.getBytes());</span><br><span class="line">					channel.write(buffer);</span><br><span class="line">					selectionKey.interestOps(SelectionKey.OP_READ);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>我们来看一下服务端的逻辑</p>
+<p>1、服务端注册到selector，然后interest set（ops）设置为SelectionKey.OP_ACCEPT等待客户端连接。</p>
+<p>2、客户端连接到达，调用到selectionKey.isAcceptable()方法，接收客户端连接，然后获得一个channel，并把</p>
+<p>interest set设置为SelectionKey.OP_READ等待从通道中读数据。</p>
+<p>3、当客户端发送的数据到达，selectionKey.isReadable() 被触发，接收客户端的数据并打印，然后把selectionKey.interestOps 设置为SelectionKey.OP_WRITE，向客户端发送数据。</p>
+<p>4、当可写之后selectionKey.isWritable()被触发，向客户端发送数据，同时selectionKey.interestOps再次设置为</p>
+<p>SelectionKey.OP_READ等待客户端数据到达。</p>
+<p>客户端:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">	SocketChannel socketChannel = SocketChannel.open();</span><br><span class="line"></span><br><span class="line">	socketChannel.configureBlocking(false);</span><br><span class="line">	Selector selector = Selector.open();</span><br><span class="line">	socketChannel.register(selector, SelectionKey.OP_CONNECT);</span><br><span class="line"></span><br><span class="line">	socketChannel.connect(new InetSocketAddress(&quot;127.0.0.1&quot;, 9000));</span><br><span class="line"></span><br><span class="line">	while (true) &#123;</span><br><span class="line">		int select = selector.select();</span><br><span class="line"></span><br><span class="line">		if (select &gt; 0) &#123;</span><br><span class="line"></span><br><span class="line">			Iterator&lt;SelectionKey&gt; iterator = selector.selectedKeys().iterator();</span><br><span class="line">			while (iterator.hasNext()) &#123;</span><br><span class="line"></span><br><span class="line">				SelectionKey selectionKey = iterator.next();</span><br><span class="line"></span><br><span class="line">				if (selectionKey.isConnectable()) &#123;</span><br><span class="line">					System.err.println(&quot;Connectable&quot;);</span><br><span class="line">					SocketChannel clientChannel = (SocketChannel) selectionKey.channel();</span><br><span class="line">					clientChannel.finishConnect();</span><br><span class="line">					selectionKey.interestOps(SelectionKey.OP_WRITE);</span><br><span class="line"></span><br><span class="line">				&#125; else if (selectionKey.isReadable()) &#123;</span><br><span class="line">					System.out.println(&quot;Readable&quot;);</span><br><span class="line">					SocketChannel channel = (SocketChannel) selectionKey.channel();</span><br><span class="line">					ByteBuffer buffer = ByteBuffer.allocate(128);</span><br><span class="line">					channel.read(buffer);</span><br><span class="line">					selectionKey.interestOps(SelectionKey.OP_WRITE);</span><br><span class="line">					System.out.println(&quot;收到服务端数据&quot; + new String(buffer.array()));</span><br><span class="line"></span><br><span class="line">				&#125; else if (selectionKey.isWritable()) &#123;</span><br><span class="line">					SocketChannel clientChannel = (SocketChannel) selectionKey.channel();</span><br><span class="line">					String str = &quot;qiwoo mobile&quot;;</span><br><span class="line">					ByteBuffer buffer = ByteBuffer.wrap(str.getBytes());</span><br><span class="line">					clientChannel.write(buffer);</span><br><span class="line">					selectionKey.interestOps(SelectionKey.OP_READ);</span><br><span class="line">					System.out.println(&quot;向服务端发送数据&quot; + new String(buffer.array()));</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				iterator.remove();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再来看一下服务端的逻辑</p>
+<p>1、向服务端发起连接请求。</p>
+<p>2、selectionKey.isConnectable()被触发，连接成功之后，selectionKey.interestOps设置为SelectionKey.OP_WRITE，准备向服务端发送数据。</p>
+<p>3、channel可写之后selectionKey.isWritable()被触发，向服务端发送数据，之后selectionKey.interestOps设置为SelectionKey.OP_READ，等待服务端过来的数据。</p>
+<p>4、服务端数据发过来之后，selectionKey.isReadable()被触发，读取服务端数据之后selectionKey.interestOps设置为SelectionKey.OP_WRITE向服务端写数据。</p>
+<p><a href="https://github.com/77Y/NIOSample" target="_blank" rel="noopener">本文demo</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Selector使用"><span class="toc-number">1.</span> <span class="toc-text">Selector使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#打开"><span class="toc-number">1.1.</span> <span class="toc-text">打开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注册"><span class="toc-number">1.2.</span> <span class="toc-text">注册</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SelectionKey"><span class="toc-number">1.2.1.</span> <span class="toc-text">SelectionKey</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ServerSocketChannel注册"><span class="toc-number">1.2.2.</span> <span class="toc-text">ServerSocketChannel注册</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SocketChannel注册"><span class="toc-number">1.2.3.</span> <span class="toc-text">SocketChannel注册</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&text=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&title=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&is_video=false&description=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Java NIO之Selector&body=Check out this article: http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&title=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&title=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&title=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&title=Java NIO之Selector" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/12/14/Java%20NIO%E4%B9%8BSelector/&name=Java NIO之Selector&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

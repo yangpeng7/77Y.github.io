@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="背景最近看到某厂Android端物联网Demo演示应用中可动态加载模块，具体操作是在后台拖拽生成一个模块和链接地址。然后在Android端刷新首页即可看到新添加的模块。下载Demo代码之后发现用到了facebook开源的react-native框架。然后打算研究一下是否能模拟动态下发模块的效果。 于是决定从以下几个方面来实现这个过程。 1、服务端——实现首页接口及下载接口 服务端用Spring B">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于reactnative实现动态加载">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2018&#x2F;12&#x2F;21&#x2F;%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="背景最近看到某厂Android端物联网Demo演示应用中可动态加载模块，具体操作是在后台拖拽生成一个模块和链接地址。然后在Android端刷新首页即可看到新添加的模块。下载Demo代码之后发现用到了facebook开源的react-native框架。然后打算研究一下是否能模拟动态下发模块的效果。 于是决定从以下几个方面来实现这个过程。 1、服务端——实现首页接口及下载接口 服务端用Spring B">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;12&#x2F;21&#x2F;5c1cc422e4379.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;12&#x2F;21&#x2F;5c1cc422ef600.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;12&#x2F;21&#x2F;5c1cc4230df43.png">
+<meta property="og:updated_time" content="2019-10-22T13:37:49.143Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2018&#x2F;12&#x2F;21&#x2F;5c1cc422e4379.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>基于reactnative实现动态加载</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/12/24/360%E6%8F%92%E4%BB%B6%E5%8C%96%E6%A1%86%E6%9E%B6%20RePlugin%20%E4%B9%8B%20ClassLoader%20Hook/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&text=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&title=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&is_video=false&description=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=基于reactnative实现动态加载&body=Check out this article: http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&title=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&title=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&title=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&title=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&name=基于reactnative实现动态加载&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-number">2.</span> <span class="toc-text">环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、jdk"><span class="toc-number">2.0.1.</span> <span class="toc-text">1、jdk</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、maven"><span class="toc-number">2.0.2.</span> <span class="toc-text">2、maven</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、nodejs"><span class="toc-number">2.0.3.</span> <span class="toc-text">3、nodejs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、android环境"><span class="toc-number">2.0.4.</span> <span class="toc-text">4、android环境</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5、react-native"><span class="toc-number">2.0.5.</span> <span class="toc-text">5、react native</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Server开发"><span class="toc-number">3.</span> <span class="toc-text">Server开发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#React-Native开发"><span class="toc-number">4.</span> <span class="toc-text">React Native开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化项目"><span class="toc-number">4.1.</span> <span class="toc-text">初始化项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#离线打包"><span class="toc-number">4.2.</span> <span class="toc-text">离线打包</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android开发"><span class="toc-number">5.</span> <span class="toc-text">Android开发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#重点"><span class="toc-number">5.0.1.</span> <span class="toc-text">重点</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        基于reactnative实现动态加载
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-12-21T11:25:00.000Z" itemprop="datePublished">2018-12-21</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近看到某厂Android端物联网Demo演示应用中可动态加载模块，具体操作是在后台拖拽生成一个模块和链接地址。然后在Android端刷新首页即可看到新添加的模块。下载Demo代码之后发现用到了facebook开源的react-native框架。然后打算研究一下是否能模拟动态下发模块的效果。</p>
+<p>于是决定从以下几个方面来实现这个过程。</p>
+<p>1、服务端——实现首页接口及下载接口</p>
+<p>服务端用Spring Boot来实现，Spring Boot是由Pivotal团队提供的全新框架，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。对于开发微服务非常便捷。</p>
+<p>2、Android端——显示可加载的模块以及下载模块</p>
+<p>即一个Android工程</p>
+<p>3、两个动态下发的模块（jsbundle）</p>
+<p>React Native实现</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h4 id="1、jdk"><a href="#1、jdk" class="headerlink" title="1、jdk"></a>1、jdk</h4><p>针对不同操作系统下载安装即可 <a href="https://www.oracle.com/technetwork/cn/java/javase/downloads/jdk8-downloads-2133151-zhs.html" target="_blank" rel="noopener">下载地址</a></p>
+<h4 id="2、maven"><a href="#2、maven" class="headerlink" title="2、maven"></a>2、maven</h4><p>Apache Maven，是一个软件（特别是Java软件）项目管理及自动构建工具，类似于Android中的Gradle。<a href="https://maven.apache.org/download.cgi" target="_blank" rel="noopener">下载地址</a></p>
+<h4 id="3、nodejs"><a href="#3、nodejs" class="headerlink" title="3、nodejs"></a>3、nodejs</h4><p>Node.js是一个基于Chrome V8引擎的JavaScript运行时。<a href="https://nodejs.org/zh-cn/download/" target="_blank" rel="noopener">下载地址</a></p>
+<h4 id="4、android环境"><a href="#4、android环境" class="headerlink" title="4、android环境"></a>4、android环境</h4><p>大家都懂</p>
+<h4 id="5、react-native"><a href="#5、react-native" class="headerlink" title="5、react native"></a>5、react native</h4><p>在终端执行<code>npm install -g react-native-cli</code></p>
+<p>部分可能需要手动配置环境变量，全部安装完成后，来看一下我本地各个软件的版本</p>
+<p>jdk版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ java -version</span><br><span class="line">java version &quot;1.8.0_121&quot;</span><br></pre></td></tr></table></figure>
+
+<p>maven版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mvn -v</span><br><span class="line">Apache Maven 3.3.9 (bb52d8502b132ec0a5a3f4c09453c07478323dc5; 2015-11-11T00:41:47+08:00)</span><br></pre></td></tr></table></figure>
+
+<p>node版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ node -v</span><br><span class="line">v10.9.0</span><br></pre></td></tr></table></figure>
+
+<p>react native 版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ react-native -v</span><br><span class="line">react-native-cli: 2.0.1</span><br><span class="line">react-native: 0.57.8</span><br></pre></td></tr></table></figure>
+
+<h2 id="Server开发"><a href="#Server开发" class="headerlink" title="Server开发"></a>Server开发</h2><p>这部分比较简单，就三个接口。在<a href="https://start.spring.io/" target="_blank" rel="noopener">spring.io</a>初始化一个maven项目然后下载下来，用Eclipse或IntelliJ IDEA打开即可。</p>
+<p>然后在<code>pom.xml</code>增加web配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>增加以下三个接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Android端获取首页配置</span><br><span class="line">@RequestMapping(value = &quot;/home&quot;, method = RequestMethod.GET)</span><br><span class="line"></span><br><span class="line">react端获取bundle信息</span><br><span class="line">@RequestMapping(value = &quot;/bundle/&#123;id&#125;&quot;, method = RequestMethod.GET)</span><br><span class="line"></span><br><span class="line">Android下载bundle</span><br><span class="line">@RequestMapping(value = &quot;/download/bundle/&#123;name&#125;&quot;, method = RequestMethod.GET, produces = &quot;application/zip&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>接口的具体实现可以看源码，都比较简单。</p>
+<h2 id="React-Native开发"><a href="#React-Native开发" class="headerlink" title="React Native开发"></a>React Native开发</h2><h3 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">react-native init AModel</span><br></pre></td></tr></table></figure>
+<p>初始化完成之后可以用 <code>react-native run-android</code>看一下运行效果。直接运行会在本地起一个node server，这个时候访问的js bundle就是访问的这个server上的。我们创建两个项目分别是AModel和BModel。具体可以看源码，这里不是我们的重点。</p>
+<h3 id="离线打包"><a href="#离线打包" class="headerlink" title="离线打包"></a>离线打包</h3><p>这一步是把之前从node server访问的js文件打成离线包，方便动态加载，打包命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">react-native AModel --entry-file index.js --bundle-output ./AModel/AModel.bundle --platform android --assets-dest ./bundle --dev false</span><br><span class="line"></span><br><span class="line">react-native BModel --entry-file index.js --bundle-output ./BModel/BModel.bundle --platform android --assets-dest ./bundle --dev false</span><br><span class="line"></span><br><span class="line">//entry-file JS文件的路径</span><br><span class="line">//bundle-output JSbundle文件的生成目录</span><br><span class="line">//platform 平台 Android或iOS</span><br><span class="line">//assets-dest 资源文件的生成目录</span><br><span class="line">//dev 开发模式</span><br></pre></td></tr></table></figure>
+<p>然后把两个bundle分别打成zip包。</p>
+<h2 id="Android开发"><a href="#Android开发" class="headerlink" title="Android开发"></a>Android开发</h2><p>仍然用react native生成一个工程，我们只用它的Android工程，之所以不直接使用Android Studio生成是为了使用react native添加好的<code>&quot;com.facebook.react:react-native:+&quot;</code>的依赖。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">react-native init host</span><br></pre></td></tr></table></figure>
+
+<p>创建好之后，删除MainApplication中多余的代码只保留以下代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class MainApplication extends Application &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        super.onCreate();</span><br><span class="line">        SoLoader.init(this, /* native exopackage */ false);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建<code>MainActivity</code>，在进入主页之后调用接口，获取有哪些模块可以加载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">private void getHomeInfo() &#123;</span><br><span class="line"></span><br><span class="line">        OkHttpClient okHttpClient = new OkHttpClient();</span><br><span class="line">        //192.168.100.14是本地server的ip地址，保证手机和电脑在统一局域网</span><br><span class="line">        Request request = new Request.Builder().url(&quot;http://192.168.100.14:8080/home&quot;).method(&quot;GET&quot;, null).build();</span><br><span class="line">        Call call = okHttpClient.newCall(request);</span><br><span class="line">        call.enqueue(new Callback() &#123;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onFailure(Call call, IOException e) &#123;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onResponse(Call call, Response response) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">                HomeResponse homeResponse = new Gson().fromJson(response.body().string(), HomeResponse.class);</span><br><span class="line"></span><br><span class="line">                for (final HomeResponse.Bundle bundle : homeResponse.data) &#123;</span><br><span class="line"></span><br><span class="line">                    runOnUiThread(new Runnable() &#123;</span><br><span class="line">                        @Override</span><br><span class="line">                        public void run() &#123;</span><br><span class="line"></span><br><span class="line">                            Button button = new Button(MainActivity.this);</span><br><span class="line">                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);</span><br><span class="line">                            params.setMargins(10, 10, 10, 10);</span><br><span class="line">                            button.setLayoutParams(params);</span><br><span class="line">                            button.setText(bundle.desc);</span><br><span class="line">                            button.setTextColor(Color.WHITE);</span><br><span class="line">                            button.setBackground(getResources().getDrawable(R.drawable.bg));</span><br><span class="line">                            button.setOnClickListener(new View.OnClickListener() &#123;</span><br><span class="line">                                @Override</span><br><span class="line">                                public void onClick(View v) &#123;</span><br><span class="line"></span><br><span class="line">                                    // 检查是否下载过，如果已经下载过则直接打开</span><br><span class="line">                                    String f = MainActivity.this.getFilesDir().getAbsolutePath() + &quot;/&quot; + bundle.name + &quot;/&quot; + bundle.name + &quot;.bundle&quot;;</span><br><span class="line">                                    File file = new File((f));</span><br><span class="line">                                    if (file.exists()) &#123;</span><br><span class="line">                                        DispatchUtils.dispatchModel = bundle.name;</span><br><span class="line">                                        DispatchActivity.start(MainActivity.this);</span><br><span class="line">                                    &#125; else &#123;</span><br><span class="line">                                        download(bundle.name);</span><br><span class="line">                                    &#125;</span><br><span class="line"></span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;);</span><br><span class="line"></span><br><span class="line">                            linearLayout.addView(button);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>点击可加载的模块，如果已经下载过，则直接打开，否则下载后打开</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">	 //下载之后解压，然后打开</span><br><span class="line">    ZipUtils.unzip(MainActivity.this.getFilesDir().getAbsolutePath() + &quot;/&quot; + bundleName + &quot;.zip&quot;, MainActivity.this.getFilesDir().getAbsolutePath());</span><br><span class="line"></span><br><span class="line">    DispatchUtils.dispatchModel = bundleName;</span><br><span class="line">    DispatchActivity.start(MainActivity.this);</span><br><span class="line"></span><br><span class="line">&#125; catch (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h4><p>这里的重点是，统一个模块分发的DispatchActivity作为入口，所有的模块打开都走这里。然后重写<code>createReactActivityDelegate</code>，这里面指定了要加载的模块的路径。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class DispatchActivity extends ReactActivity &#123;</span><br><span class="line"></span><br><span class="line">    public static void start(Context context) &#123;</span><br><span class="line">        Intent starter = new Intent(context, DispatchActivity.class);</span><br><span class="line">        context.startActivity(starter);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected ReactActivityDelegate createReactActivityDelegate() &#123;</span><br><span class="line"></span><br><span class="line">        DispatchDelegate delegate = new DispatchDelegate(this, DispatchUtils.dispatchModel);</span><br><span class="line"></span><br><span class="line">        return delegate;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">public class DispatchDelegate extends ReactActivityDelegate &#123;</span><br><span class="line"></span><br><span class="line">    private Activity activity;</span><br><span class="line">    private String bundleName;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public DispatchDelegate(Activity activity, @Nullable String mainComponentName) &#123;</span><br><span class="line">        super(activity, mainComponentName);</span><br><span class="line">        this.activity = activity;</span><br><span class="line">        this.bundleName = mainComponentName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected ReactNativeHost getReactNativeHost() &#123;</span><br><span class="line"></span><br><span class="line">        ReactNativeHost mReactNativeHost = new ReactNativeHost(activity.getApplication()) &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public boolean getUseDeveloperSupport() &#123;</span><br><span class="line">                return BuildConfig.DEBUG;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            protected List&lt;ReactPackage&gt; getPackages() &#123;</span><br><span class="line">                return Arrays.&lt;ReactPackage&gt;asList(</span><br><span class="line">                        new MainReactPackage()</span><br><span class="line">                );</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Nullable</span><br><span class="line">            @Override</span><br><span class="line">            protected String getJSBundleFile() &#123;</span><br><span class="line">				   // 这里指定JSBundleFile的入口，从而实现加载不同的模块</span><br><span class="line">                String file = activity.getFilesDir().getAbsolutePath() + &quot;/&quot; + bundleName + &quot;/&quot; + bundleName + &quot;.bundle&quot;;</span><br><span class="line">                return file;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Nullable</span><br><span class="line">            @Override</span><br><span class="line">            protected String getBundleAssetName() &#123;</span><br><span class="line">                return bundleName + &quot;.bundle&quot;;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            protected String getJSMainModuleName() &#123;</span><br><span class="line">                return &quot;index&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        return mReactNativeHost;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行效果如下：</p>
+<figure>
+    <img src="https://i.loli.net/2018/12/21/5c1cc422e4379.png" width="240">
+</figure>
+
+<figure>
+    <img src="https://i.loli.net/2018/12/21/5c1cc422ef600.png" width="240">
+    <img src="https://i.loli.net/2018/12/21/5c1cc4230df43.png" width="240">
+</figure>
+
+
+<p>有任何问题欢迎留言，源码地址<a href="https://github.com/77Y/react-native-spring" target="_blank" rel="noopener">https://github.com/77Y/react-native-spring</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">├── AModel  模块A</span><br><span class="line">├── BModel  模块B</span><br><span class="line">├── host  Android</span><br><span class="line">└── rn-server 服务端</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-number">2.</span> <span class="toc-text">环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、jdk"><span class="toc-number">2.0.1.</span> <span class="toc-text">1、jdk</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、maven"><span class="toc-number">2.0.2.</span> <span class="toc-text">2、maven</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、nodejs"><span class="toc-number">2.0.3.</span> <span class="toc-text">3、nodejs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、android环境"><span class="toc-number">2.0.4.</span> <span class="toc-text">4、android环境</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5、react-native"><span class="toc-number">2.0.5.</span> <span class="toc-text">5、react native</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Server开发"><span class="toc-number">3.</span> <span class="toc-text">Server开发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#React-Native开发"><span class="toc-number">4.</span> <span class="toc-text">React Native开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化项目"><span class="toc-number">4.1.</span> <span class="toc-text">初始化项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#离线打包"><span class="toc-number">4.2.</span> <span class="toc-text">离线打包</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android开发"><span class="toc-number">5.</span> <span class="toc-text">Android开发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#重点"><span class="toc-number">5.0.1.</span> <span class="toc-text">重点</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&text=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&title=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&is_video=false&description=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=基于reactnative实现动态加载&body=Check out this article: http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&title=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&title=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&title=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&title=基于reactnative实现动态加载" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/&name=基于reactnative实现动态加载&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

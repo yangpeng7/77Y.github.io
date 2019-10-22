@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="随着移动技术的发展，物联网（Internet of Things）这个词在我们的生活中出现的频率越来越高。越来越多的设备需要联网。智能设备连网的方式有很多种比如直接通过SIM卡、AP配网、智能配网（SmartConfig）等。 最近为了研究AP配网方式，看了一下WifiManager这个类，分享一下用法。 初始化WifiManager 　1WifiManager manager = (WifiMa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WifiManager介绍">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2018&#x2F;12&#x2F;17&#x2F;WifiManager%E4%BB%8B%E7%BB%8D&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="随着移动技术的发展，物联网（Internet of Things）这个词在我们的生活中出现的频率越来越高。越来越多的设备需要联网。智能设备连网的方式有很多种比如直接通过SIM卡、AP配网、智能配网（SmartConfig）等。 最近为了研究AP配网方式，看了一下WifiManager这个类，分享一下用法。 初始化WifiManager 　1WifiManager manager = (WifiMa">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-22T13:45:01.307Z">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>WifiManager介绍</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/12/21/%E5%9F%BA%E4%BA%8EReactNative%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/12/15/%E4%BD%BF%E7%94%A8jarjar-jar%E4%BF%AE%E6%94%B9%E5%8C%85%E5%90%8D/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&text=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&title=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&is_video=false&description=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=WifiManager介绍&body=Check out this article: http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&title=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&title=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&title=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&title=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&name=WifiManager介绍&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#初始化WifiManager"><span class="toc-number">1.</span> <span class="toc-text">初始化WifiManager 　</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取Wifi状态"><span class="toc-number">2.</span> <span class="toc-text">获取Wifi状态</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        WifiManager介绍
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-12-17T12:22:00.000Z" itemprop="datePublished">2018-12-17</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>随着移动技术的发展，物联网（Internet of Things）这个词在我们的生活中出现的频率越来越高。<br>越来越多的设备需要联网。智能设备连网的方式有很多种比如直接通过SIM卡、AP配网、智能配网（SmartConfig）等。</p>
+<p>最近为了研究AP配网方式，看了一下WifiManager这个类，分享一下用法。</p>
+<h4 id="初始化WifiManager"><a href="#初始化WifiManager" class="headerlink" title="初始化WifiManager 　"></a>初始化WifiManager 　</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WifiManager manager = (WifiManager) this.getApplicationContext().getSystemService(WIFI_SERVICE);</span><br></pre></td></tr></table></figure>
+
+<p>有两个基本的权限需要添加一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot; /&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.CHANGE_WIFI_STATE&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<p>否则回报SecurityException</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.SecurityException: WifiService: Neither user 10931 nor current process has android.permission.ACCESS_WIFI_STATE.</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="获取Wifi状态"><a href="#获取Wifi状态" class="headerlink" title="获取Wifi状态"></a>获取Wifi状态</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int state = manager.getWifiState();</span><br></pre></td></tr></table></figure>
+
+<p>一共有五种状态如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public static final int WIFI_STATE_DISABLING = 0; 正在禁用</span><br><span class="line">public static final int WIFI_STATE_DISABLED = 1;  禁用</span><br><span class="line">public static final int WIFI_STATE_ENABLING = 2;  启用中</span><br><span class="line">public static final int WIFI_STATE_ENABLED = 3;   启用</span><br><span class="line">public static final int WIFI_STATE_UNKNOWN = 4;   未知</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#### 获取已经配置的wifi</span><br></pre></td></tr></table></figure>
+<p>List<WifiConfiguration> list = manager.getConfiguredNetworks();</p>
+<p>for (WifiConfiguration configuration : list) {<br>    Log.e(TAG, configuration.toString());<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">会返回手机上保存的wifi列表</span><br><span class="line"></span><br><span class="line">&gt; 当wifi状态是关闭的时候会返回null </span><br><span class="line"></span><br><span class="line">#### 获取wifi信息</span><br></pre></td></tr></table></figure>
+<p>WifiInfo info = manager.getConnectionInfo();</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 启用wifi</span><br></pre></td></tr></table></figure>
+<p>manager.setWifiEnabled(true);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这个方法会启用wifi开关</span><br><span class="line"></span><br><span class="line">#### 禁用wifi</span><br></pre></td></tr></table></figure>
+<p>manager.setWifiEnabled(false);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这个方法会禁用wifi开关</span><br><span class="line"></span><br><span class="line">#### 启用某一wifi</span><br></pre></td></tr></table></figure>
+<p>boolean succeeded = manager.enableNetwork(manager.getConnectionInfo().getNetworkId(), true);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 禁用某一wifi</span><br></pre></td></tr></table></figure>
+<p>boolean succeeded = manager.disableNetwork(manager.getConnectionInfo().getNetworkId());</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 断开连接</span><br></pre></td></tr></table></figure>
+<p>boolean succeeded = manager.disconnect();</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 重新连接</span><br></pre></td></tr></table></figure>
+<p>boolean succeeded = manager.reconnect();<br>boolean succeeded = manager.reassociate()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">reconnect只有当前状态是断开才会重新连接，reassociate无论当前是什么状态都会重新连接</span><br><span class="line"></span><br><span class="line">#### 添加网络</span><br></pre></td></tr></table></figure>
+<p>WifiConfiguration configuration = new WifiConfiguration();<br>configuration.SSID = “live_iot”;</p>
+<p>//WPA-PSK<br>configuration.preSharedKey = “”” + 123456 + “””;</p>
+<p>//WEP(已经被证明不安全)<br>//configuration.wepKeys[0] = “”” + 123456 + “””;</p>
+<p>int id = manager.addNetwork(configuration);<br>boolean succeeded = manager.enableNetwork(id, true);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">当使用的是WPA-PSK，密码通过preSharedKey设置。当使用的是WEP，通过wepKeys设置。</span><br><span class="line">关于加密认证方式可参考[这篇文章](https://www.netspotapp.com/cn/wifi-encryption-and-security.html)</span><br><span class="line"></span><br><span class="line">&gt;密码错误也会添加成功，只不过连接不上</span><br><span class="line"></span><br><span class="line">#### 更新网络</span><br></pre></td></tr></table></figure>
+<p>manager.updateNetwork(configuration);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#### 移除网络</span><br></pre></td></tr></table></figure>
+<p>WifiInfo info = manager.getConnectionInfo();<br>manager.removeNetwork(info.getNetworkId());</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 开始扫描</span><br></pre></td></tr></table></figure>
+<p>boolean succeeded = manager.startScan();</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 接收广播扫描结果</span><br></pre></td></tr></table></figure>
+<p>private BroadcastReceiver receiver = new BroadcastReceiver() {</p>
+<pre><code>@Override
+public void onReceive(Context context, Intent intent) {
+    final String action = intent.getAction();
+
+    if (action.equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
+
+        Toast.makeText(context, &quot;扫描成功&quot;, Toast.LENGTH_SHORT).show();
+
+    }
+}</code></pre><p>};</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### 获取扫描结果</span><br></pre></td></tr></table></figure>
+<p>List<ScanResult> scanResults = manager.getScanResults();<br>for (ScanResult scanResult : scanResults) {<br>    Log.e(TAG, scanResult.SSID);<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Android6.0之后需要动态申请定位权限才可以获取到扫描结果</span><br></pre></td></tr></table></figure>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+```
+
+<p>经测试在红米4A上，允许此权限依然无法获取到扫描结果。</p>
+<p>本文<a href="https://github.com/77Y/WifiManager" target="_blank" rel="noopener">demo</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#初始化WifiManager"><span class="toc-number">1.</span> <span class="toc-text">初始化WifiManager 　</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取Wifi状态"><span class="toc-number">2.</span> <span class="toc-text">获取Wifi状态</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&text=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&title=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&is_video=false&description=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=WifiManager介绍&body=Check out this article: http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&title=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&title=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&title=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&title=WifiManager介绍" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2018/12/17/WifiManager%E4%BB%8B%E7%BB%8D/&name=WifiManager介绍&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
