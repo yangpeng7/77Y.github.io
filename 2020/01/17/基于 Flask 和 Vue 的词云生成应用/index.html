@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang=zh>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0e76dffc6c1c980a49f2d1fa69fd8148";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前言这是一个前端用 Vue，后端用 Python 的 Web 框架 Flask 开发的词云生成应用，代码已上传到 flask-vue-word-cloud。写这个小项目的起因是最近团队年终述职，有一些大佬的 PPT 上用了词云来展示自己团队一年的工作成果。还有大佬说不要守着自己的一亩三分地，在技术上拓宽视野可以帮助我们更好的成长。正好之前接触过 Python 和 R 生成词云，于是作为一个移动端开">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于 Flask 和 Vue 的词云生成应用">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;17&#x2F;%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="前言这是一个前端用 Vue，后端用 Python 的 Web 框架 Flask 开发的词云生成应用，代码已上传到 flask-vue-word-cloud。写这个小项目的起因是最近团队年终述职，有一些大佬的 PPT 上用了词云来展示自己团队一年的工作成果。还有大佬说不要守着自己的一亩三分地，在技术上拓宽视野可以帮助我们更好的成长。正好之前接触过 Python 和 R 生成词云，于是作为一个移动端开">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;17&#x2F;9J3D5heMVWu6qTC.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;17&#x2F;zoySbGNxAfXFQv2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;17&#x2F;Qc9sfKhlX46CD2g.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;17&#x2F;9oWz16msZ5heSfA.png">
+<meta property="og:updated_time" content="2020-01-17T08:06:27.314Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;17&#x2F;9J3D5heMVWu6qTC.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>基于 Flask 和 Vue 的词云生成应用</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/10/23/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8hexo%E6%8B%A5%E6%9C%89%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%B0%8F%E7%AB%99/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&text=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&title=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&is_video=false&description=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=基于 Flask 和 Vue 的词云生成应用&body=Check out this article: http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&title=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&title=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&title=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&title=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&name=基于 Flask 和 Vue 的词云生成应用&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#目录结构"><span class="toc-number">2.</span> <span class="toc-text">目录结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开发环境"><span class="toc-number">3.</span> <span class="toc-text">开发环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#前端开发"><span class="toc-number">4.</span> <span class="toc-text">前端开发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、安装vue-cli"><span class="toc-number">4.1.</span> <span class="toc-text">1、安装vue-cli</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、创建项目"><span class="toc-number">4.2.</span> <span class="toc-text">2、创建项目</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、安装element-ui"><span class="toc-number">4.3.</span> <span class="toc-text">3、安装element-ui</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、安装axios"><span class="toc-number">4.4.</span> <span class="toc-text">4、安装axios</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5、编写页面"><span class="toc-number">4.5.</span> <span class="toc-text">5、编写页面</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#后端开发"><span class="toc-number">5.</span> <span class="toc-text">后端开发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、安装Python3"><span class="toc-number">5.1.</span> <span class="toc-text">1、安装Python3</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、创建虚拟环境"><span class="toc-number">5.2.</span> <span class="toc-text">2、创建虚拟环境</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、安装-flask"><span class="toc-number">5.3.</span> <span class="toc-text">3、安装 flask</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、安装词云生成库"><span class="toc-number">5.4.</span> <span class="toc-text">4、安装词云生成库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、编写代码"><span class="toc-number">5.5.</span> <span class="toc-text">4、编写代码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TOTO"><span class="toc-number">6.</span> <span class="toc-text">TOTO</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        基于 Flask 和 Vue 的词云生成应用
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-01-17T08:04:46.000Z" itemprop="datePublished">2020-01-17</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>这是一个前端用 Vue，后端用 Python 的 Web 框架 Flask 开发的词云生成应用，代码已上传到 <a href="https://github.com/77Y/flask-vue-word-cloud" target="_blank" rel="noopener">flask-vue-word-cloud</a>。写这个小项目的起因是最近团队年终述职，有一些大佬的 PPT 上用了词云来展示自己团队一年的工作成果。还有大佬说不要守着自己的一亩三分地，在技术上拓宽视野可以帮助我们更好的成长。正好之前接触过 Python 和 R 生成词云，于是作为一个移动端开发者，想在本地跑一个生成词云的服务，就有了这个项目。</p>
+<h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><p>先简单看一下项目的目录结构，backend 是 Flask 实现的服务端，frontend 是 Vue 实现的前端。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── backend</span><br><span class="line">│   ├── app</span><br><span class="line">│   └── venv</span><br><span class="line">└── frontend</span><br><span class="line">    ├── README.md</span><br><span class="line">    ├── build</span><br><span class="line">    ├── config</span><br><span class="line">    ├── dist</span><br><span class="line">    ├── index.html</span><br><span class="line">    ├── node_modules</span><br><span class="line">    ├── package-lock.json</span><br><span class="line">    ├── package.json</span><br><span class="line">    ├── src</span><br><span class="line">    └── static</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Vue 是渐进式 JavaScript 框架。<a href="https://cn.vuejs.org/" target="_blank" rel="noopener">Vue官网</a></p>
+</blockquote>
+<blockquote>
+<p>Flask 是一个使用 Python 编写的轻量级 Web 应用框架。<a href="https://dormousehole.readthedocs.io/en/latest/" target="_blank" rel="noopener">Flask 学习资源</a></p>
+</blockquote>
+<p>再来看一下目前代码的运行效果：<br><img src="https://i.loli.net/2020/01/17/9J3D5heMVWu6qTC.png" alt="image.png"></p>
+<h3 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h3><p>硬件：</p>
+<ul>
+<li>macOS Mojave 10.14.6</li>
+</ul>
+<p>软件：</p>
+<ul>
+<li>nodejs v11.6.0</li>
+<li>Python 3.7.4</li>
+</ul>
+<p>请确保已经安装好了node js 环境，可参考<a href="https://nodejs.org/en/" target="_blank" rel="noopener">nodejs官网</a>进行安装。</p>
+<h3 id="前端开发"><a href="#前端开发" class="headerlink" title="前端开发"></a>前端开发</h3><h4 id="1、安装vue-cli"><a href="#1、安装vue-cli" class="headerlink" title="1、安装vue-cli"></a>1、安装vue-cli</h4><p>安装 vue-cli</br><br>Vue CLI 是一个基于 Vue.js 进行快速开发的完整系统。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g vue-cli</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、创建项目"><a href="#2、创建项目" class="headerlink" title="2、创建项目"></a>2、创建项目</h4><p>新建目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir word-cloud</span><br><span class="line">$ <span class="built_in">cd</span> word-cloud/</span><br></pre></td></tr></table></figure>
+<p>创建项目</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vue init webpack frontend</span><br></pre></td></tr></table></figure>
+<p>执行完上面的命令后，会让你设置项目的基本信息，我的配置如下：<br><img src="https://i.loli.net/2020/01/17/zoySbGNxAfXFQv2.png" alt="image.png"></p>
+<p>然后等待安装一些基本的依赖，完成之后进入到 frontend 目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cd frontend</span><br><span class="line">$ npm run dev</span><br></pre></td></tr></table></figure>
+<p>执行完后会在控制台提示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Your application is running here: http://localhost:8080</span><br></pre></td></tr></table></figure>
+<p>说明我们现在已经可以跑起来了，可以访问一下<code>http://localhost:8080</code>，如下：</p>
+<p><img src="https://i.loli.net/2020/01/17/Qc9sfKhlX46CD2g.png" alt="image.png"></p>
+<p>这时我们再看一下 frontend 的目录结构，已经默认帮我们生成了一些目录和代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── README.md</span><br><span class="line">├── build</span><br><span class="line">├── config</span><br><span class="line">├── index.html</span><br><span class="line">├── node_modules</span><br><span class="line">├── package-lock.json</span><br><span class="line">├── package.json</span><br><span class="line">├── src</span><br><span class="line">└── static</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、安装element-ui"><a href="#3、安装element-ui" class="headerlink" title="3、安装element-ui"></a>3、安装element-ui</h4><p><a href="https://element.eleme.io/#/zh-CN" target="_blank" rel="noopener">Element</a> 是一套为开发者、设计师和产品经理准备的基于 Vue 2.0 的桌面端组件库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm i element-ui -S</span><br></pre></td></tr></table></figure>
+<p>使用插件</p>
+<p>在 vue-cli 帮我们生成的目录中<code>/src/main.js</code>中导入ElementUI</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import ElementUI from &apos;element-ui&apos;</span><br><span class="line">import &apos;element-ui/lib/theme-chalk/index.css&apos;</span><br></pre></td></tr></table></figure>
+
+<p>最后使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Vue.use(ElementUI)</span><br></pre></td></tr></table></figure>
+
+<h4 id="4、安装axios"><a href="#4、安装axios" class="headerlink" title="4、安装axios"></a>4、安装axios</h4><p>因为是前后端分离的应用，所以还要安装请求的库axios。<a href="https://cn.vuejs.org/v2/cookbook/using-axios-to-consume-apis.html" target="_blank" rel="noopener">axios</a> 是基于 promise 的 HTTP 客户端。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install --save axios</span><br></pre></td></tr></table></figure>
+
+<p>同样在<code>/src/main.js</code>导入axios</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import axios from &apos;axios&apos;</span><br></pre></td></tr></table></figure>
+
+<p>注册axios</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Vue.prototype.axios = axios</span><br></pre></td></tr></table></figure>
+<p>之后我们就可以使用 axios 发送请求了。</p>
+<h4 id="5、编写页面"><a href="#5、编写页面" class="headerlink" title="5、编写页面"></a>5、编写页面</h4><p>先找到<code>App.vue</code>，把我们不需要的 logo 删掉。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div id=&quot;app&quot;&gt;</span><br><span class="line">    &lt;!-- &lt;img src=&quot;./assets/logo.png&quot;&gt; --&gt;</span><br><span class="line">    &lt;router-view/&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>新建<code>WordCloud.vue</code>，这就是我们的主要页面。一个标题，一个输入框，两个按钮。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        &lt;h2&gt;小词云&lt;/h2&gt;</span><br><span class="line">        &lt;div id=&quot;word-text-area&quot;&gt;</span><br><span class="line">            &lt;el-input type=&quot;textarea&quot; :rows=&quot;10&quot; placeholder=&quot;请输入内容&quot; v-model=&quot;textarea&quot;&gt;</span><br><span class="line">            &lt;/el-input&gt;</span><br><span class="line">            &lt;div id=&quot;word-img&quot;&gt;</span><br><span class="line">                &lt;el-image :src=&quot;&apos;data:image/png;base64,&apos;+pic&quot; :fit=&quot;fit&quot;&gt;</span><br><span class="line">                    &lt;div slot=&quot;error&quot; class=&quot;image-slot&quot;&gt;</span><br><span class="line">                        &lt;i class=&quot;el-icon-picture-outline&quot;&gt;&lt;/i&gt;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                &lt;/el-image&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">            &lt;div id=&quot;word-operation&quot;&gt;</span><br><span class="line">                &lt;el-row&gt;</span><br><span class="line">                    &lt;el-button type=&quot;primary&quot; @click=&quot;onSubmit&quot; round&gt;生成词云&lt;/el-button&gt;</span><br><span class="line">                    &lt;el-button type=&quot;success&quot; @click=&quot;onDownload&quot; round&gt;下载图片&lt;/el-button&gt;</span><br><span class="line">                &lt;/el-row&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>实现点击事件并发送请求</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &apos;wordcloud&apos;,</span><br><span class="line">        data() &#123;</span><br><span class="line">            return &#123;</span><br><span class="line">                textarea: &apos;&apos;,</span><br><span class="line">                pic: &quot;&quot;,</span><br><span class="line">                pageTitle: &apos;Flask Vue Word Cloud&apos;,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        methods: &#123;</span><br><span class="line">            onSubmit() &#123;</span><br><span class="line">                var param = &#123;</span><br><span class="line">                    &quot;word&quot;: this.textarea</span><br><span class="line">                &#125;</span><br><span class="line">                this.axios.post(&quot;/word/cloud/generate&quot;, param).then(</span><br><span class="line">                    res =&gt; &#123;</span><br><span class="line">                        this.pic = res.data</span><br><span class="line">                        console.log(res.data)</span><br><span class="line">                    &#125;</span><br><span class="line">                ).catch(res =&gt; &#123;</span><br><span class="line">                    console.log(res.data.res)</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;,</span><br><span class="line">            onDownload() &#123;</span><br><span class="line">                const imgUrl = &apos;data:image/png;base64,&apos; + this.pic</span><br><span class="line">                const a = document.createElement(&apos;a&apos;)</span><br><span class="line">                a.href = imgUrl</span><br><span class="line">                a.setAttribute(&apos;download&apos;, &apos;word-cloud&apos;)</span><br><span class="line">                a.click()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>最后在<code>src/router</code>中找到<code>index.js</code>修改一下路由。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">export default new Router(&#123;</span><br><span class="line">  routes: [&#123;</span><br><span class="line">    path: &apos;/&apos;,</span><br><span class="line">    name: &apos;index&apos;,</span><br><span class="line">    component: WordCloud</span><br><span class="line">  &#125;]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>打包资源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm run build</span><br></pre></td></tr></table></figure>
+<p>执行完成后会将资源打包到<code>dist</code>目录。</p>
+<p>至此，前端的开发工作就完成了。</p>
+<h3 id="后端开发"><a href="#后端开发" class="headerlink" title="后端开发"></a>后端开发</h3><h4 id="1、安装Python3"><a href="#1、安装Python3" class="headerlink" title="1、安装Python3"></a>1、安装Python3</h4><p>由于 mac 系统自带的 Python 版本是 2.7，先安装一下Python3，这里我使用 homebrew 安装。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install python3</span><br></pre></td></tr></table></figure>
+
+<p>由于我之前已经安装过了，执行完成之后出现警告，按照提示操作</p>
+<blockquote>
+<p>Warning: python 3.7.4_1 is already installed, it’s just not linked<br>You can use <code>brew link python</code> to link this version.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Linking /usr/local/Cellar/python/3.7.4_1... Error: Permission denied @ dir_s_mkdir - /usr/local/Frameworks</span><br></pre></td></tr></table></figure>
+
+<p>再次出现错误，没有权限</p>
+<blockquote>
+<p>参考处理：<a href="https://stackoverflow.com/questions/29422345/installed-just-not-linked" target="_blank" rel="noopener">https://stackoverflow.com/questions/29422345/installed-just-not-linked</a></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R $USER:admin /usr/local</span><br></pre></td></tr></table></figure>
+
+<p>再次执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew link python</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Linking /usr/local/Cellar/python/3.7.4_1... 1 symlinks created</span><br></pre></td></tr></table></figure>
+<p>错误解决，执行 python3 可以正确显示版本号。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ python3</span><br><span class="line">Python 3.7.4 (default, Sep  7 2019, 18:27:02) </span><br><span class="line">[Clang 10.0.1 (clang-1001.0.46.4)] on darwin</span><br><span class="line">Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、创建虚拟环境"><a href="#2、创建虚拟环境" class="headerlink" title="2、创建虚拟环境"></a>2、创建虚拟环境</h4><p>Python 虚拟环境可以为 Python 项目提供独立的运行环境，使得不同的应用使用不同的 Python 版本，我们使用虚拟环境开发一个 Python 应用。</p>
+<p>新建后端目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir backend</span><br><span class="line">$ cd backend/</span><br></pre></td></tr></table></figure>
+
+<p>创建虚拟环境</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m venv venv</span><br></pre></td></tr></table></figure>
+
+<p>激活虚拟环境</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source venv/bin/activate</span><br></pre></td></tr></table></figure>
+
+<p>关闭虚拟环境的命令如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deactivate</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、安装-flask"><a href="#3、安装-flask" class="headerlink" title="3、安装 flask"></a>3、安装 flask</h4><p>关于 flask 我们在文章最开始已经介绍过。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install flask</span><br></pre></td></tr></table></figure>
+
+<p>如果没有报错，那就就安装成果了。</p>
+<h4 id="4、安装词云生成库"><a href="#4、安装词云生成库" class="headerlink" title="4、安装词云生成库"></a>4、安装词云生成库</h4><p>wordcloud 是 python 优秀的词云生成库。词云以词语为基本单位更加直观的展示文本。</p>
+<p><img src="https://i.loli.net/2020/01/17/9oWz16msZ5heSfA.png" alt="image.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install wordcloud</span><br></pre></td></tr></table></figure>
+
+<h4 id="4、编写代码"><a href="#4、编写代码" class="headerlink" title="4、编写代码"></a>4、编写代码</h4><p>关于 flask 代码部分参考了<a href="https://github.com/luhuisicnu/The-Flask-Mega-Tutorial-zh" target="_blank" rel="noopener">The Flask Mega-Tutorial教程</a>，看完第一章就可以写出应用了。这里我解释一下关键代码。</p>
+<p>在<code>__init__.py</code>中修改python默认html和静态资源目录，这个资源就是我们上面在前端开发中通过<code>npm run build</code>生成的资源目录。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app = Flask(__name__,</span><br><span class="line">            template_folder=&quot;../../frontend/dist&quot;,</span><br><span class="line">            static_folder=&quot;../../frontend/dist/static&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>修改完成之后再启动 Flask，访问的就是 vue 的页面了。</p>
+<p><code>routes.py</code> 里面的代码，就是主页面和生成词云的接口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"># 真正调用词云库生成图片</span><br><span class="line">def get_word_cloud(text):</span><br><span class="line">    # font = &quot;./SimHei.ttf&quot;</span><br><span class="line">    # pil_img = WordCloud(width=500, height=500, font_path=font).generate(text=text).to_image()</span><br><span class="line"></span><br><span class="line">    pil_img = WordCloud(width=800, height=300, background_color=&quot;white&quot;).generate(text=text).to_image()</span><br><span class="line">    img = io.BytesIO()</span><br><span class="line">    pil_img.save(img, &quot;PNG&quot;)</span><br><span class="line">    img.seek(0)</span><br><span class="line">    img_base64 = base64.b64encode(img.getvalue()).decode()</span><br><span class="line">    return img_base64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 主页面</span><br><span class="line">@app.route(&apos;/&apos;)</span><br><span class="line">@app.route(&apos;/index&apos;)</span><br><span class="line">def index():</span><br><span class="line">    return render_template(&apos;index.html&apos;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 生成词云图片接口，以base64格式返回</span><br><span class="line">@app.route(&apos;/word/cloud/generate&apos;, methods=[&quot;POST&quot;])</span><br><span class="line">def cloud():</span><br><span class="line">    text = request.json.get(&quot;word&quot;)</span><br><span class="line">    res = get_word_cloud(text)</span><br><span class="line">    return res</span><br></pre></td></tr></table></figure>
+
+<p>最后执行<code>flask run</code>就可以跑起来了。</p>
+<p>当然这是用半天时间跑起来的一个简陋的应用，但是具备了基本的前后端分离应用的功能，后续将会完善起来。</p>
+<h3 id="TOTO"><a href="#TOTO" class="headerlink" title="TOTO"></a>TOTO</h3><ul>
+<li><input disabled="" type="checkbox"> 支持中文分词</li>
+<li><input disabled="" type="checkbox"> 支持停用词</li>
+<li><input disabled="" type="checkbox"> 集成 Docker</li>
+<li><input disabled="" type="checkbox"> 自定义背景颜色</li>
+<li><input disabled="" type="checkbox"> 自定义图片尺寸</li>
+<li><input disabled="" type="checkbox"> 自定义词云形状</li>
+<li><input disabled="" type="checkbox"> 自定义字体</li>
+<li><input disabled="" type="checkbox"> 服务器部署</li>
+<li><input disabled="" type="checkbox"> 其他</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#目录结构"><span class="toc-number">2.</span> <span class="toc-text">目录结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开发环境"><span class="toc-number">3.</span> <span class="toc-text">开发环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#前端开发"><span class="toc-number">4.</span> <span class="toc-text">前端开发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、安装vue-cli"><span class="toc-number">4.1.</span> <span class="toc-text">1、安装vue-cli</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、创建项目"><span class="toc-number">4.2.</span> <span class="toc-text">2、创建项目</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、安装element-ui"><span class="toc-number">4.3.</span> <span class="toc-text">3、安装element-ui</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、安装axios"><span class="toc-number">4.4.</span> <span class="toc-text">4、安装axios</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5、编写页面"><span class="toc-number">4.5.</span> <span class="toc-text">5、编写页面</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#后端开发"><span class="toc-number">5.</span> <span class="toc-text">后端开发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、安装Python3"><span class="toc-number">5.1.</span> <span class="toc-text">1、安装Python3</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、创建虚拟环境"><span class="toc-number">5.2.</span> <span class="toc-text">2、创建虚拟环境</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、安装-flask"><span class="toc-number">5.3.</span> <span class="toc-text">3、安装 flask</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、安装词云生成库"><span class="toc-number">5.4.</span> <span class="toc-text">4、安装词云生成库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、编写代码"><span class="toc-number">5.5.</span> <span class="toc-text">4、编写代码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TOTO"><span class="toc-number">6.</span> <span class="toc-text">TOTO</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&text=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&title=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&is_video=false&description=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=基于 Flask 和 Vue 的词云生成应用&body=Check out this article: http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&title=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&title=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&title=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&title=基于 Flask 和 Vue 的词云生成应用" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/&name=基于 Flask 和 Vue 的词云生成应用&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
