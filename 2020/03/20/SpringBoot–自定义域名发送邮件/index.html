@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang=zh>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0e76dffc6c1c980a49f2d1fa69fd8148";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前言最近的一个小项目用到了邮件发送的功能，由于自己实现一套 SMTP 比较复杂，于是借助第三方如 QQ 邮箱或网易邮箱或 Gmail 等邮件系统实现此功能，在开发过程中我使用了网易邮箱，并申请了免费的网易企业邮箱实现自定义域名发送邮件。 邮件协议SMTPSMTP（Simple Mail Transfer Protocol）即简单邮件传输协议是一个在互联网上传输电子邮件的标准。 POPPOP（Pos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot–自定义域名发送邮件">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;20&#x2F;SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="前言最近的一个小项目用到了邮件发送的功能，由于自己实现一套 SMTP 比较复杂，于是借助第三方如 QQ 邮箱或网易邮箱或 Gmail 等邮件系统实现此功能，在开发过程中我使用了网易邮箱，并申请了免费的网易企业邮箱实现自定义域名发送邮件。 邮件协议SMTPSMTP（Simple Mail Transfer Protocol）即简单邮件传输协议是一个在互联网上传输电子邮件的标准。 POPPOP（Pos">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-gold-cdn.xitu.io&#x2F;2020&#x2F;3&#x2F;19&#x2F;170f12a0d9bd14f5?w=1844&amp;h=762&amp;f=png&amp;s=136332">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-gold-cdn.xitu.io&#x2F;2020&#x2F;3&#x2F;19&#x2F;170f12a1070f0113?w=1376&amp;h=416&amp;f=png&amp;s=36550">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-gold-cdn.xitu.io&#x2F;2020&#x2F;3&#x2F;19&#x2F;170f14d7916db3e9?w=1140&amp;h=586&amp;f=png&amp;s=74417">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-gold-cdn.xitu.io&#x2F;2020&#x2F;3&#x2F;19&#x2F;170f12fc4535c680?w=1250&amp;h=844&amp;f=png&amp;s=121300">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-gold-cdn.xitu.io&#x2F;2020&#x2F;3&#x2F;19&#x2F;170f12a0db7800fd?w=1310&amp;h=1018&amp;f=png&amp;s=132636">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-gold-cdn.xitu.io&#x2F;2020&#x2F;3&#x2F;19&#x2F;170f12a0dbaa684b?w=1604&amp;h=574&amp;f=png&amp;s=61839">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-gold-cdn.xitu.io&#x2F;2020&#x2F;3&#x2F;19&#x2F;170f1526ab78292b?w=1880&amp;h=1486&amp;f=png&amp;s=940367">
+<meta property="og:image" content="https:&#x2F;&#x2F;user-gold-cdn.xitu.io&#x2F;2020&#x2F;3&#x2F;2&#x2F;170992b515d2588d?w=1710&amp;h=624&amp;f=png&amp;s=158448">
+<meta property="og:updated_time" content="2020-04-20T07:25:11.719Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;user-gold-cdn.xitu.io&#x2F;2020&#x2F;3&#x2F;19&#x2F;170f12a0d9bd14f5?w=1844&amp;h=762&amp;f=png&amp;s=136332">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>SpringBoot–自定义域名发送邮件</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&text=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&title=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&is_video=false&description=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SpringBoot–自定义域名发送邮件&body=Check out this article: http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&title=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&title=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&title=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&title=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&name=SpringBoot–自定义域名发送邮件&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#邮件协议"><span class="toc-number">2.</span> <span class="toc-text">邮件协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SMTP"><span class="toc-number">2.1.</span> <span class="toc-text">SMTP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POP"><span class="toc-number">2.2.</span> <span class="toc-text">POP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IMAP"><span class="toc-number">2.3.</span> <span class="toc-text">IMAP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-中相关的类"><span class="toc-number">3.</span> <span class="toc-text">Spring 中相关的类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-number">4.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#开启POP3-SMTP-IMAP服务"><span class="toc-number">4.1.</span> <span class="toc-text">开启POP3/SMTP/IMAP服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#个人邮箱配置"><span class="toc-number">4.2.</span> <span class="toc-text">个人邮箱配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#企业邮箱配置"><span class="toc-number">4.3.</span> <span class="toc-text">企业邮箱配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#申请网易企业邮箱"><span class="toc-number">4.3.1.</span> <span class="toc-text">申请网易企业邮箱</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">5.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资源"><span class="toc-number">6.</span> <span class="toc-text">参考资源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更多推荐"><span class="toc-number">7.</span> <span class="toc-text">更多推荐</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        SpringBoot–自定义域名发送邮件
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-03-20T12:22:00.000Z" itemprop="datePublished">2020-03-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近的一个小项目用到了邮件发送的功能，由于自己实现一套 SMTP 比较复杂，于是借助第三方如 QQ 邮箱或网易邮箱或 Gmail 等邮件系统实现此功能，在开发过程中我使用了网易邮箱，并申请了免费的网易企业邮箱实现自定义域名发送邮件。</p>
+<h2 id="邮件协议"><a href="#邮件协议" class="headerlink" title="邮件协议"></a>邮件协议</h2><h3 id="SMTP"><a href="#SMTP" class="headerlink" title="SMTP"></a>SMTP</h3><p>SMTP（Simple Mail Transfer Protocol）即简单邮件传输协议是一个在互联网上传输电子邮件的标准。</p>
+<h3 id="POP"><a href="#POP" class="headerlink" title="POP"></a>POP</h3><p>POP（Post Office Protocol）即邮局协议是TCP/IP协议族中的一员。此协议主要用于支持使用客户端远程管理在服务器上的电子邮件。最新版本为POP3，全名“Post Office Protocol - Version 3”，而提供了SSL加密的POP3协议被称为POP3S。</p>
+<h3 id="IMAP"><a href="#IMAP" class="headerlink" title="IMAP"></a>IMAP</h3><p>IMAP（Internet Message Access Protocol）即因特网信息访问协议是一个应用层协议，用来从本地邮件客户端（如Microsoft Outlook、Outlook Express、Foxmail、Mozilla Thunderbird）访问远程服务器上的邮件。</p>
+<p>那么这三个协议有什么关系呢？</p>
+<blockquote>
+<p>简单地说，SMTP 管 <strong>发</strong>， POP3/IMAP 管 <strong>收</strong>。</p>
+<p>举个例子，你坐在电脑边用 mail client 写完邮件，点击”发送”。这时你的 mail client 会发消息给邮件服务器上的 SMTP service。这时有两种情况：</p>
+<ol>
+<li>如果邮件的收信人也是处于同一个 domain，比如从 163.com 发送给163的邮箱，SMTP service 只需要转给 local 的 POP3 Service 即可。</li>
+<li>如果邮件收信人是另外的 domain，比如 163.com 发送给 sina.com，SMTP service 需要通过询问 DNS，找到属于 sina 的 SMTP service 的 host。</li>
+</ol>
+<p>SMTP service 收到邮件后转给负责接收邮件的 POP3 service</p>
+<p>POP3 service 和 IMAP 的区别主要是：</p>
+<ul>
+<li>POP3 是比较老的 protocol，主要为了解决本地机器和远程邮件服务器链接的问题，每次邮件会download 到本地机器，然后从远程邮件服务器上删掉（当然特殊config除外），然后进行本地编辑。这样的问题是如果从多个终端链接服务器，只有第一个下载的能看到，现在pop4正在讨论中。</li>
+<li>IMAP 是比较新的（好吧，好像也是80年代的产物）protocol，可以将邮件分文件夹整理，然后这些信息也存在远程的邮件服务器上，读取邮件后，服务器上不删除。原理上 IMAP 应该是相当于 oneline 编辑，但现在的 mail client 基本都有在本地存 copy 的功能。</li>
+</ul>
+<p>摘自知乎</p>
+<p>作者：diligentTiger<br>链接：<a href="https://www.zhihu.com/question/24605584/answer/29039357" target="_blank" rel="noopener">https://www.zhihu.com/question/24605584/answer/29039357</a></p>
+</blockquote>
+<h2 id="Spring-中相关的类"><a href="#Spring-中相关的类" class="headerlink" title="Spring 中相关的类"></a>Spring 中相关的类</h2><p>MailSender 是邮件发送相关的接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MailSender</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">send</span><span class="params">(SimpleMailMessage var1)</span> <span class="keyword">throws</span> MailException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">send</span><span class="params">(SimpleMailMessage... var1)</span> <span class="keyword">throws</span> MailException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>MailMessage 是消息相关的接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MailMessage</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setFrom</span><span class="params">(String var1)</span> <span class="keyword">throws</span> MailParseException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setReplyTo</span><span class="params">(String var1)</span> <span class="keyword">throws</span> MailParseException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setTo</span><span class="params">(String var1)</span> <span class="keyword">throws</span> MailParseException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setTo</span><span class="params">(String... var1)</span> <span class="keyword">throws</span> MailParseException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setCc</span><span class="params">(String var1)</span> <span class="keyword">throws</span> MailParseException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setCc</span><span class="params">(String... var1)</span> <span class="keyword">throws</span> MailParseException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setBcc</span><span class="params">(String var1)</span> <span class="keyword">throws</span> MailParseException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setBcc</span><span class="params">(String... var1)</span> <span class="keyword">throws</span> MailParseException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setSentDate</span><span class="params">(Date var1)</span> <span class="keyword">throws</span> MailParseException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setSubject</span><span class="params">(String var1)</span> <span class="keyword">throws</span> MailParseException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setText</span><span class="params">(String var1)</span> <span class="keyword">throws</span> MailParseException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在实际的使用过程中主要使用了 <code>JavaMailSenderImpl</code> 类，它实现了 <code>JavaMailSender</code> 接口，<code>JavaMailSender</code>接口继承自 <code>MailSender</code>，其次是 <code>MimeMessageHelper</code> 帮助我们构建邮件消息。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="开启POP3-SMTP-IMAP服务"><a href="#开启POP3-SMTP-IMAP服务" class="headerlink" title="开启POP3/SMTP/IMAP服务"></a>开启POP3/SMTP/IMAP服务</h3><p>在网易邮箱，设置——POP3/SMTP/IMAP 中开启相关的服务。</p>
+<img src="https://user-gold-cdn.xitu.io/2020/3/19/170f12a0d9bd14f5?w=1844&h=762&f=png&s=136332" alt="image.png" style="zoom: 50%;" />
+
+<p>开通完服务之后获得客户端授权码，在配置文件中会使用。</p>
+<img src="https://user-gold-cdn.xitu.io/2020/3/19/170f12a1070f0113?w=1376&h=416&f=png&s=36550" alt="image.png" style="zoom: 50%;" />
+
+<h3 id="个人邮箱配置"><a href="#个人邮箱配置" class="headerlink" title="个人邮箱配置"></a>个人邮箱配置</h3><p>在 SpringBoot 的配置文件 application.properties 中添加以下配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 网易个人邮箱</span></span><br><span class="line">spring.mail.host=smtp.163.com</span><br><span class="line">spring.mail.port=465</span><br><span class="line">spring.mail.username=你的邮箱</span><br><span class="line"><span class="comment"># 邮箱的授权码</span></span><br><span class="line">spring.mail.password=你自己的授权码</span><br><span class="line">spring.mail.properties.mail.smtp.ssl.enable=<span class="literal">true</span></span><br><span class="line">spring.mail.properties.mail.imap.ssl.socketFactory.fallback=<span class="literal">false</span></span><br><span class="line">spring.mail.properties.mail.smtp.ssl.socketFactory.class=javax.net.ssl.SSLSocketFactory</span><br><span class="line">spring.mail.properties.mail.smtp.auth=<span class="literal">true</span></span><br><span class="line">spring.mail.properties.mail.smtp.starttls.enable=<span class="literal">true</span></span><br><span class="line">spring.mail.properties.mail.smtp.starttls.required=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>发送简单邮件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">()</span> <span class="keyword">throws</span> MessagingException </span>&#123;</span><br><span class="line">    MimeMessage message = javaMailSender.createMimeMessage();</span><br><span class="line">    MimeMessageHelper helper;</span><br><span class="line">    helper = <span class="keyword">new</span> MimeMessageHelper(message, <span class="keyword">true</span>, <span class="string">"utf-8"</span>);</span><br><span class="line">    helper.setFrom(<span class="string">"你的邮箱"</span>);</span><br><span class="line">    helper.setTo(<span class="string">"邮件人@qq.com"</span>);</span><br><span class="line">    helper.setSubject(<span class="string">"九点下班"</span>);</span><br><span class="line">    helper.setText(<span class="string">"微信搜一搜"</span>);</span><br><span class="line">    javaMailSender.send(message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到在 QQ 邮箱中正常收到了邮件</p>
+<img src="https://user-gold-cdn.xitu.io/2020/3/19/170f14d7916db3e9?w=1140&h=586&f=png&s=74417" alt="image.png" style="zoom:50%;" />
+
+<p>发送 html 格式的邮件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">()</span> <span class="keyword">throws</span> MessagingException </span>&#123;</span><br><span class="line">    MimeMessage message = javaMailSender.createMimeMessage();</span><br><span class="line">    MimeMessageHelper helper;</span><br><span class="line">    helper = <span class="keyword">new</span> MimeMessageHelper(message, <span class="keyword">true</span>, <span class="string">"utf-8"</span>);</span><br><span class="line">    helper.setFrom(<span class="string">"你的邮箱"</span>);</span><br><span class="line">    helper.setTo(<span class="string">"邮件人@qq.com"</span>);</span><br><span class="line">    helper.setSubject(<span class="string">"九点下班"</span>);</span><br><span class="line"></span><br><span class="line">    helper.setText(<span class="string">"&lt;html&gt;\n"</span> +</span><br><span class="line">            <span class="string">"\n"</span> +</span><br><span class="line">            <span class="string">"&lt;body&gt;\n"</span> +</span><br><span class="line">            <span class="string">"    &lt;h4&gt;你好：&lt;/h4&gt;\n"</span> +</span><br><span class="line">            <span class="string">"    欢迎关注九点下班\n"</span> +</span><br><span class="line">            <span class="string">"&lt;/br&gt;\n"</span> +</span><br><span class="line">            <span class="string">"    &lt;img src=\"https://i.loli.net/2020/03/19/UYw3raP1NnD7Xhj.png\" width=\"20%\"&gt;\n"</span> +</span><br><span class="line">            <span class="string">"&lt;/body&gt;\n"</span> +</span><br><span class="line">            <span class="string">"\n"</span> +</span><br><span class="line">            <span class="string">"&lt;/html&gt;"</span>, <span class="keyword">true</span>); <span class="comment">//注意这里要设置为true</span></span><br><span class="line">    javaMailSender.send(message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>收到邮件格式如下：</p>
+<img src="https://user-gold-cdn.xitu.io/2020/3/19/170f12fc4535c680?w=1250&h=844&f=png&s=121300" alt="image.png" style="zoom: 50%;" />
+
+<p>除以上格式外，还可以添加附件、设置抄送、设置邮件模版等等。</p>
+<h3 id="企业邮箱配置"><a href="#企业邮箱配置" class="headerlink" title="企业邮箱配置"></a>企业邮箱配置</h3><h4 id="申请网易企业邮箱"><a href="#申请网易企业邮箱" class="headerlink" title="申请网易企业邮箱"></a>申请网易企业邮箱</h4><p>在 <a href="http://ym.163.com/" target="_blank" rel="noopener">网易企业邮箱</a> ：<a href="http://ym.163.com/" target="_blank" rel="noopener">http://ym.163.com/</a> 注册账号</p>
+<img src="https://user-gold-cdn.xitu.io/2020/3/19/170f12a0db7800fd?w=1310&h=1018&f=png&s=132636" alt="image.png" style="zoom:50%;" />
+
+<p>填完以上信息，在 MX 记录验证阶段，需要域名解析记录加一条，以下是我在阿里云域名解析的配置</p>
+<img src="https://user-gold-cdn.xitu.io/2020/3/19/170f12a0dbaa684b?w=1604&h=574&f=png&s=61839" alt="image.png" style="zoom:50%;" />
+
+<p>完成注册并验证通过之后就可以使用了，配置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 网易企业邮箱</span></span><br><span class="line">spring.mail.host=smtp.ym.163.com</span><br><span class="line">spring.mail.port=465</span><br><span class="line"><span class="comment"># 你注册的企业邮箱</span></span><br><span class="line">spring.mail.username=service@democome.com</span><br><span class="line"><span class="comment"># 注意是企业邮箱的密码，企业邮箱没有授权码</span></span><br><span class="line">spring.mail.password=企业邮箱的密码</span><br><span class="line">spring.mail.properties.mail.smtp.ssl.enable=<span class="literal">true</span></span><br><span class="line">spring.mail.properties.mail.imap.ssl.socketFactory.fallback=<span class="literal">false</span></span><br><span class="line">spring.mail.properties.mail.smtp.ssl.socketFactory.class=javax.net.ssl.SSLSocketFactory</span><br><span class="line">spring.mail.properties.mail.smtp.auth=<span class="literal">true</span></span><br><span class="line">spring.mail.properties.mail.smtp.starttls.enable=<span class="literal">true</span></span><br><span class="line">spring.mail.properties.mail.smtp.starttls.required=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>以上配置完成后，发送消息的代码基本不变</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">()</span> <span class="keyword">throws</span> MessagingException </span>&#123;</span><br><span class="line">    MimeMessage message = javaMailSender.createMimeMessage();</span><br><span class="line">    MimeMessageHelper helper;</span><br><span class="line">    helper = <span class="keyword">new</span> MimeMessageHelper(message, <span class="keyword">true</span>, <span class="string">"utf-8"</span>);</span><br><span class="line">    helper.setFrom(<span class="string">"service@democome.com"</span>);</span><br><span class="line">    helper.setTo(<span class="string">"邮件人@qq.com"</span>);</span><br><span class="line">    helper.setSubject(<span class="string">"九点下班"</span>);</span><br><span class="line"></span><br><span class="line">    helper.setText(<span class="string">"&lt;html&gt;\n"</span> +</span><br><span class="line">            <span class="string">"\n"</span> +</span><br><span class="line">            <span class="string">"&lt;body&gt;\n"</span> +</span><br><span class="line">            <span class="string">"    &lt;h4&gt;你好：&lt;/h4&gt;\n"</span> +</span><br><span class="line">            <span class="string">"    欢迎关注九点下班\n"</span> +</span><br><span class="line">            <span class="string">"&lt;/br&gt;\n"</span> +</span><br><span class="line">            <span class="string">"    &lt;img src=\"https://i.loli.net/2020/03/19/UYw3raP1NnD7Xhj.png\" width=\"20%\"&gt;\n"</span> +</span><br><span class="line">            <span class="string">"&lt;/body&gt;\n"</span> +</span><br><span class="line">            <span class="string">"\n"</span> +</span><br><span class="line">            <span class="string">"&lt;/html&gt;"</span>, <span class="keyword">true</span>);</span><br><span class="line">    javaMailSender.send(message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到已经是域名邮箱了</p>
+<img src="https://user-gold-cdn.xitu.io/2020/3/19/170f1526ab78292b?w=1880&h=1486&f=png&s=940367" alt="image.png" style="zoom:50%;" />
+
+
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>如果你在 macOS 使用的过程中出现 <code>Connection refused</code> 异常需要开启 <code>postfix</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo postfix status</span><br><span class="line">postfix/postfix-script: the Postfix mail system is running: PID: 19508</span><br></pre></td></tr></table></figure>
+
+<p>如果没有启动需要执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo postfix start</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考资源"><a href="#参考资源" class="headerlink" title="参考资源"></a>参考资源</h2><p><a href="https://zh.wikipedia.org/wiki/简单邮件传输协议" target="_blank" rel="noopener">STMP</a>：<a href="https://zh.wikipedia.org/wiki/简单邮件传输协议" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/简单邮件传输协议</a></p>
+<p><a href="https://zh.wikipedia.org/wiki/因特网信息访问协议" target="_blank" rel="noopener">IMAP</a>：<a href="https://zh.wikipedia.org/wiki/因特网信息访问协议" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/因特网信息访问协议</a></p>
+<p><a href="https://zh.wikipedia.org/wiki/郵局協定" target="_blank" rel="noopener">POP</a>：<a href="https://zh.wikipedia.org/wiki/郵局協定" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/郵局協定</a></p>
+<h2 id="更多推荐"><a href="#更多推荐" class="headerlink" title="更多推荐"></a>更多推荐</h2><p><a href="https://juejin.im/post/5e6a5223e51d4526c47ae637" target="_blank" rel="noopener">Android开发者如何写服务端代码</a></p>
+<p><a href="https://juejin.im/post/5e5b9d49e51d4527151562d2" target="_blank" rel="noopener">Nginx 入门实战</a></p>
+<p><a href="https://juejin.im/post/5e5fc89df265da572f14207a" target="_blank" rel="noopener">macOS使用iTerm2配置ssh连接</a></p>
+<p>了解更多，请关注公众号：<strong>九点下班</strong><br><img src="https://user-gold-cdn.xitu.io/2020/3/2/170992b515d2588d?w=1710&h=624&f=png&s=158448" alt=""></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#邮件协议"><span class="toc-number">2.</span> <span class="toc-text">邮件协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SMTP"><span class="toc-number">2.1.</span> <span class="toc-text">SMTP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POP"><span class="toc-number">2.2.</span> <span class="toc-text">POP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IMAP"><span class="toc-number">2.3.</span> <span class="toc-text">IMAP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-中相关的类"><span class="toc-number">3.</span> <span class="toc-text">Spring 中相关的类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-number">4.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#开启POP3-SMTP-IMAP服务"><span class="toc-number">4.1.</span> <span class="toc-text">开启POP3/SMTP/IMAP服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#个人邮箱配置"><span class="toc-number">4.2.</span> <span class="toc-text">个人邮箱配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#企业邮箱配置"><span class="toc-number">4.3.</span> <span class="toc-text">企业邮箱配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#申请网易企业邮箱"><span class="toc-number">4.3.1.</span> <span class="toc-text">申请网易企业邮箱</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">5.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资源"><span class="toc-number">6.</span> <span class="toc-text">参考资源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更多推荐"><span class="toc-number">7.</span> <span class="toc-text">更多推荐</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&text=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&title=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&is_video=false&description=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=SpringBoot–自定义域名发送邮件&body=Check out this article: http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&title=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&title=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&title=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&title=SpringBoot–自定义域名发送邮件" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/&name=SpringBoot–自定义域名发送邮件&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
