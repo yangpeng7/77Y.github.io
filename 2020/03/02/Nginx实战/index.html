@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang=zh>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0e76dffc6c1c980a49f2d1fa69fd8148";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="1. Nginx简介Nginx 是一款轻量级的 Web 服务器。通常用在反向代理、负载均衡和 HTTP 缓存。目前全球很多知名互联网公司在使用 Nginx。 反向代理和正向代理Nginx 的一个作用是反向代理，那什么是正向代理和反向代理？在知乎上有一个回答总结的不错放到这里。 以下内容来自知乎用户班长他姐夫的回答  正向代理隐藏真实客户端，反向代理隐藏真实服务端。  以下内容来自知乎用户刘志军的回">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx实战">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;02&#x2F;Nginx%E5%AE%9E%E6%88%98&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="1. Nginx简介Nginx 是一款轻量级的 Web 服务器。通常用在反向代理、负载均衡和 HTTP 缓存。目前全球很多知名互联网公司在使用 Nginx。 反向代理和正向代理Nginx 的一个作用是反向代理，那什么是正向代理和反向代理？在知乎上有一个回答总结的不错放到这里。 以下内容来自知乎用户班长他姐夫的回答  正向代理隐藏真实客户端，反向代理隐藏真实服务端。  以下内容来自知乎用户刘志军的回">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;xsRXDkOwZqFcf4H.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;64RVQMkJL9CltEg.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;6b1Ci8rVLFvsKyI.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;esWGZ4N5gbETthv.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;lMk19ReY6JW8LUK.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;n7P35w2ulsGEjJK.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;c5VS4IaYlMFrNio.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;XstLd1zhr9HA4KV.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;P2NS3urEvDlmJZI.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;cbouvn5xGCwpUJh.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;GAKflMSde9aN2Yy.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;fXJUszFpOSZ3aIR.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;gQAam9pIu24ZyUs.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;dtw5vpSKl7WjBoy.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;X54hFOziWCb21ou.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;D8UZTGRMo57EISV.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;9MqkOUJj21RD75L.png">
+<meta property="og:updated_time" content="2020-04-20T07:18:08.408Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;25&#x2F;xsRXDkOwZqFcf4H.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Nginx实战</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/01/17/%E5%9F%BA%E4%BA%8E%20Flask%20%E5%92%8C%20Vue%20%E7%9A%84%E8%AF%8D%E4%BA%91%E7%94%9F%E6%88%90%E5%BA%94%E7%94%A8/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&text=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&title=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&is_video=false&description=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Nginx实战&body=Check out this article: http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&title=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&title=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&title=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&title=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&name=Nginx实战&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Nginx简介"><span class="toc-number">1.</span> <span class="toc-text">1. Nginx简介</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#反向代理和正向代理"><span class="toc-number">1.1.</span> <span class="toc-text">反向代理和正向代理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Nginx基本使用"><span class="toc-number">2.</span> <span class="toc-text">2. Nginx基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Nginx安装"><span class="toc-number">2.1.</span> <span class="toc-text">Nginx安装</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-实战"><span class="toc-number">3.</span> <span class="toc-text">3. 实战</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#反向代理"><span class="toc-number">3.1.</span> <span class="toc-text">反向代理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#负载均衡"><span class="toc-number">3.2.</span> <span class="toc-text">负载均衡</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#https证书配置"><span class="toc-number">3.3.</span> <span class="toc-text">https证书配置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更多推荐"><span class="toc-number">4.</span> <span class="toc-text">更多推荐</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Nginx实战
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-03-02T12:21:00.000Z" itemprop="datePublished">2020-03-02</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h3 id="1-Nginx简介"><a href="#1-Nginx简介" class="headerlink" title="1. Nginx简介"></a>1. Nginx简介</h3><p><a href="https://www.nginx.com/" target="_blank" rel="noopener">Nginx</a> 是一款轻量级的 Web 服务器。通常用在<strong>反向代理</strong>、<strong>负载均衡</strong>和 <strong>HTTP 缓存</strong>。目前全球很多知名互联网公司在使用 Nginx。</p>
+<h4 id="反向代理和正向代理"><a href="#反向代理和正向代理" class="headerlink" title="反向代理和正向代理"></a>反向代理和正向代理</h4><p>Nginx 的一个作用是反向代理，那什么是正向代理和反向代理？在知乎上有一个回答总结的不错放到这里。</p>
+<p>以下内容来自知乎用户<a href="https://www.zhihu.com/question/24723688" target="_blank" rel="noopener">班长他姐夫</a>的回答</p>
+<blockquote>
+<p>正向代理隐藏真实客户端，反向代理隐藏真实服务端。</p>
+</blockquote>
+<p>以下内容来自知乎用户<a href="https://www.zhihu.com/question/24723688" target="_blank" rel="noopener">刘志军</a>的回答</p>
+<blockquote>
+<p>我们常说的代理也就是只正向代理，正向代理的过程，它隐藏了真实的请求客户端，服务端不知道真实的客户端是谁，客户端请求的服务都被代理服务器代替来请求，某些科学上网工具扮演的就是典型的正向代理角色。用浏览器访问 <a href="http://www.google.com" target="_blank" rel="noopener">http://www.google.com</a> 时，被残忍的block，于是你可以在国外搭建一台代理服务器，让代理帮我去请求google.com，代理把请求返回的相应结构再返回给我。</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/02/25/xsRXDkOwZqFcf4H.png" alt="image.png"></p>
+<blockquote>
+<p>反向代理隐藏了真实的服务端，当我们请求 <a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a> 的时候，就像拨打10086一样，背后可能有成千上万台服务器为我们服务，但具体是哪一台，你不知道，也不需要知道，你只需要知道反向代理服务器是谁就好了，<a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a> 就是我们的反向代理服务器，反向代理服务器会帮我们把请求转发到真实的服务器那里去。Nginx就是性能非常好的反向代理服务器，用来做负载均衡。</p>
+</blockquote>
+<blockquote>
+<p>两者的区别在于代理的对象不一样：正向代理代理的对象是客户端，反向代理代理的对象是服务端</p>
+</blockquote>
+<p><img src="https://i.loli.net/2020/02/25/64RVQMkJL9CltEg.png" alt="image.png"></p>
+<p>基于对上面的理解，我们可以看到 Nginx 对于处理有高并发需求的网站是有非常大的作用的。下面我们看一下在 MacOS 上 Nginx 的安装和基本使用。</p>
+<h3 id="2-Nginx基本使用"><a href="#2-Nginx基本使用" class="headerlink" title="2. Nginx基本使用"></a>2. Nginx基本使用</h3><h4 id="Nginx安装"><a href="#Nginx安装" class="headerlink" title="Nginx安装"></a>Nginx安装</h4><p>我们使用 homebrew 来安装 Nginx</p>
+<ul>
+<li><p>搜索Nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew search nginx</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装Nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install nginx</span><br></pre></td></tr></table></figure>
+<p>如果 homebrew 需要更新的话这个过程会比较慢，耐心等待即可。安装完成后会有如下提示：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">Docroot is: /usr/local/var/www</span><br><span class="line"></span><br><span class="line">The default port has been set in /usr/local/etc/nginx/nginx.conf to 8080 so that</span><br><span class="line">nginx can run without sudo.</span><br><span class="line"></span><br><span class="line">nginx will load all files in /usr/local/etc/nginx/servers/.</span><br><span class="line"></span><br><span class="line">To have launchd start nginx now and restart at login:</span><br><span class="line">  brew services start nginx</span><br><span class="line">Or, if you don&apos;t want/need a background service you can just run:</span><br><span class="line">  nginx</span><br><span class="line">==&gt; Summary</span><br><span class="line">🍺  /usr/local/Cellar/nginx/1.17.8: 25 files, 2MB</span><br><span class="line">==&gt; `brew cleanup` has not been run in 30 days, running now...</span><br><span class="line">Removing: /usr/local/Cellar/pcre/8.43... (204 files, 5.5MB)</span><br><span class="line">Pruned 1 symbolic links and 1 directories from /usr/local</span><br><span class="line">==&gt; Caveats</span><br><span class="line">==&gt; nginx</span><br><span class="line">Docroot is: /usr/local/var/www</span><br><span class="line"></span><br><span class="line">The default port has been set in /usr/local/etc/nginx/nginx.conf to 8080 so that</span><br><span class="line">nginx can run without sudo.</span><br><span class="line"></span><br><span class="line">nginx will load all files in /usr/local/etc/nginx/servers/.</span><br><span class="line"></span><br><span class="line">To have launchd start nginx now and restart at login:</span><br><span class="line">  brew services start nginx</span><br><span class="line">Or, if you don&apos;t want/need a background service you can just run:</span><br><span class="line">  nginx</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>查看Nginx信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew info nginx</span><br></pre></td></tr></table></figure>
+<p>这个命令和安装完成之后的提示基本一致，会显示 Nginx 的基本配置信息。</p>
+</li>
+<li><p>卸载Nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew uninstall Nginx</span><br></pre></td></tr></table></figure>
+<p>注意这个命令只会卸载 Nginx 软件本身，并不会删除配置文件。如果我们想彻底删干净 Nginx，需要手动删除 <code>/usr/local/var/www</code> 和 <code>/usr/local/etc/nginx/</code> 下的文件。</p>
+</li>
+<li><p>查看Nginx版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -v</span><br></pre></td></tr></table></figure>
+<p>我本机的 Nginx 版本如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx version: nginx/1.17.8</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检查Nginx配置是否正常</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>如果正常的话，我们会得到如下输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nginx: the configuration file /usr/local/etc/nginx/nginx.conf syntax is ok</span><br><span class="line">nginx: configuration file /usr/local/etc/nginx/nginx.conf test is successful</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /usr/local/etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure>
+以上命令可以输出 <code>nginx.conf</code> 默认状态下的配置，在关键的地方我加了注释说明。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line">#user  nobody;</span><br><span class="line">worker_processes  1;</span><br><span class="line">#(1)进程数</span><br><span class="line"></span><br><span class="line">#error_log  logs/error.log;</span><br><span class="line">#error_log  logs/error.log  notice;</span><br><span class="line">#error_log  logs/error.log  info;</span><br><span class="line"></span><br><span class="line">#(2)错误日志位置 Mac上在/usr/local/var/log/nginx/</span><br><span class="line"></span><br><span class="line">#pid        logs/nginx.pid;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">    #(3)最大连接数</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    #log_format  main  &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos;</span><br><span class="line">    #                  &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;</span><br><span class="line">    #                  &apos;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&apos;;</span><br><span class="line">    #(4)日志格式</span><br><span class="line"></span><br><span class="line">    #access_log  logs/access.log  main;</span><br><span class="line">    </span><br><span class="line">    #(5)访问日志位置 Mac上在/usr/local/var/log/nginx/</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    #gzip  on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       8080;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs/host.access.log  main;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">            </span><br><span class="line">            #(6)第一种情况 拒绝访问ip地址段为 50-100 的ip访问</span><br><span class="line">            deny 192.168.10.50/100;</span><br><span class="line">            </span><br><span class="line">            # 第二种情况 只允许ip地址为 192.168.10.50 的ip访问</span><br><span class="line">            allow 192.168.10.50;</span><br><span class="line">            deny all;</span><br><span class="line">            </span><br><span class="line">            # 第三种情况 这样配置都不能访问，从上到下依次匹配</span><br><span class="line">            deny all;</span><br><span class="line">            allow 192.168.10.50;</span><br><span class="line">        </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        #(7)精确匹配 /test 路径拒绝访问</span><br><span class="line">        location =/test &#123; </span><br><span class="line">            deny all;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        #(8)精确匹配 /test2 路径都可以访问</span><br><span class="line">        location =/test2 &#123;</span><br><span class="line">            allow all;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        #(9)精确匹配 已 php 结尾拒绝访问</span><br><span class="line">        location ~ \.php$ &#123; # 正则匹配</span><br><span class="line">            deny all;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        #error_page  404              /404.html;</span><br><span class="line"></span><br><span class="line">        # redirect server error pages to the static page /50x.html</span><br><span class="line">        #</span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        # proxy the PHP scripts to Apache listening on 127.0.0.1:80</span><br><span class="line">        #</span><br><span class="line">        #location ~ \.php$ &#123;</span><br><span class="line">        #    proxy_pass   http://127.0.0.1;</span><br><span class="line">        #&#125;</span><br><span class="line"></span><br><span class="line">        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000</span><br><span class="line">        #</span><br><span class="line">        #location ~ \.php$ &#123;</span><br><span class="line">        #    root           html;</span><br><span class="line">        #    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">        #    fastcgi_index  index.php;</span><br><span class="line">        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;</span><br><span class="line">        #    include        fastcgi_params;</span><br><span class="line">        #&#125;</span><br><span class="line"></span><br><span class="line">        # deny access to .htaccess files, if Apache&apos;s document root</span><br><span class="line">        # concurs with nginx&apos;s one</span><br><span class="line">        #</span><br><span class="line">        #location ~ /\.ht &#123;</span><br><span class="line">        #    deny  all;</span><br><span class="line">        #&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # another virtual host using mix of IP-, name-, and port-based configuration</span><br><span class="line">    #</span><br><span class="line">    #server &#123;</span><br><span class="line">    #    listen       8000;</span><br><span class="line">    #    listen       somename:8080;</span><br><span class="line">    #    server_name  somename  alias  another.alias;</span><br><span class="line"></span><br><span class="line">    #    location / &#123;</span><br><span class="line">    #        root   html;</span><br><span class="line">    #        index  index.html index.htm;</span><br><span class="line">    #    &#125;</span><br><span class="line">    #&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # HTTPS server</span><br><span class="line">    #</span><br><span class="line">    #server &#123;</span><br><span class="line">    #    listen       443 ssl;</span><br><span class="line">    #    server_name  localhost;</span><br><span class="line"></span><br><span class="line">    #    ssl_certificate      cert.pem;</span><br><span class="line">    #    ssl_certificate_key  cert.key;</span><br><span class="line"></span><br><span class="line">    #    ssl_session_cache    shared:SSL:1m;</span><br><span class="line">    #    ssl_session_timeout  5m;</span><br><span class="line"></span><br><span class="line">    #    ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">    #    ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">    #    location / &#123;</span><br><span class="line">    #        root   html;</span><br><span class="line">    #        index  index.html index.htm;</span><br><span class="line">    #    &#125;</span><br><span class="line">    #&#125;</span><br><span class="line">    include servers/*;</span><br><span class="line">    #(10)其他配置文件</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>启动Nginx</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/Cellar/nginx/1.17.8/bin</span><br><span class="line"></span><br><span class="line">./nginx</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重新加载配置文件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<p>启动完成之后执行 <code>ps -ef|grep nginx</code>，如果出现下面日志则说明访问成功。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">501 65101     1   0  8:59下午 ??         0:00.00 nginx: master process ./nginx</span><br><span class="line">501 65102 65101   0  8:59下午 ??         0:00.00 nginx: worker process</span><br><span class="line">501 65173 63026   0  9:00下午 ttys001    0:00.00 grep nginx</span><br></pre></td></tr></table></figure>
+
+<p>访问<code>http://localhost:8080</code>，如果出现以下页面说明我们配置成功，并且访问正常。</p>
+<p><img src="https://i.loli.net/2020/02/25/6b1Ci8rVLFvsKyI.png" alt="image.png"></p>
+<h3 id="3-实战"><a href="#3-实战" class="headerlink" title="3. 实战"></a>3. 实战</h3><p>现在我们已经安装和配置好了 Nginx，那我们先来看一下在<strong>反向代理</strong>这种场景下 Nginx 是如何使用的。首先我们先用 SpringBoot 创建一个 Web 服务。</p>
+<p>在 <a href="https://start.spring.io/" target="_blank" rel="noopener">start.spring.io</a> 初始化一个项目方便我们测试。</p>
+<p><img src="https://i.loli.net/2020/02/25/esWGZ4N5gbETthv.png" alt="image.png"></p>
+<p>用 Eclipse 或 InteliJ IDEA 打开刚刚初始化好的项目，整个工程的目录如下。</p>
+<p><img src="https://i.loli.net/2020/02/25/lMk19ReY6JW8LUK.png" alt="image.png"></p>
+<p>在 <code>NginxTestController</code> 中写两个简单的接口，分别是 <code>/hello/nginx</code> 和 <code>/hi/nginx</code>，同时在接口的响应中返回当前程序在监听哪个端口即 <code>serverPort</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">@RestController</span><br><span class="line">public class NginxTestController &#123;</span><br><span class="line"></span><br><span class="line">    @Value(&quot;$&#123;server.port&#125;&quot;)</span><br><span class="line">    private int serverPort;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/hello/nginx&quot;, method = RequestMethod.GET)</span><br><span class="line">    public TestResponse getNginx() throws Exception &#123;</span><br><span class="line"></span><br><span class="line">        TestResponse response = new TestResponse();</span><br><span class="line">        response.setCode(200);</span><br><span class="line">        response.setMessage(&quot;success&quot;);</span><br><span class="line">        response.setName(&quot;hello nginx&quot;);</span><br><span class="line">        response.setServerPort(serverPort);</span><br><span class="line">        return response;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/hi/nginx&quot;, method = RequestMethod.GET)</span><br><span class="line">    public TestResponse getIncome() throws Exception &#123;</span><br><span class="line"></span><br><span class="line">        TestResponse response = new TestResponse();</span><br><span class="line">        response.setCode(200);</span><br><span class="line">        response.setMessage(&quot;success&quot;);</span><br><span class="line">        response.setName(&quot;hi nginx&quot;);</span><br><span class="line">        response.setServerPort(serverPort);</span><br><span class="line">        return response;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>application.properties</code> 配置文件中添加监听的端口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server.port=8090</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server.port=9090</span><br></pre></td></tr></table></figure>
+
+<p>使用 maven 分别打包两个监听 8090 和 9090 端口的 Web 服务的 jar 包为 <code>nginxdemo-SNAPSHOT-8090.jar</code> 和 <code>nginxdemo-SNAPSHOT-9090.jar</code></p>
+<p>分别启动两个 server</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">启动第一个 server</span><br><span class="line">java -jar nginxdemo-SNAPSHOT-8090.jar</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">启动第二个 server</span><br><span class="line">java -jar nginxdemo-SNAPSHOT-9090.jar</span><br></pre></td></tr></table></figure>
+
+<p>在不使用 Nginx 做反向代理的情况下，我们先访问下两个 server 的接口是否都能正常使用，如下图表示均正常。</p>
+<p>监听 8090 端口的 tomcat</p>
+<p><img src="https://i.loli.net/2020/02/25/n7P35w2ulsGEjJK.png" alt="image.png"></p>
+<p>监听 9090 端口的 tomcat</p>
+<p><img src="https://i.loli.net/2020/02/25/c5VS4IaYlMFrNio.png" alt="image.png"></p>
+<h4 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h4><ul>
+<li>规则匹配</li>
+</ul>
+<p>我们先来看一下上面讲过的关于访问规则的匹配，在 server 块中添加以下 location。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location =/hello/nginx &#123;</span><br><span class="line">    deny all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>server 块的完整配置如下，修改完成后重新加载 Nginx 配置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       9000;</span><br><span class="line">    server_name  localhost;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass        http://localhost:8090;</span><br><span class="line">        proxy_set_header  Host $http_host;</span><br><span class="line">        proxy_set_header  X-Real-IP  $remote_addr;</span><br><span class="line">        proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">        proxy_set_header  X-Forwarded-Proto $scheme;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location =/hello/nginx &#123;</span><br><span class="line">        deny all;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    error_page   500 502 503 504  /50x.html;</span><br><span class="line">    location = /50x.html &#123;</span><br><span class="line">        root   html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由上面的配置可以 <code>/hello/nginx</code> 被拒绝访问，我们在浏览器访问可得到如下图结果：</p>
+<p><code>/hello/nginx</code> 被拒绝访问。</p>
+<p><img src="https://i.loli.net/2020/02/25/XstLd1zhr9HA4KV.png" alt="image.png"></p>
+<p><code>/hi/nginx</code> 仍然可以访问。</p>
+<p><img src="https://i.loli.net/2020/02/25/P2NS3urEvDlmJZI.png" alt="image.png"></p>
+<ul>
+<li>使用端口号进行反向代理<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">#user  nobody;</span><br><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       9000;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass        http://localhost:8090;</span><br><span class="line">            proxy_set_header  Host $http_host;</span><br><span class="line">            proxy_set_header  X-Real-IP  $remote_addr;</span><br><span class="line">            proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header  X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       9001;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass        http://localhost:9090;</span><br><span class="line">            proxy_set_header  Host $http_host;</span><br><span class="line">            proxy_set_header  X-Real-IP  $remote_addr;</span><br><span class="line">            proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header  X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    include servers/*;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>使用端口进行反向代理比较简单，我们在配置文件中添加两个 server 块，让 Nginx 分别监听 9000 端口和 9001 端口。然后在 location 块中通过 proxy_pass 分别代理到 tomcat 的 8090 端口和 9090 端口。</p>
+<p>通过 Nginx 访问 9000 端口，可以看到返回的是 tomcat 8090 端口的内容。<br><img src="https://i.loli.net/2020/02/25/cbouvn5xGCwpUJh.png" alt="image.png"><br>通过 Nginx 访问 9001 端口，可以看到返回的是 tomcat 9090 端口的内容。<br><img src="https://i.loli.net/2020/02/25/GAKflMSde9aN2Yy.png" alt="image.png"></p>
+<p>这样做的目的是，在真实的服务器环境中，我们不可能把所有的端口都开放出去，比如 mysql 常用的 3306 端口，这样会有很大的安全问题，通过 Nginx 的反向代理就可以解决。</p>
+<ul>
+<li>使用域名进行反向代理</li>
+</ul>
+<p>上面讲过了使用端口进行反向代理，在真实的开发环境中，我们更多的是使用域名或者二级域名来访问某些页面或接口，我们通常是不需要在域名上加上端口号的。这是因为 80 是 http 协议的默认端口。我们在访问 <code>http://baidu.com</code> 时其实是访问 <code>http://baidu.com:80</code>。</p>
+<p>那么我们来看一下如何使用 Nginx 通过域名来做反向代理。由于我是在本地进行开发测试的，是没有公网的 ip 地址的，这时候怎么让一个域名解析到我自己的 ip 上呢？我们可以修改 hosts 文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 hello.democome.local</span><br><span class="line">127.0.0.1 hi.democome.local</span><br></pre></td></tr></table></figure>
+
+<p>以上是我给本机的 hosts 文件添加的两行配置，我们知道是没有 .local 这个域名的，但是加上上面的配置之后当我访问 <code>hello.democome.local</code> 和 <code>hi.democome.local</code> 时，就会解析到我的本机，这样就可以通过 Nginx 进行反向代理了，我们看看具体的 Nginx 配置文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">#user  nobody;</span><br><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  hello.democome.local;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass        http://localhost:8090;</span><br><span class="line">            proxy_set_header  Host $http_host;</span><br><span class="line">            proxy_set_header  X-Real-IP  $remote_addr;</span><br><span class="line">            proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header  X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  hi.democome.local;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass        http://localhost:9090;</span><br><span class="line">            proxy_set_header  Host $http_host;</span><br><span class="line">            proxy_set_header  X-Real-IP  $remote_addr;</span><br><span class="line">            proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header  X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    include servers/*;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上配置，我们把两个 server 块中监听的端口都改为了 80，然后两个二级域名 <code>hello.democome.local</code> 和 <code>hi.democome.local</code> 分别代理到了 <code>http://localhost:8090</code> 和<code>http://localhost:9090</code> 两个 web server。</p>
+<p>在浏览器访问 <code>http://hello.democome.local/hello/nginx</code> 可以看到可以正常返回 8090 端口的内容。</p>
+<p><img src="https://i.loli.net/2020/02/25/fXJUszFpOSZ3aIR.png" alt="image.png"></p>
+<p>在浏览器访问 <code>http://hi.democome.local/hello/nginx</code> 可以看到可以正常返回 9090 端口的内容。</p>
+<p><img src="https://i.loli.net/2020/02/25/gQAam9pIu24ZyUs.png" alt="image.png"></p>
+<p>通过以上测试，我们的配置是生效的。</p>
+<p>如果不想使用默认的 80 端口，我们依然可以使用域名加上端口的形式访问，配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       9000;</span><br><span class="line">    server_name  hello.democome.local;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass        http://localhost:8090;</span><br><span class="line">        proxy_set_header  Host $http_host;</span><br><span class="line">        proxy_set_header  X-Real-IP  $remote_addr;</span><br><span class="line">        proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">        proxy_set_header  X-Forwarded-Proto $scheme;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    error_page   500 502 503 504  /50x.html;</span><br><span class="line">    location = /50x.html &#123;</span><br><span class="line">        root   html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改完配置重新加载，可以看到通过域名加端口也可以正常访问。<br><img src="https://i.loli.net/2020/02/25/dtw5vpSKl7WjBoy.png" alt="image.png"></p>
+<ul>
+<li>代理到其他网站<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  hi.democome.local;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass        https://www.so.com/;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>我们把 server 块改成如下配置，然后重新加载 Nginx 配置，可以发现虽然我们访问的是 <code>hi.democome.local</code> 但是真正返回的页面是 360 搜索的页面，并且域名也不会变化。</p>
+<p><img src="https://i.loli.net/2020/02/25/X54hFOziWCb21ou.png" alt="image.png"></p>
+<h4 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h4><p>说到负载均衡，那么什么是负载均衡，先来看一下维基百科的定义</p>
+<blockquote>
+<p>负载平衡（Load balancing）是一种计算机技术，用来在多个计算机（计算机集群）、网络连接、CPU、磁盘驱动器或其他资源中分配负载，以达到最优化资源使用、最大化吞吐率、最小化响应时间、同时避免过载的目的。 使用带有负载平衡的多个服务器组件，取代单一的组件，可以通过冗余提高可靠性。负载平衡服务通常是由专用软件和硬件来完成。 主要作用是将大量作业合理地分摊到多个操作单元上进行执行，用于解决互联网架构中的高并发和高可用的问题。</p>
+</blockquote>
+<p>总结来说负载均衡就是解决高并发的。假如我们有多台服务器，我们在每台服务器上都跑了相同的应用，当用户访问时，我们希望 Nginx 把用户的请求根据一定的策略转发的不同的服务器，已解决单个服务器访问压力大的问题。</p>
+<p>为了测试这个效果，我先把之前打包的 jar 文件上传一个到远程的服务器上，并启动。</p>
+<p>我们看一下具体如何配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">#user  nobody;</span><br><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    upstream localhost &#123;</span><br><span class="line">        server 62.234.66.219:8090 weight=1; #远程服务器</span><br><span class="line">        server 192.168.0.101:8090 weight=3;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  hello.democome.local;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            add_header Backend-IP $upstream_addr;</span><br><span class="line">            proxy_pass        http://localhost;</span><br><span class="line">            proxy_set_header  Host $http_host;</span><br><span class="line">            proxy_set_header  X-Real-IP  $remote_addr;</span><br><span class="line">            proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header  X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    include servers/*;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中主要是 upstream 块的配置，我配置了两个服务器，其中 62.234.66.219:8090 是腾讯云服务器的地址， 192.168.0.101:8090 是我本机的 ip 地址。策略是按照比重来分别转发到两个服务器上，比例为1:3。关于策略还有很多规则，比如根据 ip hash 等。我们这里只演示 weight 策略。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream localhost &#123;</span><br><span class="line">    server 62.234.66.219:8090 weight=1; #远程服务器</span><br><span class="line">    server 192.168.0.101:8090 weight=3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>完成好上面的配置执行 <code>nginx -s reload</code> 重新加载配置。继续访问<code>http://hello.democome.local/hello/nginx</code>。</p>
+<p>如下图，本次请求来自192.168.0.101<br><img src="https://i.loli.net/2020/02/25/D8UZTGRMo57EISV.png" alt="image.png"></p>
+<p>如下图，本次请求来自 62.234.66.219<br><img src="https://i.loli.net/2020/02/25/9MqkOUJj21RD75L.png" alt="image.png"></p>
+<p>通过多次请求我们发现，转发到各个服务器的比例基本是 1:3，以上说明我们配置的负载均衡策略是生效的。</p>
+<h4 id="https证书配置"><a href="#https证书配置" class="headerlink" title="https证书配置"></a>https证书配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl;                                                     </span><br><span class="line">    server_name democome.com www.democome.com; #配置域名</span><br><span class="line">    ssl_certificate /etc/letsencrypt/live/democome.com/fullchain.pem; #配置证书位置</span><br><span class="line">    ssl_certificate_key /etc/letsencrypt/live/democome.com/privkey.pem; #配置证书位置</span><br><span class="line">    location /&#123;                                                         #反向代理配置</span><br><span class="line">        proxy_pass            http://localhost:8080;</span><br><span class="line">        proxy_set_header  Host $http_host;</span><br><span class="line">        proxy_set_header  X-Real-IP  $remote_addr;</span><br><span class="line">        proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">        proxy_set_header  X-Forwarded-Proto $scheme;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置证书比较简单，首先监听 443 端口，然后执行证书位置即可。</p>
+<h3 id="更多推荐"><a href="#更多推荐" class="headerlink" title="更多推荐"></a>更多推荐</h3><p>免费 https 证书申请 <a href="https://letsencrypt.org/" target="_blank" rel="noopener">letsencrypt</a>。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Nginx简介"><span class="toc-number">1.</span> <span class="toc-text">1. Nginx简介</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#反向代理和正向代理"><span class="toc-number">1.1.</span> <span class="toc-text">反向代理和正向代理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Nginx基本使用"><span class="toc-number">2.</span> <span class="toc-text">2. Nginx基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Nginx安装"><span class="toc-number">2.1.</span> <span class="toc-text">Nginx安装</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-实战"><span class="toc-number">3.</span> <span class="toc-text">3. 实战</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#反向代理"><span class="toc-number">3.1.</span> <span class="toc-text">反向代理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#负载均衡"><span class="toc-number">3.2.</span> <span class="toc-text">负载均衡</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#https证书配置"><span class="toc-number">3.3.</span> <span class="toc-text">https证书配置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更多推荐"><span class="toc-number">4.</span> <span class="toc-text">更多推荐</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&text=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&title=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&is_video=false&description=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Nginx实战&body=Check out this article: http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&title=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&title=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&title=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&title=Nginx实战" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/02/Nginx%E5%AE%9E%E6%88%98/&name=Nginx实战&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
