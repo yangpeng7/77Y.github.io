@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang=zh>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0e76dffc6c1c980a49f2d1fa69fd8148";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前言能解决用户需求的技术，都是好技术。作为一个程序猿，尤其是移动端程序猿，大家有没有独立开发一个产品的想法？我自己一直都有这样一个想法，因为：  一个产品梦，完全按照自己的想法，独立设计开发一个应用，应该是一件有成就感的事。 技术的相通性，如果你是 Android 开发者，那你肯定对 Java 非常熟悉，如果使用 Java 的 Spring 技术栈写服务端那肯定也不是什么难事，尤其是很多的技术都是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android开发者如何写服务端代码">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;13&#x2F;Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="前言能解决用户需求的技术，都是好技术。作为一个程序猿，尤其是移动端程序猿，大家有没有独立开发一个产品的想法？我自己一直都有这样一个想法，因为：  一个产品梦，完全按照自己的想法，独立设计开发一个应用，应该是一件有成就感的事。 技术的相通性，如果你是 Android 开发者，那你肯定对 Java 非常熟悉，如果使用 Java 的 Spring 技术栈写服务端那肯定也不是什么难事，尤其是很多的技术都是">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;12&#x2F;qw5Mj3oNsStfIAR.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;12&#x2F;ohwFv9PVYznlJgA.png">
+<meta property="og:updated_time" content="2020-04-20T07:23:33.537Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;12&#x2F;qw5Mj3oNsStfIAR.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Android开发者如何写服务端代码</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/03/05/macOS%E4%BD%BF%E7%94%A8iTerm2%E9%85%8D%E7%BD%AEssh%E8%BF%9E%E6%8E%A5/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&text=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&title=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&is_video=false&description=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Android开发者如何写服务端代码&body=Check out this article: http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&title=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&title=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&title=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&title=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&name=Android开发者如何写服务端代码&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#架构图"><span class="toc-number">2.</span> <span class="toc-text">架构图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开发工具"><span class="toc-number">3.</span> <span class="toc-text">开发工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#业务框架"><span class="toc-number">4.</span> <span class="toc-text">业务框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务部署"><span class="toc-number">5.</span> <span class="toc-text">服务部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关资源"><span class="toc-number">7.</span> <span class="toc-text">相关资源</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Android开发者如何写服务端代码
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-03-13T03:55:00.000Z" itemprop="datePublished">2020-03-13</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>能解决用户需求的技术，都是好技术。作为一个程序猿，尤其是移动端程序猿，大家有没有独立开发一个产品的想法？我自己一直都有这样一个想法，因为：</p>
+<ul>
+<li><strong>一个产品梦</strong>，完全按照自己的想法，独立设计开发一个应用，应该是一件有成就感的事。</li>
+<li><strong>技术的相通性</strong>，如果你是 Android 开发者，那你肯定对 Java 非常熟悉，如果使用 Java 的 Spring 技术栈写服务端那肯定也不是什么难事，尤其是很多的技术都是相通的，比如<ul>
+<li>各种框架的设计模式的使用</li>
+<li>Android Jetpack Room 与 SpringBoot  JPA</li>
+<li>Dagger 与 Spring 中的 IoC</li>
+<li>AOP 的实现，对字节码的修改，ASM、AspectJ</li>
+<li>HTTP 请求的拦截与过滤</li>
+<li>跨进程间的通信方式</li>
+<li>等等</li>
+</ul>
+</li>
+<li><strong>对技术的好奇心</strong>，我想我们应该不仅局限于自己的一亩三分地，当然前提是要守好自己的专业阵地，然后拓宽自己的视野，前段时间和同事讨论技术的深度和广度的问题，基于第二点，有时候广度可以拓展深度。</li>
+<li><strong>疫情期间更多的时间</strong>，在家办工省去了上下班的时间，有更多的时间做感兴趣的事情。</li>
+</ul>
+<p>于是，作为一个 Android 开发者，我自己设计开发了个 App，本篇文章谈一谈我对于 Java 服务端开发的理解和实践。这是一个简单的签到类应用，主要的页面如下，顺便提一下，下面的 App 使用 Flutter 开发的。</p>
+<p><img src="https://i.loli.net/2020/03/12/qw5Mj3oNsStfIAR.png" alt="image.png"></p>
+<p>Flutter 页面开发不是本篇文章的重点。下面给大家介绍下开发过程中我使用到的服务端技术。</p>
+<h3 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h3><img src="https://i.loli.net/2020/03/12/ohwFv9PVYznlJgA.png" alt="image.png" style="zoom: 33%;" />
+
+<p>通过这张图可以简单看下我所理解的 Java 服务端开发流程，首先业务代码由我们开发完成后，推送到代码仓库 gitlab(github)，然后由持续集成工具 Jenkins 拉取代码进行编译打包，把打成的 Jar 或者 War 包存到服务器某个目录，最后将 Jar 或者 War 部署在 Tomcat 中运行。最后由 Nginx 进行反向代理，将请求转发的不同的服务器，如果有多个服务器的话，还可以做一个负载均衡，减轻单个服务器压力。这样前端浏览器或者移动端 App 就可以正常访问请求了。</p>
+<p>在每一台服务器上，我们可能不同的业务跑在不同的 Tomcat 上，这样还会有不同服务之间的通信问题，可以采用 HTTP 或者消息订阅进行通信。另外也不是每次请求都会访问数据库，比如在我开发验证码验证功能的时候，就将验证码存在了 redis 中。当然在线上服务运行的过程中，我们还需要对运行情况做监控。比如 Zabbix 等工具。</p>
+<h3 id="开发工具"><a href="#开发工具" class="headerlink" title="开发工具"></a>开发工具</h3><ul>
+<li><p>开发工具：IntelliJ IDEA、Android Studio</p>
+</li>
+<li><p>MySQL客户端：MySQL Workbench</p>
+</li>
+<li><p>Redis客户端：Another Redis DeskTop Manager</p>
+</li>
+<li><p>终端工具：iTerm2</p>
+</li>
+<li><p>Git工具：SourceTree</p>
+</li>
+<li><p>HTTP 请求工具：Postman</p>
+</li>
+</ul>
+<h3 id="业务框架"><a href="#业务框架" class="headerlink" title="业务框架"></a>业务框架</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── README.md</span><br><span class="line">├── pom.xml</span><br><span class="line">├── roc-css-business</span><br><span class="line">├── roc-css-data</span><br><span class="line">├── roc-css-webapp-app</span><br><span class="line">├── roc-css-webapp-browser</span><br><span class="line">└── roc-css.iml</span><br></pre></td></tr></table></figure>
+
+<p>项目的结构如下：</p>
+<ul>
+<li>roc-css-data 模块中是模型类，模型对应数据库中的表</li>
+<li>roc-css-business 模块是业务逻辑类，大部分的逻辑都在这个模块中</li>
+<li>roc-css-webapp-app 模块是移动端的 HTTP 请求入口也就是 Controller，主要做一些参数校验等逻辑</li>
+</ul>
+<p>因为最熟悉的是 Java，在开发业务代码时，我选择了 Java Web 开发中最流行的 Spring Boot 框架。用到的技术包括：</p>
+<ul>
+<li>spring-boot-starter-web：使用这个模块可以把我们的项目变成一个 web 项目</li>
+<li>spring-boot-starter-security：用户验证和鉴权模块，我认为这是比较难的部分，包括对一些过滤器、拦截器的理解，以及如何统一处理业务逻辑错误和用户授权的错误</li>
+<li>JWT：JSON Web Token，用于生成和验证用户 Token 和 security 配合使用</li>
+<li>spring-boot-starter-data-jpa：用于数据库操作，这一部分用起来非常简单，甚至我们可以不必写 SQL 语句，但是用好不容有，尤其是如果不熟悉有问题不好查</li>
+<li>spring-boot-starter-data-redis：用于操作 Redis</li>
+<li>lombok：免于写各种 getter 和 setter</li>
+<li>springfox-swagger2、springfox-swagger-ui：用于生成在线接口文档</li>
+<li>等等</li>
+</ul>
+<p>以上以来使用 maven 进行管理，当然也可以使用 Android 中常用的 Gradle。</p>
+<h3 id="服务部署"><a href="#服务部署" class="headerlink" title="服务部署"></a>服务部署</h3><ul>
+<li>服务器：腾讯云Ubuntu</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>以上就是我在开发这个小项目的过程中用到的一些技术，当然还有很多的坑实在实际的开发中遇到的，后续会逐渐把代码完善并进行开发，欢迎大家持续关注 <strong>九点下班</strong> 公众号，持续分享 Android、Flutter、Java Web 等技术。</p>
+<h3 id="相关资源"><a href="#相关资源" class="headerlink" title="相关资源"></a>相关资源</h3><p><a href="https://spring.io/projects/spring-boot/" target="_blank" rel="noopener">spring-boot 官网</a></p>
+<p><a href="https://spring.io/projects/spring-security" target="_blank" rel="noopener">spring security 介绍</a></p>
+<p><a href="https://jwt.io/" target="_blank" rel="noopener">JWT 官网</a></p>
+<p><a href="https://www.mysql.com/products/workbench/" target="_blank" rel="noopener">MySQL Workbench 官网</a></p>
+<p><a href="https://github.com/qishibo/AnotherRedisDesktopManager/" target="_blank" rel="noopener">Redis 客户端工具</a></p>
+<p><a href="https://www.iterm2.com/" target="_blank" rel="noopener">iTerm2 官网</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#架构图"><span class="toc-number">2.</span> <span class="toc-text">架构图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开发工具"><span class="toc-number">3.</span> <span class="toc-text">开发工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#业务框架"><span class="toc-number">4.</span> <span class="toc-text">业务框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务部署"><span class="toc-number">5.</span> <span class="toc-text">服务部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关资源"><span class="toc-number">7.</span> <span class="toc-text">相关资源</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&text=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&title=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&is_video=false&description=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Android开发者如何写服务端代码&body=Check out this article: http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&title=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&title=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&title=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&title=Android开发者如何写服务端代码" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/13/Android%E5%BC%80%E5%8F%91%E8%80%85%E5%A6%82%E4%BD%95%E5%86%99%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%A3%E7%A0%81/&name=Android开发者如何写服务端代码&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
