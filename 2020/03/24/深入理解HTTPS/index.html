@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang=zh>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0e76dffc6c1c980a49f2d1fa69fd8148";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前言感谢伟大的数学家和密码学家们，让我们的网络处于一个相对安全的环境。 最近整理了一下 HTTPS 相关的知识，本文中所有的分析是基于 TLS1.2 版本。 WebTrustWebTrust 是由全球两大著名注册会计师协会 AICPA（美国注册会计师协会）和 CICA（加拿大注册会计师协会）共同制定的安全审计标准，主要对互联网服务商的系统及业务运作逻辑安全性、保密性等共计七项内容进行近乎严苛的审查">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解HTTPS">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;03&#x2F;24&#x2F;%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="前言感谢伟大的数学家和密码学家们，让我们的网络处于一个相对安全的环境。 最近整理了一下 HTTPS 相关的知识，本文中所有的分析是基于 TLS1.2 版本。 WebTrustWebTrust 是由全球两大著名注册会计师协会 AICPA（美国注册会计师协会）和 CICA（加拿大注册会计师协会）共同制定的安全审计标准，主要对互联网服务商的系统及业务运作逻辑安全性、保密性等共计七项内容进行近乎严苛的审查">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;20&#x2F;8MuyPK1XjtFLr3T.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;20&#x2F;5UCwGWmBFydQRIL.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;23&#x2F;swZAqQWJvkY3Xa5.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;23&#x2F;8UpB4Ego7jbPyMa.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;23&#x2F;7jBrXLoCWh9VZ1u.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;23&#x2F;TYCex8nvmc7XJ5a.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;23&#x2F;LxHZYa2zA8DWRmr.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;23&#x2F;WRb9xADtHrXZSpP.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;23&#x2F;AwyB5HanEFOZgS3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;23&#x2F;87JALuFmqReZp3U.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;23&#x2F;tVuge7jHnfZY2cs.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;22&#x2F;2JXG6afw9iEq4CH.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;20&#x2F;MxSat9XbVcCkGyj.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;19&#x2F;HrcSBlPEzYXg7Zb.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;19&#x2F;3XDntQjSYsTuczx.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;20&#x2F;2sfu7zT8LdAN5F9.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;20&#x2F;qNfa2GZQXeKAtyz.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;20&#x2F;9CrP21GMRNbuZe3.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;cdn.arstechnica.net&#x2F;wp-content&#x2F;uploads&#x2F;2013&#x2F;10&#x2F;elliptic-curve-crypt-image02.gif">
+<meta property="og:image" content="https:&#x2F;&#x2F;upload-images.jianshu.io&#x2F;upload_images&#x2F;785822-85f0ed4e61c77f27.gif">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;20&#x2F;XIW1txcb4Rzdhuv.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;www.zhihu.com&#x2F;equation?tex=G">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;22&#x2F;2JXG6afw9iEq4CH.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;23&#x2F;F1rqOn9vzPXfie4.png">
+<meta property="og:updated_time" content="2020-04-20T07:26:46.677Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;03&#x2F;20&#x2F;8MuyPK1XjtFLr3T.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>深入理解HTTPS</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/03/20/SpringBoot%E2%80%93%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&text=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&title=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&is_video=false&description=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=深入理解HTTPS&body=Check out this article: http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&title=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&title=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&title=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&title=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&name=深入理解HTTPS&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebTrust"><span class="toc-number">2.</span> <span class="toc-text">WebTrust</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CA机构"><span class="toc-number">3.</span> <span class="toc-text">CA机构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CA机构定义"><span class="toc-number">3.1.</span> <span class="toc-text">CA机构定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#有哪些CA机构"><span class="toc-number">3.2.</span> <span class="toc-text">有哪些CA机构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对称加密"><span class="toc-number">4.</span> <span class="toc-text">对称加密</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#定义"><span class="toc-number">4.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用加密算法"><span class="toc-number">4.2.</span> <span class="toc-text">常用加密算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例"><span class="toc-number">4.3.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非对称加密"><span class="toc-number">5.</span> <span class="toc-text">非对称加密</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#定义-1"><span class="toc-number">5.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用加密算法-1"><span class="toc-number">5.2.</span> <span class="toc-text">常用加密算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例-1"><span class="toc-number">5.3.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数字签名"><span class="toc-number">6.</span> <span class="toc-text">数字签名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TLS与SSL"><span class="toc-number">7.</span> <span class="toc-text">TLS与SSL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WireShark抓包TLS握手"><span class="toc-number">8.</span> <span class="toc-text">WireShark抓包TLS握手</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Client-Hello"><span class="toc-number">8.1.</span> <span class="toc-text">Client Hello</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Server-Hello"><span class="toc-number">8.2.</span> <span class="toc-text">Server Hello</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Certificate"><span class="toc-number">8.3.</span> <span class="toc-text">Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Server-Key-Exchange"><span class="toc-number">8.4.</span> <span class="toc-text">Server Key Exchange</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#DH-算法"><span class="toc-number">8.4.1.</span> <span class="toc-text">DH 算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ECC算法"><span class="toc-number">8.4.2.</span> <span class="toc-text">ECC算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#椭圆曲线运算"><span class="toc-number">8.4.3.</span> <span class="toc-text">椭圆曲线运算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数学概念"><span class="toc-number">8.4.4.</span> <span class="toc-text">数学概念</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#有限域"><span class="toc-number">8.4.4.1.</span> <span class="toc-text">有限域</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#群"><span class="toc-number">8.4.4.2.</span> <span class="toc-text">群</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Curve25519"><span class="toc-number">8.4.4.3.</span> <span class="toc-text">Curve25519</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ECDH"><span class="toc-number">8.4.5.</span> <span class="toc-text">ECDH</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Client-Key-Exchange"><span class="toc-number">8.5.</span> <span class="toc-text">Client Key Exchange</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对称加密通信"><span class="toc-number">8.6.</span> <span class="toc-text">对称加密通信</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#X-509"><span class="toc-number">9.</span> <span class="toc-text">X.509</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工具"><span class="toc-number">10.</span> <span class="toc-text">工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-number">11.</span> <span class="toc-text">参考文章</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        深入理解HTTPS
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-03-24T12:22:00.000Z" itemprop="datePublished">2020-03-24</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>感谢伟大的数学家和密码学家们，让我们的网络处于一个相对安全的环境。</p>
+<p>最近整理了一下 HTTPS 相关的知识，本文中所有的分析是基于 TLS1.2 版本。</p>
+<h2 id="WebTrust"><a href="#WebTrust" class="headerlink" title="WebTrust"></a>WebTrust</h2><p>WebTrust 是由全球两大著名注册会计师协会 AICPA（美国注册会计师协会）和 CICA（加拿大注册会计师协会）共同制定的安全审计标准，主要对互联网服务商的系统及业务运作逻辑安全性、保密性等共计七项内容进行近乎严苛的审查和鉴证。只有通过 WebTrust 国际安全审计认证的根证书才能预装到主流的浏览器中。 </p>
+<h2 id="CA机构"><a href="#CA机构" class="headerlink" title="CA机构"></a>CA机构</h2><h3 id="CA机构定义"><a href="#CA机构定义" class="headerlink" title="CA机构定义"></a>CA机构定义</h3><p>证书颁发机构（CA, Certificate Authority）即颁发数字证书的机构。是负责发放和管理数字证书的权威机构，并作为电子商务交易中受信任的第三方，承担公钥体系中公钥的合法性检验的责任。</p>
+<h3 id="有哪些CA机构"><a href="#有哪些CA机构" class="headerlink" title="有哪些CA机构"></a>有哪些CA机构</h3><p>目前全球主流的 CA 机构有 Comodo 、Symantec、GeoTrust、DigiCert、Thawte、GlobalSign、RapidSSL 等，其中 Symantec、GeoTrust 都是 DigiCert 机构的子公司，目前市场上主流的 SSL 证书品牌是 Comodo 证书、Symantec 证书、GeoTrust 证书、Thawte 证书和 RapidSSL 证书，还有一些不知名的证书机构也是可以颁发数字证书的。</p>
+<p>国内的 CA 机构主要有中国金融认证中心（CFCA）、沃通（WoSign）、数安时代（GDCA）和安信证书（AnTruet）等。</p>
+<h2 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>采用单钥密码系统的加密方法，同一个密钥可以同时用作信息的加密和解密，这种加密方法称为对称加密，也称为单密钥加密。</p>
+<h3 id="常用加密算法"><a href="#常用加密算法" class="headerlink" title="常用加密算法"></a>常用加密算法</h3><p>DES、AES、RC2、RC4、RC5 等</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DES</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">encrypt</span><span class="params">(String content, String key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">byte</span>[] encryptionBytes = content.getBytes(<span class="string">"UTF-8"</span>);</span><br><span class="line">            SecureRandom random = <span class="keyword">new</span> SecureRandom();</span><br><span class="line">            DESKeySpec desKey = <span class="keyword">new</span> DESKeySpec(key.getBytes());</span><br><span class="line">            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(<span class="string">"DES"</span>);</span><br><span class="line">            SecretKey secureKey = keyFactory.generateSecret(desKey);</span><br><span class="line">            Cipher cipher = Cipher.getInstance(<span class="string">"DES"</span>);</span><br><span class="line">            cipher.init(Cipher.ENCRYPT_MODE, secureKey, random);</span><br><span class="line">            <span class="keyword">byte</span>[] encryptionBase64Bytes = Base64.getEncoder().encode(cipher.doFinal(encryptionBytes));</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> String(encryptionBase64Bytes);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">decrypt</span><span class="params">(String content, String key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">byte</span>[] decryptionBytes = Base64.getDecoder().decode(content);</span><br><span class="line">            SecureRandom random = <span class="keyword">new</span> SecureRandom();</span><br><span class="line">            DESKeySpec desKey = <span class="keyword">new</span> DESKeySpec(key.getBytes());</span><br><span class="line">            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(<span class="string">"DES"</span>);</span><br><span class="line">            SecretKey secureKey = keyFactory.generateSecret(desKey);</span><br><span class="line">            Cipher cipher = Cipher.getInstance(<span class="string">"DES"</span>);</span><br><span class="line">            cipher.init(Cipher.DECRYPT_MODE, secureKey, random);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> String(cipher.doFinal(decryptionBytes), <span class="string">"UTF-8"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> String key = <span class="string">"this_is_key"</span>;</span><br><span class="line">        String content = <span class="string">"九点下班"</span>;</span><br><span class="line"></span><br><span class="line">        String encryptStr = DES.encrypt(content, key);</span><br><span class="line">        System.out.println(<span class="string">"加密："</span> + encryptStr);</span><br><span class="line"></span><br><span class="line">        String decryptStr = DES.decrypt(encryptStr, key);</span><br><span class="line">        System.out.println(<span class="string">"解密："</span> + decryptStr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/03/20/8MuyPK1XjtFLr3T.png" alt="image.png"></p>
+<p>1、李雷想要给韩梅梅发送消息，他们约定使用对称加密的方式把消息进行加密</p>
+<p>2、李雷用密钥把消息加密然后发送给韩梅梅</p>
+<p>3、韩梅梅用同一个密钥解密，然后看到李雷发送给自己的消息</p>
+<p>可以看到使用上面的方式，一旦密钥泄漏，消息就很容易被破解</p>
+<h2 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p>对称加密算法在加密和解密时使用的是同一个秘钥，非对称加密算法需要两个密钥来进行加密和解密，这两个密钥是公开密钥（public key，简称公钥）和私有密钥（private key，简称私钥）。</p>
+<h3 id="常用加密算法-1"><a href="#常用加密算法-1" class="headerlink" title="常用加密算法"></a>常用加密算法</h3><p>RSA、ECC 等</p>
+<h3 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RSA</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Cipher cipher;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            cipher = Cipher.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchPaddingException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">generateKeyPair</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">            keyPairGenerator.initialize(<span class="number">2048</span>);</span><br><span class="line">            KeyPair keyPair = keyPairGenerator.generateKeyPair();</span><br><span class="line">            PublicKey publicKey = keyPair.getPublic();</span><br><span class="line">            PrivateKey privateKey = keyPair.getPrivate();</span><br><span class="line">            String publicKeyStr = getKeyString(publicKey);</span><br><span class="line">            String privateKeyStr = getKeyString(privateKey);</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"publicKeyStr :"</span> + publicKeyStr);</span><br><span class="line">            System.out.println(<span class="string">"privateKeyStr :"</span> + privateKeyStr);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> PublicKey <span class="title">getPublicKey</span><span class="params">(String key)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] keyBytes = Base64.decode(key);</span><br><span class="line">        X509EncodedKeySpec keySpec = <span class="keyword">new</span> X509EncodedKeySpec(keyBytes);</span><br><span class="line">        KeyFactory keyFactory = KeyFactory.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">        PublicKey publicKey = keyFactory.generatePublic(keySpec);</span><br><span class="line">        <span class="keyword">return</span> publicKey;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> PrivateKey <span class="title">getPrivateKey</span><span class="params">(String key)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] keyBytes = Base64.decode(key);</span><br><span class="line">        PKCS8EncodedKeySpec keySpec = <span class="keyword">new</span> PKCS8EncodedKeySpec(keyBytes);</span><br><span class="line">        KeyFactory keyFactory = KeyFactory.getInstance(<span class="string">"RSA"</span>);</span><br><span class="line">        PrivateKey privateKey = keyFactory.generatePrivate(keySpec);</span><br><span class="line">        <span class="keyword">return</span> privateKey;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getKeyString</span><span class="params">(Key key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] keyBytes = key.getEncoded();</span><br><span class="line">        <span class="keyword">return</span> Base64.encode(keyBytes);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">encrypt</span><span class="params">(String publicKey, String content)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            cipher.init(Cipher.ENCRYPT_MODE, getPublicKey(publicKey));</span><br><span class="line">            <span class="keyword">byte</span>[] encryptBytes = cipher.doFinal(content.getBytes());</span><br><span class="line">            <span class="keyword">return</span> Base64.encode(encryptBytes);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">decrypt</span><span class="params">(String privateKey, String content)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            cipher.init(Cipher.DECRYPT_MODE, getPrivateKey(privateKey));</span><br><span class="line">            <span class="keyword">byte</span>[] decryptBytes = cipher.doFinal(Base64.decode(content));</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> String(decryptBytes);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">//        generateKeyPair();</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> String publicKey = <span class="string">"使用generateKeyPair生成"</span>;</span><br><span class="line">        <span class="keyword">final</span> String privateKey = <span class="string">"使用generateKeyPair生成"</span>;</span><br><span class="line"></span><br><span class="line">        String content = <span class="string">"九点下班"</span>;</span><br><span class="line">        String encryptStr = encrypt(publicKey, content);</span><br><span class="line">        System.out.println(<span class="string">"加密："</span> + encryptStr);</span><br><span class="line">        String decryptStr = decrypt(privateKey, encryptStr);</span><br><span class="line">        System.out.println(<span class="string">"解密："</span> + decryptStr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/03/20/5UCwGWmBFydQRIL.png" alt="image.png"></p>
+<p>1、李雷想要给韩梅梅发送消息，他们约定使用非对称加密的方式把消息进行加密</p>
+<p>2、李雷首先要得到韩梅梅的公钥</p>
+<p>2、李雷用韩梅梅的公钥把消息加密然后发送给韩梅梅</p>
+<p>3、韩梅梅用自己的私钥解密，然后看到李雷发送给自己的消息</p>
+<p>韩梅梅给李雷发送消息同理。</p>
+<h2 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h2><p>数字签名（Digital Signature）是一种功能类似写在纸上的普通签名、但是使用了公钥加密领域的技术，以用于鉴别数字信息的方法。一套数字签名通常会定义两种互补的运算，一个用于签名，另一个用于验证。通常我们使用公钥加密，用私钥解密。而在数字签名中，我们使用私钥加密（相当于生成签名），公钥解密（相当于验证签名）。我们可以直接对消息进行签名（即使用私钥加密，此时加密的目的是为了签名，而不是保密），验证者用公钥正确解密消息，如果和原消息一致，则验证签名成功。但通常我们会对消息的散列值签名，因为通常散列值的长度远小于消息原文，使得签名（非对称加密）的效率大大提高。注意，计算消息的散列值不是数字签名的必要步骤。</p>
+<h2 id="TLS与SSL"><a href="#TLS与SSL" class="headerlink" title="TLS与SSL"></a>TLS与SSL</h2><p>TLS（传输层安全性协议：Transport Layer Security）及其前身 SSL（安全套接层：Secure Sockets Layer）是一种安全协议，目的是为互联网通信提供安全及数据完整性保障。</p>
+<p>我们访问我的个人博客  <a href="https://democome.com/" target="_blank" rel="noopener">https://democome.com/</a>，然后用 WireShark 抓包看下 TLS 握手的过程。</p>
+<h2 id="WireShark抓包TLS握手"><a href="#WireShark抓包TLS握手" class="headerlink" title="WireShark抓包TLS握手"></a>WireShark抓包TLS握手</h2><p>TLS 握手有 RSA 握手、ECDH 握手。通过我下面的抓包分析，下面的示例中使用的是 ECDH 握手。使用 WireShark 进行 ip 过滤</p>
+<p><code>ip.dst == 185.199.109.153 or ip.src == 185.199.109.153</code></p>
+<p>TLS 握手过程如下图，我们现在只关注 Protocol 为 TLSv1.2 的抓包信息：</p>
+<p><img src="https://i.loli.net/2020/03/23/swZAqQWJvkY3Xa5.png" alt="image.png"></p>
+<p>通过上面的图我们可以发现，TLS 的握手过程主要分为以下几步。</p>
+<ul>
+<li>Client Hello</li>
+<li>Server Hello</li>
+<li>Certificate</li>
+<li>Server Key Exchange</li>
+<li>Client Key Exchange</li>
+</ul>
+<p>其中涉及到了<strong>对称加密、非对称加密</strong>等算法，我们来对每一步进行分析。</p>
+<h3 id="Client-Hello"><a href="#Client-Hello" class="headerlink" title="Client Hello"></a>Client Hello</h3><p><strong>浏览器发送给服务器</strong></p>
+<p><img src="https://i.loli.net/2020/03/23/8UpB4Ego7jbPyMa.png" alt="image.png"></p>
+<p>我们需要关注以下内容：</p>
+<ul>
+<li>TLS版本:1.2</li>
+<li>随机数：Radnom</li>
+<li>浏览器支持的加密套件：Cipher Suites</li>
+</ul>
+<p>可以看到浏览器支持的 Cipher Suites 有17种，服务器会从中选择一个。随机数会在最后计算主密钥（master key）即对称加密所使用的密钥时使用。</p>
+<h3 id="Server-Hello"><a href="#Server-Hello" class="headerlink" title="Server Hello"></a>Server Hello</h3><p><strong>服务器发送给浏览器</strong></p>
+<p><img src="https://i.loli.net/2020/03/23/7jBrXLoCWh9VZ1u.png" alt="image.png"></p>
+<ul>
+<li>随机数：Radnom</li>
+<li>服务器选择的加密套件：Cipher Suite</li>
+</ul>
+<p>可以看到服务器选择的加密套件是：<strong>TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</strong></p>
+<p>我们看下一每一部分的含义</p>
+<p>ECDHE：密钥协商算法</p>
+<p>RSA：证书公钥加密算法</p>
+<p>AES_128：对称加密算法、AES的密码长度</p>
+<p>GCM：AES加密模式</p>
+<p>SHA256：验证消息的消息摘要算法（哈希算法）    </p>
+<h3 id="Certificate"><a href="#Certificate" class="headerlink" title="Certificate"></a>Certificate</h3><p><strong>服务器发送给浏览器</strong></p>
+<p>在 Server Hello 过程中服务器已经选择好了加密套件。服务器下发证书，携带了 CA 证书链和证书的公钥。在证书链最上层有一个根 CA 证书，这个证书存储在浏览器或者操作系统中，由系统直接信任的。</p>
+<p>我们先在浏览器中看一下证书链如下：</p>
+<p><img src="https://i.loli.net/2020/03/23/TYCex8nvmc7XJ5a.png" alt="image.png"></p>
+<p>然后再看一下 macOS 系统根证书，可以发现最上层的证书是系统信任的。</p>
+<p><img src="https://i.loli.net/2020/03/23/LxHZYa2zA8DWRmr.png" alt="image.png"></p>
+<p>浏览器验证服务器证书的过程如下，首先找到找到 democome.com 证书的中级证书颁发机构 Let’s Encrypt Authority X3 ，然后再往上找直到根证书，这里就是 DST Root CA X3。</p>
+<p>然后从根证书开始往下去验证数字签名。在这个例子中用 DST Root CA X3 的公钥验证 Let’s Encrypt Authority X3 证书的数字签名。再用 Let’s Encrypt Authority X3 证书的公钥验证服务器证书 democome.com 的数字签名。如果在验证过程中任何一个环节失败，那么这个证书就是不合法的。</p>
+<p><strong>Certificate</strong> 这一步骤信息如下</p>
+<p><img src="https://i.loli.net/2020/03/23/WRb9xADtHrXZSpP.png" alt="image.png"></p>
+<p>证书的公钥如下图：</p>
+<p><img src="https://i.loli.net/2020/03/23/AwyB5HanEFOZgS3.png" alt="image.png"></p>
+<p>证书签名如下图：</p>
+<p>证书的签名用来确保证书没有被篡改过。</p>
+<p><img src="https://i.loli.net/2020/03/23/87JALuFmqReZp3U.png" alt="image.png"></p>
+<h3 id="Server-Key-Exchange"><a href="#Server-Key-Exchange" class="headerlink" title="Server Key Exchange"></a>Server Key Exchange</h3><p><strong>服务器发送给浏览器</strong></p>
+<p>服务器选择的加密套件为：<strong>TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</strong> 其中 ECDHE（Elliptic Curve Diffie Hellman Ephemeral）用于密钥协商。这里涉及到了椭圆曲线加密。椭圆曲线密码（Elliptic Curve Cryptography，缩写：ECC）是一种基于椭圆曲线数学的公开密钥加密算法。ECC 的主要优势是在某些情况下它比其他的算法（比如 RSA 加密算法）使用更小的密钥并提供相当的或更高等级的安全。</p>
+<p><img src="https://i.loli.net/2020/03/23/tVuge7jHnfZY2cs.png" alt="image.png"></p>
+<p>以上 Server Key Exchange 内容我们重点关注 EC Diffie-Hellman Server Params，可以看到 Named Curve 这里选择的是 x25519 这条曲线。它的原理可以简单理解如下：</p>
+<p>还是李雷和韩梅梅要写信</p>
+<p>1、李雷用自己的私钥 $a$ 算出椭圆曲线上点 $Q1$，然后把基点 $G$ 和 $Q1$ 发送给韩梅梅</p>
+<p>2、韩梅梅用自己的私钥 $b$ 算出椭圆曲线上点 $Q2$ 发送给李雷</p>
+<p>3、根据椭圆曲线计算规则双方共同计算出的 $K$ 是相同的。</p>
+<p>这样就可以进行对称加密了，并且加密的密钥没有在网络上传递过。其实这个计算出来的 $K$  也不是最终对称加密的密钥这里可以理解为 premaster key ，最终还会用浏览器和服务器双方的随机数再进行一个计算（PRF）得到真正的对称加密密钥 master key。</p>
+<p><img src="https://i.loli.net/2020/03/22/2JXG6afw9iEq4CH.png" alt="image.png"></p>
+<p>上图中的 Pubkey 就可以理解为服务器计算的椭圆上一点。</p>
+<p>以下内容主要是椭圆曲线加密算法的一些数学原理，不感兴趣可以忽略，直接到 Client Key Exchange 这一步骤。</p>
+<h4 id="DH-算法"><a href="#DH-算法" class="headerlink" title="DH 算法"></a>DH 算法</h4><p>DH（Diffie–Hellman key exchange）它可以让双方在完全没有对方任何预先信息的条件下通过不安全信道创建起一个密钥。这个密钥可以在后续的通讯中作为对称密钥来加密通讯内容。</p>
+<p><img src="https://i.loli.net/2020/03/20/MxSat9XbVcCkGyj.png" alt="image.png"></p>
+<p>简单解释一下，假如通信的双方是 李雷 和 韩梅梅</p>
+<p>前提条件：</p>
+<ul>
+<li>$a$ 是 李雷 的私钥，$b$ 是 韩梅梅 的私钥。</li>
+<li>$p$ 是一个质数，是公开的</li>
+<li>$g$ 是 $p$ 的一个原根，是公开的</li>
+</ul>
+<p>协商过程：</p>
+<p>第一步：李雷 根据自己的私钥 $a$ 计算出自己的 公钥 $A = g^a\mod p$</p>
+<p>第二步：李雷 将 $g$、$p$ 和 $A$ 发送给 韩梅梅</p>
+<p>第三步：韩梅梅 根据自己的私钥 $b$ 计算出自己的 公钥 $B = g^b\mod p$</p>
+<p>第四步：韩梅梅 把自己的公钥 $B$ 发送给 李雷</p>
+<p>第五步：李雷 计算对称加密的密钥 $K=B^a\mod p$</p>
+<p>第六步：韩梅梅 计算对称加密的密钥 $K=A^b\mod p$</p>
+<p>由上图的推导可知最终计算的 $K$ 是相同的。</p>
+<p>具体例子：</p>
+<p>李雷 与 韩梅梅 协定使用 $p=23$以及$g=5$。<br>李雷 的私钥 $a=6$, 计算$A = g^a\mod p$并发送给 韩梅梅。<br>$A = 5^6\mod 23 =8$<br>韩梅梅 的私钥 $b=15$, 计算$B = g^b\mod p$ 并发送给 李雷。<br>$B = 5^{15}\mod 23 = 19$<br>李雷 计算 $K=B^a\mod p$<br>$K=19^6\mod 23 = 2$<br>韩梅梅 计算 $K=A^b\mod p$<br>$K=8^{15}\mod 23 = 2$</p>
+<p>可以看到对称加密的密钥 $K$ 并没有在 李雷 和 韩梅梅 之间传输，但是计算出来的结果是一样的。</p>
+<h4 id="ECC算法"><a href="#ECC算法" class="headerlink" title="ECC算法"></a>ECC算法</h4><p>椭圆曲线密码（Elliptic Curve Cryptography，缩写：ECC）是一种基于椭圆曲线数学的公开密钥加密算法。ECC的主要优势是在某些情况下它比其他的算法（比如RSA加密算法）使用更小的密钥并提供相当的或更高等级的安全。</p>
+<p>椭圆曲线的方程如下：</p>
+<p>$y^2 = x^3 + ax + b$</p>
+<p>椭圆曲线的函数图像如下：</p>
+<p>$y^2 = x^3 - x + 1$</p>
+<img src="https://i.loli.net/2020/03/19/HrcSBlPEzYXg7Zb.png" alt="image.png" style="zoom:50%;" />
+
+<p>$y^2 = x^3 + x + 1$</p>
+<img src="https://i.loli.net/2020/03/19/3XDntQjSYsTuczx.png" alt="image.png" style="zoom:50%;" />
+
+<p>可以看到是关于 X 轴对称的。</p>
+<h4 id="椭圆曲线运算"><a href="#椭圆曲线运算" class="headerlink" title="椭圆曲线运算"></a>椭圆曲线运算</h4><p>过曲线上 A、B 两点与椭圆曲线交与点 C，点 C 关于 A 轴做对称，与椭圆曲线的交点定义为 A+B。</p>
+<img src="https://i.loli.net/2020/03/20/2sfu7zT8LdAN5F9.png" alt="image.png" style="zoom:50%;" />
+
+
+
+<p>考虑加法的一种特殊情况，如果 A = B，也就A（B）是椭圆曲线的切点，这个时候在重复上面的运算得到 A+A = 2A。</p>
+<img src="https://i.loli.net/2020/03/20/qNfa2GZQXeKAtyz.png" alt="image.png" style="zoom:50%;" />
+
+
+
+<p>A 关于 X 轴做对称得到的点定义为 -A。</p>
+<img src="https://i.loli.net/2020/03/20/9CrP21GMRNbuZe3.png" alt="image.png" style="zoom:50%;" />
+
+
+
+<p>下面有两张动态图，描述了这一过程：</p>
+<p>A+B = C </p>
+<p>A+C = D</p>
+<p>A+D = E</p>
+<p><img src="https://cdn.arstechnica.net/wp-content/uploads/2013/10/elliptic-curve-crypt-image02.gif" alt="img"></p>
+<p>A 和 B 重合演示如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/785822-85f0ed4e61c77f27.gif" alt="img"></p>
+<p>有了以上 $A+B$ 和 $2A$ 的运算，如果已知椭圆曲线上一点 $G$ ，我们可以求出 $2G$、 $3G=G+2G $  、$4G=2G+2G$  、$5G=2G+3G$ 、…  $kG$，但是反过来如果我们已知 $kG$ ，要想求出 $G$ 是非常困难的。</p>
+<p>椭圆曲线的有限域</p>
+<p>椭圆曲线加密算法并非使用实数域，而是使用有限域，那么我们把椭圆曲线定义在有限域上。</p>
+<p>用 $Ep(a,b)$ 表示椭圆曲线方程 $y^2=x^3+ax+b$ ，在有限域 $Fp$ 中，表示所有在同余( $mod$ )意义上满足该方程的 $(x, y)$ 点。</p>
+<p>举例：加入我们的曲线是 $E_{23}(1, 1)$ 即 $p=23,a=1,b=1$ 。那么 $y^2=x^3+x+1$。</p>
+<p>点 $P(3, 10)$ 满足 $y^2=10^2=100 ，100(mod)23=8$，$x^3+x+1=3^3+3+1=31,31(mod)23=8$</p>
+<p>所以点 $P(3, 10)$ 在曲线上。</p>
+<img src="https://i.loli.net/2020/03/20/XIW1txcb4Rzdhuv.png" alt="image.png"  />
+
+<p>以上是离散化之后的点。利用椭圆曲线进行加密通信的过程如下（这里给出推理过程，涉及到的运算比较复杂，需要的数学知识比较多，我还在研究中）：</p>
+<p>1、李雷选择一条曲线 $Ep(a,b)$，取椭圆曲线上一点 $G$ 作为基点。</p>
+<p>2、李雷选择一个私钥 $k$，然后生成公钥 $K=kG$</p>
+<p>3、李雷把  $Ep(a,b)$ 、公钥 $K$ 和 基点 $G$ 传给韩梅梅</p>
+<p>4、韩梅梅以上信息，把明文编码到 $Ep(a,b)$ 上一点 $M$，并产生一个随机数 $r$</p>
+<p>5、韩梅梅计算 $C_1 = M+rK $  和 $C_2 = rG$</p>
+<p>6、韩梅梅把 $C_1、C_2$ 传给李雷</p>
+<p>7、李雷收到信息后，计算 $C_1-kC2$ 结果就是点 $M$</p>
+<p>因为 $C_1-kC_2 = M+rK-krG = M+rkG-krG=M$</p>
+<h4 id="数学概念"><a href="#数学概念" class="headerlink" title="数学概念"></a>数学概念</h4><h5 id="有限域"><a href="#有限域" class="headerlink" title="有限域"></a>有限域</h5><p>在数学中，有限域（finite field）是包含有限个元素的域。与其他域一样，有限域是进行加减乘除运算都有定义并且满足特定规则的集合。有限域最常见的例子是当 $p$ 为素数时，整数对 $p$ 取模。有限域的元素个数称为它的 <strong>阶</strong>。</p>
+<h5 id="群"><a href="#群" class="headerlink" title="群"></a>群</h5><p>数学里面的群是一类定义了二元运算（我们称之为加法，用符号+表示）的集合。如果想让集合 <img src="https://www.zhihu.com/equation?tex=G" alt="[公式]"> 变成一个群，我们必须定义满足如下四条性质的加法：</p>
+<p>1、封闭性：如果 $a$ 和 $b$ 属于 $G$，那么 $a+b$ 也属于 $G$；</p>
+<p>2、结合律：$(a+b)+c=a+(b+c)$；</p>
+<p>3、存在单位元（注：在二元运算中，单位元指与任意元素运算不改变其值的元素，以实数为例，乘法单位元为1，加法单位元为0）$\theta$ 使得 $ a+\theta = \theta + a = a$；</p>
+<p>4、每个元素都存在逆元素，也即对于任意元素 $a$ 存在 $b$ 使得 $a+b=\theta$；</p>
+<p>如果我们添加第五条要求：</p>
+<p>5、交换律：$a+b=b+a$</p>
+<p>那么这个群就是阿贝尔群。</p>
+<h5 id="Curve25519"><a href="#Curve25519" class="headerlink" title="Curve25519"></a>Curve25519</h5><p>在密码学中，Curve25519 是一种椭圆曲线，被设计用于椭圆曲线迪菲-赫尔曼（ECDH）密钥交换方法。它是不被任何已知专利覆盖的最快 ECC 曲线之一。</p>
+<p>Curve25519 椭圆曲线方程为：$y^2 = x^3 + 486662x^2 + x$，使用基点 $x = 9$</p>
+<h4 id="ECDH"><a href="#ECDH" class="headerlink" title="ECDH"></a>ECDH</h4><p>还以 李雷 和 韩梅梅 为例，把 DH 的交换内容改为曲线上的点</p>
+<p><img src="https://i.loli.net/2020/03/22/2JXG6afw9iEq4CH.png" alt="image.png"></p>
+<p>当我们选择 Curve25519 是一种椭圆曲线时，参数是确定的，G 也是确定的，所以只交换双方的公钥即可。</p>
+<h3 id="Client-Key-Exchange"><a href="#Client-Key-Exchange" class="headerlink" title="Client Key Exchange"></a>Client Key Exchange</h3><p><strong>浏览器发送给服务器</strong></p>
+<p>同理，这里的 Pubkey 就可以理解为浏览器计算的椭圆上一点。这一步和 Server Key Exchange 类似，都是为了计算对称加密的密钥。</p>
+<p><img src="https://i.loli.net/2020/03/23/F1rqOn9vzPXfie4.png" alt="image.png"></p>
+<h3 id="对称加密通信"><a href="#对称加密通信" class="headerlink" title="对称加密通信"></a>对称加密通信</h3><p>有了上面的基础，浏览器可以计算出一个对称加密密钥，服务器可以计算出一个对称加密密钥，尽管这两个密钥没有在网络上传输，但是可以保证这两个密钥是相同的。这样使用这个密钥进行加密就可以在网络上进行传输了。</p>
+<p>以上就是关于 TLS 握手的基本过程，保证了数据在网络上传递的安全性。</p>
+<h2 id="X-509"><a href="#X-509" class="headerlink" title="X.509"></a>X.509</h2><p>X.509 是密码学里公钥证书的格式标准。X.509 证书已应用在包括 TLS/SSL 在内的众多网络协议里，同时它也用在很多非在线应用场景里，比如电子签名服务。X.509 证书里含有公钥、身份信息（比如网络主机名，组织的名称或个体名称等）和签名信息（可以是证书签发机构 CA 的签名，也可以是自签名）。对于一份经由可信的证书签发机构签名或者可以通过其它方式验证的证书，证书的拥有者就可以用证书及相应的私钥来创建安全的通信，对文档进行数字签名。</p>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><p><a href="https://www.desmos.com/calculator/ialhd71we3" target="_blank" rel="noopener">在线画图工具</a></p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://ssl.idcspy.net/5687.html" target="_blank" rel="noopener">SSL证书CA机构</a></p>
+<p><a href="http://www.cac.gov.cn/2015-06/02/c_1115480021.htm" target="_blank" rel="noopener">数字证书与网络安全</a></p>
+<p><a href="https://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html" target="_blank" rel="noopener">数字签名是什么？</a></p>
+<p><a href="https://zh.wikipedia.org/wiki/椭圆曲线密码学" target="_blank" rel="noopener">椭圆曲线加密</a></p>
+<p><a href="https://zh.wikipedia.org/wiki/Curve25519" target="_blank" rel="noopener">Curve25519</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/26029199" target="_blank" rel="noopener">椭圆曲线密码学的简单介绍</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/37636276" target="_blank" rel="noopener">TLS的握手流程</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/75461564" target="_blank" rel="noopener">再谈HTTPS</a></p>
+<p><a href="https://blog.csdn.net/sitebus/article/details/82835492" target="_blank" rel="noopener">ECC椭圆曲线加解密原理详解(配图)</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/36326221" target="_blank" rel="noopener">ECC椭圆曲线加密算法：介绍</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/34363494" target="_blank" rel="noopener">新手上路：实数上的椭圆曲线和群论</a></p>
+<p><a href="https://www.jianshu.com/p/3b810faff3ba" target="_blank" rel="noopener">密码学基础2：椭圆曲线密码学原理分析</a></p>
+<p><a href="https://halfrost.com/https-key-cipher/" target="_blank" rel="noopener">HTTPS 温故知新（五） —— TLS 中的密钥计算</a></p>
+<p><a href="https://zh.wikipedia.org/wiki/有限域" target="_blank" rel="noopener">有限域</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebTrust"><span class="toc-number">2.</span> <span class="toc-text">WebTrust</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CA机构"><span class="toc-number">3.</span> <span class="toc-text">CA机构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CA机构定义"><span class="toc-number">3.1.</span> <span class="toc-text">CA机构定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#有哪些CA机构"><span class="toc-number">3.2.</span> <span class="toc-text">有哪些CA机构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对称加密"><span class="toc-number">4.</span> <span class="toc-text">对称加密</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#定义"><span class="toc-number">4.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用加密算法"><span class="toc-number">4.2.</span> <span class="toc-text">常用加密算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例"><span class="toc-number">4.3.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非对称加密"><span class="toc-number">5.</span> <span class="toc-text">非对称加密</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#定义-1"><span class="toc-number">5.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用加密算法-1"><span class="toc-number">5.2.</span> <span class="toc-text">常用加密算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例-1"><span class="toc-number">5.3.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数字签名"><span class="toc-number">6.</span> <span class="toc-text">数字签名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TLS与SSL"><span class="toc-number">7.</span> <span class="toc-text">TLS与SSL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WireShark抓包TLS握手"><span class="toc-number">8.</span> <span class="toc-text">WireShark抓包TLS握手</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Client-Hello"><span class="toc-number">8.1.</span> <span class="toc-text">Client Hello</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Server-Hello"><span class="toc-number">8.2.</span> <span class="toc-text">Server Hello</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Certificate"><span class="toc-number">8.3.</span> <span class="toc-text">Certificate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Server-Key-Exchange"><span class="toc-number">8.4.</span> <span class="toc-text">Server Key Exchange</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#DH-算法"><span class="toc-number">8.4.1.</span> <span class="toc-text">DH 算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ECC算法"><span class="toc-number">8.4.2.</span> <span class="toc-text">ECC算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#椭圆曲线运算"><span class="toc-number">8.4.3.</span> <span class="toc-text">椭圆曲线运算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数学概念"><span class="toc-number">8.4.4.</span> <span class="toc-text">数学概念</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#有限域"><span class="toc-number">8.4.4.1.</span> <span class="toc-text">有限域</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#群"><span class="toc-number">8.4.4.2.</span> <span class="toc-text">群</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Curve25519"><span class="toc-number">8.4.4.3.</span> <span class="toc-text">Curve25519</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ECDH"><span class="toc-number">8.4.5.</span> <span class="toc-text">ECDH</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Client-Key-Exchange"><span class="toc-number">8.5.</span> <span class="toc-text">Client Key Exchange</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对称加密通信"><span class="toc-number">8.6.</span> <span class="toc-text">对称加密通信</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#X-509"><span class="toc-number">9.</span> <span class="toc-text">X.509</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工具"><span class="toc-number">10.</span> <span class="toc-text">工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-number">11.</span> <span class="toc-text">参考文章</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&text=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&title=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&is_video=false&description=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=深入理解HTTPS&body=Check out this article: http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&title=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&title=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&title=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&title=深入理解HTTPS" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/&name=深入理解HTTPS&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2020 snow
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
