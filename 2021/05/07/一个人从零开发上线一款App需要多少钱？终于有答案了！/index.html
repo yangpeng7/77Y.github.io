@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang=zh>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0e76dffc6c1c980a49f2d1fa69fd8148";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前言多少有点标题党，开发一个 App 的成本肯定和需求的复杂程度有关。本文仅仅是作者在从零到产生需求到开发一个 App 的个人总结与记录。开发过程中使用了 Google 的跨平台开发框架 Flutter ，移动端和官网都采用 Flutter 来实现，目前来看应该是成本最低的开发方式了。如有异议，请各位大佬轻拍，理性讨论。 为什么要从零到开发一个App 从正式成为程序员的第一天起就有一个开发自己作品">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个人从零开发上线一款App需要多少钱？终于有答案了！">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2021&#x2F;05&#x2F;07&#x2F;%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81&#x2F;index.html">
+<meta property="og:site_name" content="九点下班">
+<meta property="og:description" content="前言多少有点标题党，开发一个 App 的成本肯定和需求的复杂程度有关。本文仅仅是作者在从零到产生需求到开发一个 App 的个人总结与记录。开发过程中使用了 Google 的跨平台开发框架 Flutter ，移动端和官网都采用 Flutter 来实现，目前来看应该是成本最低的开发方式了。如有异议，请各位大佬轻拍，理性讨论。 为什么要从零到开发一个App 从正式成为程序员的第一天起就有一个开发自己作品">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;25&#x2F;zyHgIL35tJu9mpb.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;25&#x2F;tFZe7rH5uOlWhUQ.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;18&#x2F;sQBf23DH1kKeCYE.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;18&#x2F;TEVM9BOuZLinYy1.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;18&#x2F;iuFaVDKGByzh61Q.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;16&#x2F;4LZNk1TdjIznUy8.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;17&#x2F;TSfoHn65tMV47DR.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;17&#x2F;OBGbfK6pJSy7wV9.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;17&#x2F;XD2KCzSpeJnZQuh.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;17&#x2F;739jTzNtAsVRQ6e.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;17&#x2F;EdoHPKNxBvqTCWG.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;17&#x2F;yo4rlTeYk8asjI6.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;17&#x2F;7tcH28pOioBEDv5.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;18&#x2F;dPeDbx6ZKRcE3UC.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;05&#x2F;07&#x2F;HFsnx7SRJeQ3wIk.png">
+<meta property="og:updated_time" content="2021-05-07T14:02:31.291Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2021&#x2F;04&#x2F;25&#x2F;zyHgIL35tJu9mpb.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>一个人从零开发上线一款App需要多少钱？终于有答案了！</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/03/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3HTTPS/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&text=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&title=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&is_video=false&description=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=一个人从零开发上线一款App需要多少钱？终于有答案了！&body=Check out this article: http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/" target="_blank" rel="noopener"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&title=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&title=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&title=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&title=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&name=一个人从零开发上线一款App需要多少钱？终于有答案了！&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#为什么要从零到开发一个App"><span class="toc-number">1.0.1.</span> <span class="toc-text">为什么要从零到开发一个App</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最终成果"><span class="toc-number">2.</span> <span class="toc-text">最终成果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#官网"><span class="toc-number">2.1.</span> <span class="toc-text">官网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#桌面端"><span class="toc-number">2.2.</span> <span class="toc-text">桌面端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#手机端"><span class="toc-number">2.3.</span> <span class="toc-text">手机端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#iOS"><span class="toc-number">2.4.</span> <span class="toc-text">iOS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Android"><span class="toc-number">2.5.</span> <span class="toc-text">Android</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开发成本"><span class="toc-number">3.</span> <span class="toc-text">开发成本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#技术栈"><span class="toc-number">3.1.</span> <span class="toc-text">技术栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基础设施"><span class="toc-number">3.2.</span> <span class="toc-text">基础设施</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#人力成本"><span class="toc-number">3.3.</span> <span class="toc-text">人力成本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开发历程"><span class="toc-number">4.</span> <span class="toc-text">开发历程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-设计页面"><span class="toc-number">4.1.</span> <span class="toc-text">1. 设计页面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-App-开发"><span class="toc-number">4.2.</span> <span class="toc-text">2. App 开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-接口开发"><span class="toc-number">4.3.</span> <span class="toc-text">3. 接口开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-联调"><span class="toc-number">4.4.</span> <span class="toc-text">4. 联调</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-服务部署"><span class="toc-number">4.5.</span> <span class="toc-text">5. 服务部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-其他琐事"><span class="toc-number">4.6.</span> <span class="toc-text">6. 其他琐事</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#困难："><span class="toc-number">5.</span> <span class="toc-text">困难：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#如何自驱"><span class="toc-number">5.1.</span> <span class="toc-text">如何自驱</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#未来计划"><span class="toc-number">6.</span> <span class="toc-text">未来计划</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        一个人从零开发上线一款App需要多少钱？终于有答案了！
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">九点下班</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-05-07T14:00:20.000Z" itemprop="datePublished">2021-05-07</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>多少有点标题党，开发一个 App 的成本肯定和需求的复杂程度有关。本文仅仅是作者在从零到产生需求到开发一个 App 的个人总结与记录。开发过程中使用了 Google 的跨平台开发框架 Flutter ，移动端和官网都采用 Flutter 来实现，目前来看应该是成本最低的开发方式了。如有异议，请各位大佬轻拍，理性讨论。</p>
+<h4 id="为什么要从零到开发一个App"><a href="#为什么要从零到开发一个App" class="headerlink" title="为什么要从零到开发一个App"></a>为什么要从零到开发一个App</h4><ul>
+<li><p>从正式成为程序员的第一天起就有一个开发自己作品的梦想，这也是最重要的原因。</p>
+</li>
+<li><p>对抗各种公众号贩卖的焦虑。与其睡前刷刷抖音，不如用这点时间写写代码。对自己的技术进行总结和沉淀。当然这一点是对写代码的热情。</p>
+</li>
+<li><p>作为程序员经常被其他行业的亲戚朋友问：开发一个淘宝或者写一个游戏多少钱，应该很简单吧，那我就用亲身实践来解答这个问题。</p>
+</li>
+</ul>
+<p>基于以上几点，就有最终开发上线的 App《乐记》，先来看一下最终上线的成果。</p>
+<h2 id="最终成果"><a href="#最终成果" class="headerlink" title="最终成果"></a>最终成果</h2><p>如果你看下面的截图或者听 App 的名字，应该可以猜出是音乐相关的 App 。为什么叫《乐记》呢？因为《乐记》是我国最早的一部具有比较完整体系的音乐理论著作。而我写的 App 也是我学习乐理过程的记录，因此得名。目前它的主要功能有：</p>
+<ul>
+<li>乐理列表/详情</li>
+<li>节拍器</li>
+<li>登录/注册</li>
+<li>意见反馈</li>
+<li>其他</li>
+</ul>
+<p>为什么写这么一个 App 呢？几年前和一个老师学过一段时间吉他，在学的过程中老师告诉怎么弹就怎么弹，不知道和弦为什么这么按，也不懂按出来究竟是什么音，即使能弹出来也感到很困惑。因此研究了一段时间的乐理，并作了一些记录。当然乐理是非常庞大的一个体系，目前整理的都是最基本的一些内容，后续会随着学习的深入逐步把内容完善。无论是练习吉他或者其他一些乐器，亦或是一个人开发一个 App 都需要坚持与不断的练习和思考。虽然目前吉他水平也就是弹唱《平凡之路》，但我想会一直坚持下去。等五六十岁的时候和大爷们一起在街边嗨起来。</p>
+<p>言归正传，看一下目前开发出来的产品：</p>
+<h3 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h3><p><a href="https://music.jiudian.link/" target="_blank" rel="noopener">https://music.jiudian.link/</a></p>
+<p>官网适配了桌面端浏览器以及手机浏览器</p>
+<h3 id="桌面端"><a href="#桌面端" class="headerlink" title="桌面端"></a>桌面端</h3><img src="https://i.loli.net/2021/04/25/zyHgIL35tJu9mpb.png" alt="桌面端" style="zoom: 50%;" />
+
+<h3 id="手机端"><a href="#手机端" class="headerlink" title="手机端"></a>手机端</h3><img src="https://i.loli.net/2021/04/25/tFZe7rH5uOlWhUQ.png" alt="手机端" style="zoom:50%;" />
+
+<h3 id="iOS"><a href="#iOS" class="headerlink" title="iOS"></a>iOS</h3><p>iPhoneX运行主要页面如下：</p>
+<p><img src="https://i.loli.net/2021/04/18/sQBf23DH1kKeCYE.png" alt="image-20210414235013790.png"></p>
+<h3 id="Android"><a href="#Android" class="headerlink" title="Android"></a>Android</h3><p>红米9运行主要页面如下：</p>
+<p><img src="https://i.loli.net/2021/04/18/TEVM9BOuZLinYy1.png" alt="image-20210414235649843.png"></p>
+<h2 id="开发成本"><a href="#开发成本" class="headerlink" title="开发成本"></a>开发成本</h2><p>这块主要分为两部分硬件成本（云服务器等归为这部分）和人力成本。</p>
+<h3 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h3><table>
+<thead>
+<tr>
+<th align="center">项目</th>
+<th align="center">技术栈</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">《乐记》服务端</td>
+<td align="center">SpringBoot（Java）</td>
+<td align="center">App端接口</td>
+</tr>
+<tr>
+<td align="center">《乐记》Android/iOS版本</td>
+<td align="center">Flutter</td>
+<td align="center">Android/iOS应用</td>
+</tr>
+<tr>
+<td align="center">《乐记》官网</td>
+<td align="center">SpringBoot+Flutter</td>
+<td align="center">地址：<a href="https://music.jiudian.link/" target="_blank" rel="noopener">https://music.jiudian.link/</a></td>
+</tr>
+</tbody></table>
+<h3 id="基础设施"><a href="#基础设施" class="headerlink" title="基础设施"></a>基础设施</h3><table>
+<thead>
+<tr>
+<th align="center">项目</th>
+<th align="center">价格</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">腾讯云服务器</td>
+<td align="center">998 RMB</td>
+<td align="center">2核CPU、4G内存、50G高性能云硬盘</td>
+</tr>
+<tr>
+<td align="center">阿里云域名</td>
+<td align="center">58 RMB</td>
+<td align="center">有效期一年</td>
+</tr>
+<tr>
+<td align="center">苹果开发者账号</td>
+<td align="center">668 RMB</td>
+<td align="center">有效期一年</td>
+</tr>
+</tbody></table>
+<p><strong>总计：1724 RMB</strong></p>
+<h3 id="人力成本"><a href="#人力成本" class="headerlink" title="人力成本"></a>人力成本</h3><p>对于互联网公司来说，人力成本几乎是最高的，这部分根据程序员及其他岗位的工作年限不同，薪资差距非常大。因此这部分相对来说比较主观。我根据拉勾2021年3月1日发布的《互联网人薪资报告》1-2月的月薪来估算这部分。</p>
+<p><img src="https://i.loli.net/2021/04/18/iuFaVDKGByzh61Q.png" alt="image-20210415222731984.png"></p>
+<p>这部分是粗略计算的，提交代码的时间都是在周末和晚上（特别喜欢在晚上夜深人静的时候写代码，特别有感觉😄），因此并没用特别精确的统计，估算如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">岗位</th>
+<th align="center">开发周期（单位：天）</th>
+<th align="center">单价（月薪/工作日）</th>
+<th align="center">总价</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">移动端开发</td>
+<td align="center">5</td>
+<td align="center">22.4/22=1k</td>
+<td align="center">5k</td>
+</tr>
+<tr>
+<td align="center">前端开发</td>
+<td align="center">2</td>
+<td align="center">22.4/22=1k</td>
+<td align="center">2k</td>
+</tr>
+<tr>
+<td align="center">服务端开发</td>
+<td align="center">5</td>
+<td align="center">22.4/22=1k</td>
+<td align="center">5k</td>
+</tr>
+<tr>
+<td align="center">设计师</td>
+<td align="center">5</td>
+<td align="center">16.4/22=0.7k</td>
+<td align="center">3.5k</td>
+</tr>
+<tr>
+<td align="center">产品经理</td>
+<td align="center">2</td>
+<td align="center">23.1/22=1k</td>
+<td align="center">2k</td>
+</tr>
+</tbody></table>
+<p><strong>总计：17500 RMB</strong></p>
+<p>至此我们算出了开发《乐记》的成本：1724 + 17500 = 19224 RMB</p>
+<h2 id="开发历程"><a href="#开发历程" class="headerlink" title="开发历程"></a>开发历程</h2><p>在确定了想法之后，下一步就是如何开发了，在技术栈选择上，由于要同时支持 iOS 和 Android 系统，所以跨平台方案成为第一选择。目前市面上相对来说比较成熟的移动端跨平台开发方案有 React Native、Weex、Flutter 等。由于前两者都是使用前端的技术栈开发，作者是一名 Android 开发，并且在工作中接触过 Flutter 开发，因此首选 Flutter 作为移动端的技术方案。在开发移动端的过程中 Flutter 2.0 正式发布，Flutter Web 也进入了稳定版，因此也用 Flutter 开发了 Web 版官网。</p>
+<p>关于后端技术选择，如果是 Android 开发者可以选择最熟悉的使用 Java ，也就是 SpringBoot 来作为服务端方案，作者最开始工作的前几年用 Spring 相关技术做过一段时间后端开发。而作为一个小项目的后端来说 SpringBoot 提供好的各种 starter 可以很快帮我搭建起整个环境。</p>
+<p>选择好技术栈之后，我创建了如下几个项目</p>
+<p><img src="https://i.loli.net/2021/04/16/4LZNk1TdjIznUy8.png" alt="image.png"></p>
+<ul>
+<li>music_backend：SpringBoot项目，提供 App 需要的接口</li>
+<li>music_frontend：SpringBoot项目，用于运行官网</li>
+<li>music_md：整理的乐理文档</li>
+<li>music_theory：Flutter 项目，也就是上面看到的打包出 Android/iOS 的项目</li>
+<li>music_web ：Flutter 项目，官网</li>
+</ul>
+<p>一个人开发的好处就是，进度可以完全自己控制，什么时候开发服务端接口，什么时候写 App 页面，什么时候联调。我基本上就是按照下面顺序开发的《乐记》这个App。</p>
+<h3 id="1-设计页面"><a href="#1-设计页面" class="headerlink" title="1. 设计页面"></a>1. 设计页面</h3><p>上来就聊这个问题，是因为可能跟我有同样想法或者独立开发者都面临的一个问题（当然有设计能力的程序员就不是问题了），并且是一个很重要的问题。下面介绍下我是如何解决页面设计的。</p>
+<p>首先我要解决整个 App 的配色问题这里推荐一个网站 <a href="https://colorhunt.co/" target="_blank" rel="noopener">Color Hunt</a> ，上面有各种各样的颜色带搭配可以选择，而且有颜色的代码。</p>
+<p><img src="https://i.loli.net/2021/04/17/TSfoHn65tMV47DR.png" alt="image.png"></p>
+<p>选好了主题色，接下来需要有一个 App 整体的设计。这里可参考的网站比较多，我常看的有 <a href="https://huaban.com/" target="_blank" rel="noopener">花瓣网</a> 和 <a href="https://dribbble.com/" target="_blank" rel="noopener">dribbble</a></p>
+<p><img src="https://i.loli.net/2021/04/17/OBGbfK6pJSy7wV9.png" alt="image.png"></p>
+<p>设计网站的设计只是一个参考，最终还需要根据自己 App 的内容、风格和自己的喜好再进行调整。有时候我也需要自己画一些页面。就有了下面的工具 Adobe XD，Adobe XD 是快速且功能强大的 UI/UX 设计和协作工具，最重要的是它是免费的。用它还可以很方便的导出移动端的多倍图。下面是我用它画的闪屏页面，当然这个需要花点时间熟悉一些基本操作。</p>
+<p><img src="https://i.loli.net/2021/04/17/XD2KCzSpeJnZQuh.png" alt="image.png"></p>
+<p>有了以上几个工具基本差不多了，然后就是应用的 icon ，比如设置页面，我选择的是阿里的 <a href="https://www.iconfont.cn/" target="_blank" rel="noopener">IconFont</a>。有非常多的可商用的 icon 和插画。并且可以直接复制到 Adobe XD，然后在 Adobe XD 里调整大小和颜色。</p>
+<p><img src="https://i.loli.net/2021/04/17/739jTzNtAsVRQ6e.png" alt="image.png"></p>
+<p>最后如果想给 App 增加的炫酷效果，比如加一些动画，对于移动端来说非常熟悉的是 airbnb 开源的 lottie 库，可以运行设计师导出的 json 格式的动画。json 文件怎么来？可以用 <a href="https://lottiefiles.com/" target="_blank" rel="noopener">lottie files</a> ，有非常多的免费的可在线编辑的动画。</p>
+<p><img src="https://i.loli.net/2021/04/17/EdoHPKNxBvqTCWG.png" alt="image.png"></p>
+<p>好了，经过以上一番折腾设计基本就搞定了，接下来就是开发阶段。</p>
+<h3 id="2-App-开发"><a href="#2-App-开发" class="headerlink" title="2. App 开发"></a>2. App 开发</h3><p>这部分其实没什么好说的，按照上面的设计，按部就班开发就好了。由于是 Flutter 开发，开发工具可以选择 Android Studio 或者 VSCode，简单看一下 App 的项目结构吧，由于官网也是 Flutter 开发，不做过多介绍，主要是打包的时候 build web 版本就行。</p>
+<p><img src="https://i.loli.net/2021/04/17/yo4rlTeYk8asjI6.png" alt="image.png"></p>
+<h3 id="3-接口开发"><a href="#3-接口开发" class="headerlink" title="3. 接口开发"></a>3. 接口开发</h3><p>这里有一个问题是先开发接口还是先写页面，我个人习惯是先写好页面再开发接口。这里说几个遇到的问题：</p>
+<ul>
+<li>本想做手机号/验证码登录，后改为免费的网易企业邮箱/验证码（迫于贫穷的无奈之举，虽然短信包也不是特别贵，可毕竟成本已经接近2w了不是😂）。</li>
+<li>本来想做微信第三方登录，认证微信开发者的过程中发现微信对于个人开发者认证不是特别友好，也放弃了。</li>
+</ul>
+<p>还有其他大大小小的问题，都通过曲线救国的方式解决了。</p>
+<p>用到的主要技术有：</p>
+<ol>
+<li>SpringBoot：基本Web开发框架</li>
+<li>JPA+MySql：数据存储</li>
+<li>Redis：缓存邮箱验证码</li>
+<li>SpringSecurity+JWT：用户鉴权</li>
+<li>网易企业邮箱服务：自定义域名发送邮件</li>
+</ol>
+<p>看下服务端的项目结构：</p>
+<p><img src="https://i.loli.net/2021/04/17/7tcH28pOioBEDv5.png" alt="image.png"></p>
+<h3 id="4-联调"><a href="#4-联调" class="headerlink" title="4. 联调"></a>4. 联调</h3><p>联调部分基本是是写好一个页面和一个接口就调一下。因为都是我自己，也没有沟通成本，这块还是比较顺畅的。</p>
+<h3 id="5-服务部署"><a href="#5-服务部署" class="headerlink" title="5. 服务部署"></a>5. 服务部署</h3><p>这块比较做的并不如公司那样规范，比如代码仓库没有关联 CI/CD 工具。这个主要是得在服务器搭建打包代码的环境，一是不想再占用服务器资源，二是一个人就目前的部署方式也可以接受。基本是本地打包然后上传到服务器部署。还有就是一些服务器的监控目前也没有做，这部分之后看情况再优化。</p>
+<p>因为在服务器上有多个服务，现在是通过 Nginx 做一层代理，通过不同的二级域名转发到不同的服务。</p>
+<p>再有就是我的域名之前是在阿里云买的，后来腾讯云优惠比较大，云服务器又搞到了腾讯云。需要用阿里云的云解析服务把在阿里云的域名解析到腾讯云。此外腾讯云提供了一年有效期的免费 HTTPS 证书。</p>
+<h3 id="6-其他琐事"><a href="#6-其他琐事" class="headerlink" title="6. 其他琐事"></a>6. 其他琐事</h3><p>看似一个小小的 App，其实琐事非常非常多。比如：</p>
+<ul>
+<li><p>上架 App Store 各种麻烦的审核机制。新的苹果开发者账号提交的App还有一段时间的莫名其妙的被拒，这种情况只能等。</p>
+<p><img src="https://i.loli.net/2021/04/18/dPeDbx6ZKRcE3UC.png" alt="image.png"></p>
+</li>
+<li><p>腾讯云服务器备案，提供各种材料，来来回回大概十几天</p>
+</li>
+<li><p>不满于之前的设计，反反复复的修改</p>
+</li>
+<li><p>上架 Android 商店，估计大部分都需要软著，暂时先放弃</p>
+</li>
+</ul>
+<h2 id="困难："><a href="#困难：" class="headerlink" title="困难："></a>困难：</h2><h3 id="如何自驱"><a href="#如何自驱" class="headerlink" title="如何自驱"></a>如何自驱</h3><p>技术上的困难其实都不能算困难。对我来说最困难的就是<strong>自我驱动</strong>。如何让自己长期坚持去完成一件事情，如何在别人在看电影的时候继续写代码。《乐记》第一次提交代码是在去年的十一假期，至今也有大半年时间了。其实在很早之前已经因为驱动力不足导致不止一个类似的 App 烂尾了。这次就想死磕一下自己。每天晚上定一个任务拆分后小目标，基本上一个小时就能完成。最终虽然不完美但还是开发出来了。上线之后的感觉也是成就感满满，就像是一个困扰多日的 BUG 在解决的一瞬间。</p>
+<h2 id="未来计划"><a href="#未来计划" class="headerlink" title="未来计划"></a>未来计划</h2><p>当然是有时间继续完善《乐记》。吉他是要继续练的，乐理是要继续学的。有一些其他的好的想法也会同步进行落地。我的备忘录里已经记录了不下10个 idea了，甚至有一些很早之前的想法现在看来非常幼稚。如果你也有同样的想法我们可以一起交流技术、吐槽生活、学习音乐、共同进步。建了个技术交流群欢迎加入。如果过期了可加我个人微信：（base64）c25vd19zcGFjZQ==（请注明来意）。</p>
+<img src="https://i.loli.net/2021/05/07/HFsnx7SRJeQ3wIk.png" alt="image.png" style="zoom: 25%;" />
+
+<p><strong>one more thing</strong> 我最大的梦想就是：和三五好友一起，吃着火锅唱着歌，望着大海写着代码，希望有朝一日能实现😄</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#为什么要从零到开发一个App"><span class="toc-number">1.0.1.</span> <span class="toc-text">为什么要从零到开发一个App</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最终成果"><span class="toc-number">2.</span> <span class="toc-text">最终成果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#官网"><span class="toc-number">2.1.</span> <span class="toc-text">官网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#桌面端"><span class="toc-number">2.2.</span> <span class="toc-text">桌面端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#手机端"><span class="toc-number">2.3.</span> <span class="toc-text">手机端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#iOS"><span class="toc-number">2.4.</span> <span class="toc-text">iOS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Android"><span class="toc-number">2.5.</span> <span class="toc-text">Android</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开发成本"><span class="toc-number">3.</span> <span class="toc-text">开发成本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#技术栈"><span class="toc-number">3.1.</span> <span class="toc-text">技术栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基础设施"><span class="toc-number">3.2.</span> <span class="toc-text">基础设施</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#人力成本"><span class="toc-number">3.3.</span> <span class="toc-text">人力成本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开发历程"><span class="toc-number">4.</span> <span class="toc-text">开发历程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-设计页面"><span class="toc-number">4.1.</span> <span class="toc-text">1. 设计页面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-App-开发"><span class="toc-number">4.2.</span> <span class="toc-text">2. App 开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-接口开发"><span class="toc-number">4.3.</span> <span class="toc-text">3. 接口开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-联调"><span class="toc-number">4.4.</span> <span class="toc-text">4. 联调</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-服务部署"><span class="toc-number">4.5.</span> <span class="toc-text">5. 服务部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-其他琐事"><span class="toc-number">4.6.</span> <span class="toc-text">6. 其他琐事</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#困难："><span class="toc-number">5.</span> <span class="toc-text">困难：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#如何自驱"><span class="toc-number">5.1.</span> <span class="toc-text">如何自驱</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#未来计划"><span class="toc-number">6.</span> <span class="toc-text">未来计划</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&text=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&title=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&is_video=false&description=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=一个人从零开发上线一款App需要多少钱？终于有答案了！&body=Check out this article: http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/" target="_blank" rel="noopener"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&title=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&title=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&title=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&title=一个人从零开发上线一款App需要多少钱？终于有答案了！" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2021/05/07/%E4%B8%80%E4%B8%AA%E4%BA%BA%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%8F%91%E4%B8%8A%E7%BA%BF%E4%B8%80%E6%AC%BEApp%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B0%91%E9%92%B1%EF%BC%9F%E7%BB%88%E4%BA%8E%E6%9C%89%E7%AD%94%E6%A1%88%E4%BA%86%EF%BC%81/&name=一个人从零开发上线一款App需要多少钱？终于有答案了！&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2021 九点下班
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/project/">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
